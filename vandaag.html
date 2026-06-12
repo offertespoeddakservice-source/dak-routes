@@ -3,10 +3,11 @@
 <title>📅 Vandaag</title><style>
 body{font-family:-apple-system,sans-serif;background:#f5f5f7;margin:0 auto;padding:.7rem;max-width:600px;color:#1c1c1e;}
 h1{font-size:1.2rem;margin:.3rem 0;}
-a.terug{font-size:.85rem;color:#1a73e8;text-decoration:none;}
+.nav{font-size:.85rem;margin-bottom:.2rem;}.nav a{color:#1a73e8;text-decoration:none;margin-right:.7rem;}
 .modes{display:flex;gap:.4rem;margin:.6rem 0;}
 .modes button{flex:1;border:none;border-radius:9px;padding:.7rem;font-weight:700;font-size:.95rem;cursor:pointer;background:#e3e3e6;color:#555;}
 .modes button.act{background:#1a73e8;color:#fff;}
+.auto{font-size:.78rem;color:#1a9850;font-weight:600;margin:-.2rem 0 .4rem;}
 .blok{background:#fff;border-radius:11px;padding:.7rem .9rem;margin-bottom:.6rem;box-shadow:0 1px 2px rgba(0,0,0,.06);}
 .blok h2{font-size:.95rem;margin:.1rem 0 .4rem;}
 label.c{display:flex;align-items:center;gap:.55rem;padding:.4rem 0;font-size:.92rem;border-bottom:1px dashed #eee;cursor:pointer;}
@@ -23,26 +24,26 @@ details summary{cursor:pointer;font-weight:600;color:#1a73e8;}
 .klus b{font-size:.95rem;}
 .klus .knop{display:inline-block;background:#34a853;color:#fff;text-decoration:none;padding:.35rem .7rem;border-radius:7px;font-size:.8rem;margin:.3rem .3rem 0 0;}
 .klus .knop.tel{background:#1a73e8;}
-input.link{width:100%;padding:.5rem;border:1px solid #ccc;border-radius:8px;font-size:.85rem;box-sizing:border-box;}
 .hint{font-size:.78rem;color:#888;margin:.3rem 0;}
 .groet{font-size:.95rem;color:#1a9850;font-weight:600;margin:.2rem 0 .5rem;}
 .dagkeuze{display:flex;gap:.4rem;margin:.3rem 0 .5rem;}
 .dagkeuze button{border:1px solid #ccc;background:#fff;border-radius:7px;padding:.35rem .7rem;font-size:.8rem;cursor:pointer;}
-.dagkeuze button.act{background:#333;color:#fff;border-color:#333;}
+.dagkeuze button.act{background:#333;color:#333;background:#333;color:#fff;border-color:#333;}
 </style></head><body>
-<a class="terug" href="index.html">← lijst</a> &nbsp;·&nbsp; <a class="terug" href="kaart.html">🗺️ kaart</a>
+<div class="nav"><a href="index.html">🏠 start</a><a href="begin_lijst.html">📋 buurten</a><a href="kaart.html">🗺️ kaart</a></div>
 <h1>📅 Vandaag</h1>
 <div class="groet" id="groet"></div>
 <div class="modes">
-  <button id="m-loop" onclick="zetMode('loop')">🚶 Loopdag</button>
-  <button id="m-klus" onclick="zetMode('klus')">🔧 Klusdag</button>
+  <button id="m-loop" onclick="zetMode('loop',true)">🚶 Loopdag</button>
+  <button id="m-klus" onclick="zetMode('klus',true)">🔧 Klusdag</button>
 </div>
+<div class="auto" id="autotekst"></div>
 
 <!-- ===================== LOOPDAG ===================== -->
 <div id="loop" style="display:none">
   <div class="blok"><h2>🎒 Voor je de deur uitgaat</h2><div id="check-ochtend"></div></div>
   <div class="blok"><h2>▶ De dag zelf</h2>
-    <div class="stap"><span class="nr">1</span><span>Kies je buurt in de <a href="index.html">begin-lijst</a> → open het straatplan</span></div>
+    <div class="stap"><span class="nr">1</span><span>Kies je buurt in de <a href="begin_lijst.html">buurten-lijst</a> → open het straatplan</span></div>
     <div class="stap"><span class="nr">2</span><span>Loop eerst het <b>🧪 START-TEST blok</b> (±100 beste deuren, 1 flyer-bundel)</span></div>
     <div class="stap"><span class="nr">3</span><span>Druk <b>▶ Start</b> op de buurt-pagina · per straat GO/skip + DONE + notitie</span></div>
     <div class="stap"><span class="nr">4</span><span><b>2-uur-regel:</b> geen sale na de test → verlies nemen, alternatief onderaan de pagina</span></div>
@@ -61,13 +62,8 @@ input.link{width:100%;padding:.5rem;border:1px solid #ccc;border-radius:8px;font
 <div id="klus" style="display:none">
   <div class="blok"><h2>🎒 Voor je de deur uitgaat</h2><div id="check-klus"></div></div>
   <div class="blok"><h2>📋 Je planning</h2>
-    <div class="dagkeuze"><button id="d-vandaag" class="act" onclick="zetDag(0)">vandaag</button><button id="d-morgen" onclick="zetDag(1)">morgen</button><button id="d-alles" onclick="zetDag(-1)">alles komend</button></div>
+    <div class="dagkeuze"><button id="d-vandaag" class="act" onclick="zetDag(0)">vandaag</button><button id="d-morgen" onclick="zetDag(1)">morgen</button><button id="d-alles" onclick="zetDag(-1)">week</button></div>
     <div id="planning"><div class="hint">planning laden…</div></div>
-    <div id="linkvraag" style="display:none">
-      <div class="hint">Plak hier 1x de link van je OFFERTE-sheet (Form responses — daar staat de planning in). Factuur-sheet kan ook (blijft alleen op dít apparaat):</div>
-      <input class="link" id="sheeturl" placeholder="https://docs.google.com/spreadsheets/d/...">
-      <button class="knop" style="background:#1a73e8;color:#fff;border:none;border-radius:7px;padding:.45rem .8rem;margin-top:.4rem;cursor:pointer" onclick="bewaarLink()">Opslaan</button>
-    </div>
   </div>
   <div class="blok"><h2>📲 Per klus — het ritme</h2>
     <div class="stap"><span class="nr">1</span><span>Ochtend-app: "Vandaag kom ik langs voor de goten — u hoeft er niet voor te blijven 👍"</span></div>
@@ -79,15 +75,16 @@ input.link{width:100%;padding:.5rem;border:1px solid #ccc;border-radius:8px;font
 </div>
 
 <script>
+// Sheets (link-leesbaar): [0] = offerte/planning, [1] = facturen (Datum werkzaamheden)
+const SHEETS = ['1PF_2fViLo7MasoTIw5vuba4MzxvOvAl_OKl7tMBBZgY','1K7Pns_wrwX0X5liDe3P9Wx3LWcMT5icjw1IA6Na53X8'];
 const vandaag = new Date(); const dagISO = vandaag.toISOString().slice(0,10);
 const dagen=['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'];
 document.getElementById('groet').textContent = 'Goedemorgen! Het is '+dagen[vandaag.getDay()]+' '+vandaag.getDate()+'-'+(vandaag.getMonth()+1)+'.';
 
-// ---- checklists (reset elke dag)
 const LIJSTEN = {
  'check-ochtend': ['Telefoon + powerbank + kabeltje','Flyers gestempeld met de wijkdatum (thuis doen!)','Flyer-bundel(s) van 100 geteld','Drinken met elektrolyten','Pillenbakje + olijfolie','Trui / regenjas gecheckt (weer!)','Goede schoenen aan'],
  'check-eind': ['💬 WhatsApp-export gelopen straten verstuurd','Uitkomsten in de sheet gezet (niks / verkocht X / twijfel-app datum)','Opvolger gedraaid voor twijfelaars (laptop: python opvolger.py)'],
- 'check-klus': ['Juiste TASSEN ingeladen (zie planning hieronder)','Ladder in/op de bus','Telefoon + powerbank','Ochtend-apps versturen (zie planning)','Flyers mee (voor de buren!)','Drinken + eten mee'],
+ 'check-klus': ['Juiste TASSEN ingeladen (zie planning)','Ladder in/op de bus','Telefoon + powerbank','Ochtend-apps versturen (zie planning)','Flyers mee (voor de buren!)','Drinken + eten mee'],
 };
 function bouwChecklist(id){
   const st = JSON.parse(localStorage.getItem('chk_'+id+'_'+dagISO)||'{}');
@@ -101,81 +98,84 @@ function bouwChecklist(id){
 }
 Object.keys(LIJSTEN).forEach(bouwChecklist);
 
-// ---- mode
-function zetMode(m){
-  localStorage.setItem('dagmode',m);
+function zetMode(m, handmatig){
+  if(handmatig) localStorage.setItem('dagmode_man_'+dagISO, m);
   document.getElementById('loop').style.display = m==='loop'?'':'none';
   document.getElementById('klus').style.display = m==='klus'?'':'none';
   document.getElementById('m-loop').className = m==='loop'?'act':'';
   document.getElementById('m-klus').className = m==='klus'?'act':'';
-  if(m==='klus') laadPlanning();
 }
-zetMode(localStorage.getItem('dagmode')||'loop');
+zetMode(localStorage.getItem('dagmode_man_'+dagISO)||'loop', false);
 
-// ---- planning (sheet-link alleen in localStorage, nooit in broncode)
-let dagFilter = 0;
+// ---- planning + AUTO-dagdetectie -------------------------------------------
+let dagFilter = 0; let alleKlussen = [];
 function zetDag(d){dagFilter=d;
   ['d-vandaag','d-morgen','d-alles'].forEach(id=>document.getElementById(id).className='');
   document.getElementById(d===0?'d-vandaag':d===1?'d-morgen':'d-alles').className='act';
-  laadPlanning();}
-function bewaarLink(){
-  const u=document.getElementById('sheeturl').value.trim();
-  const m=u.match(/\/d\/([\w-]+)/);
-  if(!m){alert('Dat lijkt geen geldige sheet-link.');return;}
-  localStorage.setItem('plansheet',m[1]); laadPlanning();
-}
-function laadPlanning(){
-  const sid=localStorage.getItem('plansheet');
+  render();}
+
+function zelfdeDag(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();}
+
+function render(){
   const P=document.getElementById('planning');
-  if(!sid){P.innerHTML='';document.getElementById('linkvraag').style.display='';return;}
-  document.getElementById('linkvraag').style.display='none';
-  P.innerHTML='<div class="hint">planning laden…</div>';
-  window.__plan=function(r){
-    try{
-      const cols=r.table.cols.map(c=>(c.label||'').toLowerCase());
-      const ix=(naam)=>cols.findIndex(c=>c.includes(naam));
-      let iDat=ix('datum werkzaamheden'); if(iDat<0)iDat=cols.findIndex(c=>c.trim()==='datum'); if(iDat<0)iDat=ix('datum');
-      const iNaam=ix('naam'), iAdr=ix('adres'), iSrv=ix('service'), iTel=ix('telefoon'),
-            iPrijs=ix('totaal inclusief')>=0?ix('totaal inclusief'):ix('prijs inclusief'), iTv=ix('tijdvak');
-      const doel=new Date(vandaag); if(dagFilter>0)doel.setDate(doel.getDate()+dagFilter);
-      let items=[];let n=0;
-      for(const row of r.table.rows){
-        const c=row.c; if(!c||!c[iDat]||!c[iDat].v)continue;
-        let dm=String(c[iDat].v).match(/Date\((\d+),(\d+),(\d+)/);
-        if(!dm)continue;
-        const d=new Date(+dm[1],+dm[2],+dm[3]);
-        const zelfde=(a,b)=>a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();
-        if(dagFilter>=0 && !zelfde(d,doel))continue;
-        if(dagFilter<0 && d<new Date(vandaag.getFullYear(),vandaag.getMonth(),vandaag.getDate()))continue;
-        n++;
-        const naam=c[iNaam]&&c[iNaam].v||'?', adr=c[iAdr]&&c[iAdr].v||'',
-              srv=String(c[iSrv]&&c[iSrv].v||''), tel=String(c[iTel]&&c[iTel].v||'').replace(/\D/g,''),
-              prijs=c[iPrijs>=0?iPrijs:0]&&iPrijs>=0&&(c[iPrijs].f||c[iPrijs].v)||'',
-              tv=iTv>=0&&c[iTv]&&c[iTv].v||'';
-        const sl=srv.toLowerCase();
-        let tas='🎒 Universele tas';
-        if(sl.includes('goot')||sl.includes('reinig'))tas='🎒 Goten-tas';
-        if(sl.includes('vogel'))tas='🎒 Vogelwering-tas';
-        if(sl.includes('nok')||sl.includes('vorst'))tas='🎒 Nok/specie-tas';
-        if(sl.includes('lood')||sl.includes('schoorsteen'))tas='🎒 Lood-tas';
-        if(sl.includes('dakkapel'))tas='🎒 Poets-tas';
-        items.push({d:d,html:`<div class='klus'><b>${naam}</b>${tv?' · '+tv:''}${prijs?' · €'+String(prijs).replace('€',''):''}<br>${adr}<br><span class='hint'>${srv.slice(0,80)} · <b>${tas}</b></span><br>`
-           +`<a class='knop' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(adr)}&travelmode=driving'>🚗 Navigeer</a>`
-           +(tel?`<a class='knop tel' target='_blank' href='https://wa.me/${tel.startsWith('0')?'31'+tel.slice(1):tel}'>💬 App</a>`:'')+`</div>`});
-      }
-      items.sort((a,b)=>a.d-b.d);
-      let out='',vorige='';
-      for(const it of items){
-        const kop=dagen[it.d.getDay()]+' '+it.d.getDate()+'-'+(it.d.getMonth()+1);
-        if(dagFilter<0&&kop!==vorige){out+=`<div style='font-weight:700;margin:.5rem 0 .2rem'>${kop}</div>`;vorige=kop;}
-        out+=it.html;
-      }
-      P.innerHTML = n? out : '<div class="hint">Geen klussen voor deze dag in de planning 🎉</div>';
-    }catch(e){P.innerHTML='<div class="hint">Kon planning niet lezen — check de sheet-link. <a href="#" onclick="localStorage.removeItem(\'plansheet\');laadPlanning();return false;">opnieuw instellen</a></div>';}
-  };
+  const doel=new Date(vandaag); if(dagFilter>0)doel.setDate(doel.getDate()+dagFilter);
+  const items = alleKlussen.filter(k=>{
+    if(dagFilter>=0) return zelfdeDag(k.d,doel);
+    return k.d>=new Date(vandaag.getFullYear(),vandaag.getMonth(),vandaag.getDate());
+  }).sort((a,b)=>a.d-b.d);
+  let out='',vorige='';
+  for(const k of items){
+    const kop=dagen[k.d.getDay()]+' '+k.d.getDate()+'-'+(k.d.getMonth()+1);
+    if(dagFilter<0&&kop!==vorige){out+=`<div style='font-weight:700;margin:.5rem 0 .2rem'>${kop}</div>`;vorige=kop;}
+    out+=k.html;
+  }
+  P.innerHTML = items.length? out : '<div class="hint">Geen klussen voor deze dag 🎉</div>';
+}
+
+let sheetIdx = 0;
+window.__plan=function(r){
+  try{
+    const cols=r.table.cols.map(c=>(c.label||'').toLowerCase());
+    const ix=(naam)=>cols.findIndex(c=>c.includes(naam));
+    let iDat=ix('datum werkzaamheden'); if(iDat<0)iDat=cols.findIndex(c=>c.trim()==='datum'); if(iDat<0)iDat=ix('datum');
+    const iNaam=ix('naam'), iAdr=ix('adres'), iSrv=ix('service'), iTel=ix('telefoon'),
+          iPrijs=ix('totaal inclusief')>=0?ix('totaal inclusief'):ix('prijs inclusief'), iTv=ix('tijdvak');
+    for(const row of r.table.rows){
+      const c=row.c; if(!c||!c[iDat]||!c[iDat].v)continue;
+      const dm=String(c[iDat].v).match(/Date\((\d+),(\d+),(\d+)/); if(!dm)continue;
+      const d=new Date(+dm[1],+dm[2],+dm[3]);
+      const naam=c[iNaam]&&c[iNaam].v||'?', adr=String(c[iAdr]&&c[iAdr].v||''),
+            srv=String(c[iSrv]&&c[iSrv].v||''), tel=String(c[iTel]&&c[iTel].v||'').replace(/\D/g,''),
+            prijs=iPrijs>=0&&c[iPrijs]&&(c[iPrijs].f||c[iPrijs].v)||'', tv=iTv>=0&&c[iTv]&&c[iTv].v||'';
+      const sl=srv.toLowerCase();
+      let tas='🎒 Universele tas';
+      if(sl.includes('goot')||sl.includes('reinig'))tas='🎒 Goten-tas';
+      if(sl.includes('vogel'))tas='🎒 Vogelwering-tas';
+      if(sl.includes('nok')||sl.includes('vorst'))tas='🎒 Nok/specie-tas';
+      if(sl.includes('lood')||sl.includes('schoorsteen'))tas='🎒 Lood-tas';
+      if(sl.includes('dakkapel'))tas='🎒 Poets-tas';
+      alleKlussen.push({d:d,html:`<div class='klus'><b>${naam}</b>${tv?' · '+tv:''}${prijs?' · €'+String(prijs).replace('€',''):''}<br>${adr}<br><span class='hint'>${srv.slice(0,80)} · <b>${tas}</b></span><br>`
+        +`<a class='knop' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(adr)}&travelmode=driving'>🚗 Navigeer</a>`
+        +(tel?`<a class='knop tel' target='_blank' href='https://wa.me/${tel.startsWith('0')?'31'+tel.slice(1):tel}'>💬 App</a>`:'')+`</div>`});
+    }
+  }catch(e){}
+  sheetIdx++;
+  if(sheetIdx<SHEETS.length){laadSheet(sheetIdx);return;}
+  // AUTO-detectie: klussen vandaag → klusdag, anders loopdag (handmatige keuze wint)
+  const nVandaag = alleKlussen.filter(k=>zelfdeDag(k.d,vandaag)).length;
+  const man = localStorage.getItem('dagmode_man_'+dagISO);
+  const auto = nVandaag>0?'klus':'loop';
+  if(!man) zetMode(auto,false);
+  document.getElementById('autotekst').textContent =
+    nVandaag>0 ? `🤖 automatisch herkend: ${nVandaag} klus(sen) gepland vandaag → klusdag`
+               : '🤖 automatisch herkend: niks gepland vandaag → loopdag';
+  render();
+};
+function laadSheet(i){
   const s=document.createElement('script');
-  s.src='https://docs.google.com/spreadsheets/d/'+sid+'/gviz/tq?tqx=out:json;responseHandler:__plan';
-  s.onerror=()=>{P.innerHTML='<div class="hint">Laden mislukt — is de sheet op "iedereen met link" gezet?</div>';};
+  s.src='https://docs.google.com/spreadsheets/d/'+SHEETS[i]+'/gviz/tq?tqx=out:json;responseHandler:__plan';
+  s.onerror=()=>{sheetIdx++; if(sheetIdx<SHEETS.length)laadSheet(sheetIdx); else render();};
   document.body.appendChild(s);
 }
+laadSheet(0);
 </script></body></html>

@@ -29,6 +29,9 @@ a.terug{font-size:.85rem;color:#1a73e8;text-decoration:none;}
 .nokcap{font-size:.66rem;color:#888;text-align:center;}
 .reden{font-size:.78rem;color:#555;font-style:italic;margin-bottom:.3rem;}
 .haakjes{font-size:.8rem;color:#7a5a00;background:#fff3cd;border-radius:6px;padding:.25rem .5rem;margin-bottom:.3rem;font-weight:600;}
+.blok-review{display:flex;gap:.3rem;margin:.4rem 0;}
+.blok-review input{flex:1;border:1px solid #ddd;border-radius:8px;padding:.5rem;font-size:.85rem;}
+.blok-review button{border:none;border-radius:8px;background:#7b1fa2;color:#fff;font-weight:600;padding:.4rem .7rem;cursor:pointer;}
 .testblok{background:#e8f0fe;border:2px solid #1a73e8;border-radius:11px;padding:.6rem .8rem;margin:.5rem 0;font-size:.85rem;}
 .testblok .trij{margin:.25rem 0;}.testblok a{color:#1a73e8;font-weight:600;}
 .tuitleg{font-size:.75rem;color:#555;margin:.3rem 0;}
@@ -56,6 +59,7 @@ a.terug{font-size:.85rem;color:#1a73e8;text-decoration:none;}
 <h1>🗺️ Voorkoop Noord — straatplan</h1>
 <div class='intro'>🎯 = bouwjaar 1955-1980. Bekijk de 3 foto's (begin/midden/eind): is de <b>nok halfrond</b>?
 De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b>DONE</b> als je 'm gelopen hebt.</div>
+<div class='blok-review'><input id='buurtrev' placeholder='⭐ Review over de hele buurt (sfeer, type mensen, concurrent gezien...)'><button onclick='bewaarBuurtrev()'>Opslaan</button></div>
 <div class='bar'><div id='routes'></div><div class='klok'><button class='k-start' onclick='klok("start")'>▶ Start</button><button class='k-pauze' id='pauzebtn' onclick='klokPauze()'>⏸ Pauze</button><button class='k-fin' onclick='klok("finish")'>🏁 Klaar</button><span id='tijdtxt'></span></div><button class='sorteer' id='sortbtn' onclick='toggleSort()'>⭐ GO eerst</button><div class='teller' id='teller'>—</div></div>
 <div class='testblok'><b>🧪 START-TEST — pak deze eerst (≈140 huizen)</b><div class='trij'><a href='#s_Egelantier'>Egelantier</a> · 43 huizen · ?</div><div class='trij'><a href='#s_Akelei'>Akelei</a> · 97 huizen · ?</div><div class='tuitleg'>Dichtste straten naast elkaar. Loopt het hier niet binnen de test → wijk is niks, pak een alternatief (onderaan).</div><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.95582019,5.24643301&travelmode=driving' target='_blank'>🚗 Naar de test-straten</a></div>
 <div id='lijst'>
@@ -425,6 +429,9 @@ function renderKlok(){
   const m=Math.round(netto()/60000);
   tt.textContent=tijd.length?('⏱ '+Math.floor(m/60)+'u'+String(m%60).padStart(2,'0')+(l==='pauze'?' (pauze)':l==='finish'?' (klaar)':'')):'';
 }
+const br=document.getElementById('buurtrev');
+br.value=localStorage.getItem('buurtrev_'+code)||'';
+function bewaarBuurtrev(){localStorage.setItem('buurtrev_'+code,br.value);log('buurtreview: '+br.value,'⭐ BUURT');alert('Opgeslagen ✓');}
 const notes=JSON.parse(localStorage.getItem('notes_'+code)||'{}');
 for(const k in notes){const inp=document.getElementById('n_'+k);if(inp)inp.value=notes[k];}
 document.querySelectorAll('.notitie').forEach(inp=>inp.addEventListener('change',()=>{
