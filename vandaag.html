@@ -1,6 +1,8 @@
 <!doctype html><html lang="nl"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>📅 Vandaag</title><style>
+.tabs{display:flex;gap:.3rem;flex-wrap:wrap;font-size:.8rem;margin-bottom:.6rem;}.tabs a{background:#fff;border-radius:8px;padding:.35rem .55rem;text-decoration:none;color:#1a73e8;font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.06);}
+.allesbtn{border:none;background:#e8f0fe;color:#1a73e8;border-radius:7px;padding:.25rem .6rem;font-size:.75rem;font-weight:700;cursor:pointer;float:right;}
 body{font-family:-apple-system,sans-serif;background:#f5f5f7;margin:0 auto;padding:.7rem;max-width:600px;color:#1c1c1e;}
 h1{font-size:1.2rem;margin:.3rem 0;}
 .nav{font-size:.85rem;margin-bottom:.2rem;}.nav a{color:#1a73e8;text-decoration:none;margin-right:.7rem;}
@@ -30,7 +32,7 @@ details summary{cursor:pointer;font-weight:600;color:#1a73e8;}
 .dagkeuze button{border:1px solid #ccc;background:#fff;border-radius:7px;padding:.35rem .7rem;font-size:.8rem;cursor:pointer;}
 .dagkeuze button.act{background:#333;color:#333;background:#333;color:#fff;border-color:#333;}
 </style></head><body>
-<div class="nav"><a href="index.html">🏠 start</a><a href="begin_lijst.html">📋 buurten</a><a href="kaart.html">🗺️ kaart</a></div>
+<div class="tabs"><a href="index.html">🏠</a><a href="vandaag.html">📅 Planning</a><a href="begin_lijst.html">📋 Buurten</a><a href="#" id="t-straten">🚶 Straten</a><a href="kaart.html">🗺️ Kaart</a><a href="feedback.html">💬 Feedback</a></div>
 <h1>📅 Vandaag</h1>
 <div class="groet" id="groet"></div>
 <div class="modes">
@@ -38,6 +40,9 @@ details summary{cursor:pointer;font-weight:600;color:#1a73e8;}
   <button id="m-klus" onclick="zetMode('klus',true)">🔧 Klusdag</button>
 </div>
 <div class="auto" id="autotekst"></div>
+<div class="blok" id="opvolgblok" style="display:none"><h2>📌 Open opvolgingen <span id="opvN"></span></h2>
+<div class="hint">Deze mensen wachten op jouw appje (offerte zonder uitkomst of twijfelaar). Eén tik = WhatsApp met je buurt-frame bericht. Daarna uitkomst in de sheet zetten.</div>
+<div id="opvolglijst"></div></div>
 
 <!-- ===================== LOOPDAG ===================== -->
 <div id="loop" style="display:none">
@@ -47,6 +52,7 @@ details summary{cursor:pointer;font-weight:600;color:#1a73e8;}
     <div class="stap"><span class="nr">2</span><span>Loop eerst het <b>🧪 START-TEST blok</b> (±100 beste deuren, 1 flyer-bundel)</span></div>
     <div class="stap"><span class="nr">3</span><span>Druk <b>▶ Start</b> op de buurt-pagina · per straat GO/skip + DONE + notitie</span></div>
     <div class="stap"><span class="nr">4</span><span><b>2-uur-regel:</b> geen sale na de test → verlies nemen, alternatief onderaan de pagina</span></div>
+    <div class='hint'>💡 Tips: dichte rijtjes eerst · twijfel-straat? kijk live naar de nok (3 sec) en tik GO of skip · elke notitie maakt het systeem slimmer.</div>
     <details><summary>📣 Pitch-spiekbrief</summary><div class="pitch">
     <b>Opener:</b> "Goeiedag! We zijn donderdag hier in de buurt bezig met goten reinigen, schoorstenen vegen en dakkapellen poetsen van de mensen. En voor €40 kunnen we uw beide goten ook meteen meenemen — vroeg me af of u daar interesse in heeft?"<br><br>
     <b>JA →</b> "Top, dan zet ik u in de planning. Wat is uw 06? Dan app ik wanneer ik eraan kom en stuur ik een foto als 'ie klaar is — u hoeft er niet voor thuis te blijven."<br><br>
@@ -71,11 +77,14 @@ details summary{cursor:pointer;font-weight:600;color:#1a73e8;}
     <div class="stap"><span class="nr">3</span><span>Klaar-app: klaar-foto + betaalverzoek + evt. probleem-foto ("kwam dit tegen, geen haast, zegt u het maar")</span></div>
     <div class="stap"><span class="nr">4</span><span>Tevreden klant? → review-akkoord + "zal ik volgend jaar weer langskomen?"</span></div>
     <div class="stap"><span class="nr">5</span><span>'s Avonds: uitkomst per rij in de sheet (10 sec p.p.)</span></div>
+    <div class='hint'>💡 Uitkomst-codes: <b>niks</b> · <b>niet thuis</b> · <b>verkocht [iets] €[bedrag]</b> · <b>twijfel, app [datum]</b> — meer hoeft niet.</div>
   </div>
 </div>
 
 <script>
 // Sheets (link-leesbaar): [0] = offerte/planning, [1] = facturen (Datum werkzaamheden)
+const LOGURL='https://script.google.com/macros/s/AKfycbzMkmZKeadRlwNxTzl9io-vftCurSiGP2lz2rDFLSkVVADnzjOkwzqoHlstRCFyj1ppjA/exec';
+function log(actie,straat){try{fetch(LOGURL+'?'+new URLSearchParams({buurt:'VANDAAG',straat:straat||'-',actie:actie}),{mode:'no-cors'});}catch(e){}}
 const SHEETS = ['1PF_2fViLo7MasoTIw5vuba4MzxvOvAl_OKl7tMBBZgY','1K7Pns_wrwX0X5liDe3P9Wx3LWcMT5icjw1IA6Na53X8'];
 const vandaag = new Date(); const dagISO = vandaag.toISOString().slice(0,10);
 const dagen=['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'];
@@ -89,17 +98,20 @@ const LIJSTEN = {
 function bouwChecklist(id){
   const st = JSON.parse(localStorage.getItem('chk_'+id+'_'+dagISO)||'{}');
   const div = document.getElementById(id); div.innerHTML='';
+  const ab=document.createElement('button');ab.className='allesbtn';ab.textContent='✓ alles';
+  ab.onclick=()=>{LIJSTEN[id].forEach((_,i)=>st[i]=true);localStorage.setItem('chk_'+id+'_'+dagISO,JSON.stringify(st));log('checklist alles afgevinkt',id);bouwChecklist(id);};
+  div.appendChild(ab);
   LIJSTEN[id].forEach((tekst,i)=>{
     const l=document.createElement('label'); l.className='c'+(st[i]?' af':'');
     const cb=document.createElement('input'); cb.type='checkbox'; cb.checked=!!st[i];
-    cb.onchange=()=>{st[i]=cb.checked;localStorage.setItem('chk_'+id+'_'+dagISO,JSON.stringify(st));l.className='c'+(cb.checked?' af':'');};
+    cb.onchange=()=>{st[i]=cb.checked;localStorage.setItem('chk_'+id+'_'+dagISO,JSON.stringify(st));l.className='c'+(cb.checked?' af':'');log('check '+(cb.checked?'✓':'✗')+' '+tekst.slice(0,45),id);};
     l.appendChild(cb); l.appendChild(document.createTextNode(tekst)); div.appendChild(l);
   });
 }
 Object.keys(LIJSTEN).forEach(bouwChecklist);
 
 function zetMode(m, handmatig){
-  if(handmatig) localStorage.setItem('dagmode_man_'+dagISO, m);
+  if(handmatig){localStorage.setItem('dagmode_man_'+dagISO, m);log('dagmode handmatig: '+m,'-');}
   document.getElementById('loop').style.display = m==='loop'?'':'none';
   document.getElementById('klus').style.display = m==='klus'?'':'none';
   document.getElementById('m-loop').className = m==='loop'?'act':'';
@@ -132,7 +144,7 @@ function render(){
   P.innerHTML = items.length? out : '<div class="hint">Geen klussen voor deze dag 🎉</div>';
 }
 
-let sheetIdx = 0;
+let sheetIdx = 0; let opvolg=[];
 window.__plan=function(r){
   try{
     const cols=r.table.cols.map(c=>(c.label||'').toLowerCase());
@@ -140,6 +152,26 @@ window.__plan=function(r){
     let iDat=ix('datum werkzaamheden'); if(iDat<0)iDat=cols.findIndex(c=>c.trim()==='datum'); if(iDat<0)iDat=ix('datum');
     const iNaam=ix('naam'), iAdr=ix('adres'), iSrv=ix('service'), iTel=ix('telefoon'),
           iPrijs=ix('totaal inclusief')>=0?ix('totaal inclusief'):ix('prijs inclusief'), iTv=ix('tijdvak');
+    const iToel=ix('toelichting'), iVerk=ix('analyseren'), iTs=ix('timestamp')>=0?ix('timestamp'):ix('tijd');
+    if(sheetIdx===0){
+      for(const row of r.table.rows){
+        const c=row.c; if(!c)continue;
+        const naam=c[iNaam]&&String(c[iNaam].v||'').trim(); const tel=String(c[iTel]&&c[iTel].v||'').replace(/\D/g,'');
+        if(!naam||!tel)continue;
+        const alles=(String(c[iToel]&&c[iToel].v||'')+' '+String(iVerk>=0&&c[iVerk]&&c[iVerk].v||'')).toLowerCase();
+        const srv=String(c[iSrv]&&c[iSrv].v||'').toLowerCase();
+        if(/verkocht|afgevallen|niks|niet thuis|gedaan/.test(alles))continue;
+        const isTw=/twijfel/.test(alles), isOf=/offerte/.test(srv);
+        if(!isTw&&!isOf)continue;
+        let dgn='';
+        const tm=iTs>=0&&c[iTs]&&String(c[iTs].v||'').match(/Date\((\d+),(\d+),(\d+)/);
+        if(tm){const dd=new Date(+tm[1],+tm[2],+tm[3]);dgn=Math.floor((vandaag-dd)/864e5);if(isOf&&dgn<4)continue;}
+        const vn=naam.split(' ')[0];
+        const msg=encodeURIComponent('Hoi '+vn+', donderdag zijn we weer bij u in de buurt. We zouden de klus dan meteen kunnen meenemen — scheelt u de voorrijkosten. Zal ik \'m inplannen, of liever niet? Allebei prima 👍');
+        opvolg.push({naam:naam,dgn:dgn,badge:isTw?'🤔 twijfel':'📄 offerte open',
+          wa:'https://wa.me/'+(tel.startsWith('0')?'31'+tel.slice(1):tel)+'?text='+msg});
+      }
+    }
     for(const row of r.table.rows){
       const c=row.c; if(!c||!c[iDat]||!c[iDat].v)continue;
       const dm=String(c[iDat].v).match(/Date\((\d+),(\d+),(\d+)/); if(!dm)continue;
@@ -166,6 +198,12 @@ window.__plan=function(r){
   const man = localStorage.getItem('dagmode_man_'+dagISO);
   const auto = nVandaag>0?'klus':'loop';
   if(!man) zetMode(auto,false);
+  if(opvolg.length){
+    document.getElementById('opvolgblok').style.display='';
+    document.getElementById('opvN').textContent='('+opvolg.length+')';
+    document.getElementById('opvolglijst').innerHTML=opvolg.slice(0,20).map(o=>
+      `<div class='klus'><b>${o.naam}</b> · ${o.badge}${o.dgn!==''?' · '+o.dgn+' dgn':''} <a class='knop' style='background:#25d366' href='${o.wa}' target='_blank'>💬 Opvolg-app</a></div>`).join('');
+  }
   document.getElementById('autotekst').textContent =
     nVandaag>0 ? `🤖 automatisch herkend: ${nVandaag} klus(sen) gepland vandaag → klusdag`
                : '🤖 automatisch herkend: niks gepland vandaag → loopdag';
@@ -178,4 +216,5 @@ function laadSheet(i){
   document.body.appendChild(s);
 }
 laadSheet(0);
+const ts=document.getElementById('t-straten');if(ts)ts.href=localStorage.getItem('laatste_plan')||'begin_lijst.html';
 </script></body></html>
