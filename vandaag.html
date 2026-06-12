@@ -176,7 +176,7 @@ fetch('https://api.open-meteo.com/v1/forecast?latitude=51.68&longitude=5.31&hour
 
 const LIJSTEN = {
  'check-ochtend': ['Telefoon + powerbank + kabeltje','Flyers gestempeld met de wijkdatum (thuis doen!)','Flyer-bundel(s) van 100 geteld','Drinken met elektrolyten','Pillenbakje + olijfolie','Trui / regenjas gecheckt (weer!)','Goede schoenen aan'],
- 'check-eind': ['💬 WhatsApp-export gelopen straten verstuurd','Uitkomsten in de sheet gezet (niks / verkocht X / twijfel-app datum)','Opvolger gedraaid voor twijfelaars (laptop: python opvolger.py)'],
+ 'check-eind': ['📨 Kom-eraan-apps voor morgen versturen (Planning → morgen) — later dan 21:30 thuis? morgenochtend, zelfde knop','💬 WhatsApp-export gelopen straten verstuurd','Uitkomsten in de sheet gezet (niks / verkocht X / twijfel-app datum)','Opvolger gedraaid voor twijfelaars (laptop: python opvolger.py)'],
  'check-klus': ['Juiste TASSEN ingeladen (zie planning)','Ladder in/op de bus','Telefoon + powerbank','Ochtend-apps versturen (zie planning)','Flyers mee (voor de buren!)','Drinken + eten mee'],
 };
 function bouwChecklist(id){
@@ -204,7 +204,18 @@ function zetMode(m, handmatig){
 zetMode(localStorage.getItem('dagmode_man_'+dagISO)||'loop', false);
 
 // ---- planning + AUTO-dagdetectie -------------------------------------------
-let dagFilter = 0; let alleKlussen = [];
+let dagFilter = 0; let alleKlussen = []; let bevData={};
+function bevApp(ki){
+  const k=alleKlussen[ki], b=bevData[ki]; if(!k||!b)return;
+  const morgenD=new Date(vandaag); morgenD.setDate(morgenD.getDate()+1);
+  let wanneer, slot;
+  if(zelfdeDag(k.d,vandaag)){wanneer='Vandaag'; slot='Tot zo!';}
+  else if(zelfdeDag(k.d,morgenD)){wanneer='Morgen'; slot='Tot morgen!';}
+  else {wanneer=dagen[k.d.getDay()].charAt(0).toUpperCase()+dagen[k.d.getDay()].slice(1); slot='Tot dan!';}
+  const msg='Hoi '+b.vn+', Rens hier van Spoed Dak Service 👋 '+wanneer+' kom ik '+(b.tv?'tussen '+b.tv+' ':'')+'langs voor de goten. U hoeft er niet voor thuis te blijven. Sla dit nummer gerust op — voor dak-spoed zijn we er vaak dezelfde dag. '+slot;
+  log('kom-eraan-app: '+wanneer, b.vn);
+  window.open('https://wa.me/'+(b.tel.startsWith('0')?'31'+b.tel.slice(1):b.tel)+'?text='+encodeURIComponent(msg),'_blank');
+}
 function zetDag(d){dagFilter=d;
   ['d-vandaag','d-morgen','d-alles'].forEach(id=>document.getElementById(id).className='');
   document.getElementById(d===0?'d-vandaag':d===1?'d-morgen':'d-alles').className='act';
@@ -297,11 +308,11 @@ window.__plan=function(r){
       if(sl.includes('nok')||sl.includes('vorst'))tas='🎒 Nok/specie-tas';
       if(sl.includes('lood')||sl.includes('schoorsteen'))tas='🎒 Lood-tas';
       if(sl.includes('dakkapel'))tas='🎒 Poets-tas';
-      const ki=alleKlussen.length; afNamen[ki]=String(naam);
+      const ki=alleKlussen.length; afNamen[ki]=String(naam); bevData[ki]={tel:tel,tv:tv,vn:String(naam).split(' ')[0]};
       alleKlussen.push({d:d,html:`<div class='klus'><b>${naam}</b>${tv?' · '+tv:''}${prijs?' · €'+String(prijs).replace('€',''):''}<br>${adr}<br><span class='hint'>${srv.slice(0,80)} · <b>${tas}</b></span><br>`
         +`<a class='knop' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(adr)}&travelmode=driving'>🚗 Navigeer</a>`
         +(tel?`<a class='knop tel' target='_blank' href='https://wa.me/${tel.startsWith('0')?'31'+tel.slice(1):tel}'>💬 App</a>`:'')
-        +(tel?`<a class='knop' style='background:#e08c00' target='_blank' href='https://wa.me/${tel.startsWith('0')?'31'+tel.slice(1):tel}?text=${encodeURIComponent('Hoi '+String(naam).split(' ')[0]+', Rens hier van Spoed Dak Service 👋 Morgen kom ik '+(tv?'tussen '+tv+' ':'')+'langs voor de goten. U hoeft er niet voor thuis te blijven. Sla dit nummer gerust op — voor dak-spoed zijn we er vaak dezelfde dag. Tot morgen!')}'>📨 Morgen-app</a>`:'')
+        +(tel?`<button class='knop' style='border:none;background:#e08c00' onclick='bevApp(${ki})'>📨 Kom-eraan-app</button>`:'')
         +`<button class='knop' style='border:none;background:#7b1fa2' onclick='afToggle(${ki})'>✅ Afronden</button>`
         +afForm(ki)+`</div>`});
     }
