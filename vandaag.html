@@ -64,7 +64,7 @@ input.link{width:100%;padding:.5rem;border:1px solid #ccc;border-radius:8px;font
     <div class="dagkeuze"><button id="d-vandaag" class="act" onclick="zetDag(0)">vandaag</button><button id="d-morgen" onclick="zetDag(1)">morgen</button><button id="d-alles" onclick="zetDag(-1)">alles komend</button></div>
     <div id="planning"><div class="hint">planning laden…</div></div>
     <div id="linkvraag" style="display:none">
-      <div class="hint">Plak hier 1x de link van je offerte/factuur-sheet (blijft alleen op dít apparaat):</div>
+      <div class="hint">Plak hier 1x de link van je OFFERTE-sheet (Form responses — daar staat de planning in). Factuur-sheet kan ook (blijft alleen op dít apparaat):</div>
       <input class="link" id="sheeturl" placeholder="https://docs.google.com/spreadsheets/d/...">
       <button class="knop" style="background:#1a73e8;color:#fff;border:none;border-radius:7px;padding:.45rem .8rem;margin-top:.4rem;cursor:pointer" onclick="bewaarLink()">Opslaan</button>
     </div>
@@ -87,7 +87,7 @@ document.getElementById('groet').textContent = 'Goedemorgen! Het is '+dagen[vand
 const LIJSTEN = {
  'check-ochtend': ['Telefoon + powerbank + kabeltje','Flyers gestempeld met de wijkdatum (thuis doen!)','Flyer-bundel(s) van 100 geteld','Drinken met elektrolyten','Pillenbakje + olijfolie','Trui / regenjas gecheckt (weer!)','Goede schoenen aan'],
  'check-eind': ['💬 WhatsApp-export gelopen straten verstuurd','Uitkomsten in de sheet gezet (niks / verkocht X / twijfel-app datum)','Opvolger gedraaid voor twijfelaars (laptop: python opvolger.py)'],
- 'check-klus': ['Ladder + gereedschap in de bus','Telefoon + powerbank','Ochtend-apps versturen (zie planning)','Flyers mee (voor de buren!)','Drinken + eten mee'],
+ 'check-klus': ['Juiste TASSEN ingeladen (zie planning hieronder)','Ladder in/op de bus','Telefoon + powerbank','Ochtend-apps versturen (zie planning)','Flyers mee (voor de buren!)','Drinken + eten mee'],
 };
 function bouwChecklist(id){
   const st = JSON.parse(localStorage.getItem('chk_'+id+'_'+dagISO)||'{}');
@@ -134,10 +134,11 @@ function laadPlanning(){
     try{
       const cols=r.table.cols.map(c=>(c.label||'').toLowerCase());
       const ix=(naam)=>cols.findIndex(c=>c.includes(naam));
-      const iDat=ix('datum werkzaamheden'), iNaam=ix('naam'), iAdr=ix('adres'),
-            iSrv=ix('service'), iTel=ix('telefoon'), iPrijs=ix('totaal inclusief');
+      let iDat=ix('datum werkzaamheden'); if(iDat<0)iDat=cols.findIndex(c=>c.trim()==='datum'); if(iDat<0)iDat=ix('datum');
+      const iNaam=ix('naam'), iAdr=ix('adres'), iSrv=ix('service'), iTel=ix('telefoon'),
+            iPrijs=ix('totaal inclusief')>=0?ix('totaal inclusief'):ix('prijs inclusief'), iTv=ix('tijdvak');
       const doel=new Date(vandaag); if(dagFilter>0)doel.setDate(doel.getDate()+dagFilter);
-      let out='';let n=0;
+      let items=[];let n=0;
       for(const row of r.table.rows){
         const c=row.c; if(!c||!c[iDat]||!c[iDat].v)continue;
         let dm=String(c[iDat].v).match(/Date\((\d+),(\d+),(\d+)/);
@@ -148,12 +149,26 @@ function laadPlanning(){
         if(dagFilter<0 && d<new Date(vandaag.getFullYear(),vandaag.getMonth(),vandaag.getDate()))continue;
         n++;
         const naam=c[iNaam]&&c[iNaam].v||'?', adr=c[iAdr]&&c[iAdr].v||'',
-              srv=c[iSrv]&&c[iSrv].v||'', tel=String(c[iTel]&&c[iTel].v||'').replace(/\D/g,''),
-              prijs=c[iPrijs]&&(c[iPrijs].f||c[iPrijs].v)||'';
-        const datStr=d.getDate()+'-'+(d.getMonth()+1);
-        out+=`<div class='klus'><b>${naam}</b> · ${datStr}${prijs?' · €'+String(prijs).replace('€',''):''}<br>${adr}<br><span class='hint'>${srv}</span><br>`
+              srv=String(c[iSrv]&&c[iSrv].v||''), tel=String(c[iTel]&&c[iTel].v||'').replace(/\D/g,''),
+              prijs=c[iPrijs>=0?iPrijs:0]&&iPrijs>=0&&(c[iPrijs].f||c[iPrijs].v)||'',
+              tv=iTv>=0&&c[iTv]&&c[iTv].v||'';
+        const sl=srv.toLowerCase();
+        let tas='🎒 Universele tas';
+        if(sl.includes('goot')||sl.includes('reinig'))tas='🎒 Goten-tas';
+        if(sl.includes('vogel'))tas='🎒 Vogelwering-tas';
+        if(sl.includes('nok')||sl.includes('vorst'))tas='🎒 Nok/specie-tas';
+        if(sl.includes('lood')||sl.includes('schoorsteen'))tas='🎒 Lood-tas';
+        if(sl.includes('dakkapel'))tas='🎒 Poets-tas';
+        items.push({d:d,html:`<div class='klus'><b>${naam}</b>${tv?' · '+tv:''}${prijs?' · €'+String(prijs).replace('€',''):''}<br>${adr}<br><span class='hint'>${srv.slice(0,80)} · <b>${tas}</b></span><br>`
            +`<a class='knop' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(adr)}&travelmode=driving'>🚗 Navigeer</a>`
-           +(tel?`<a class='knop tel' target='_blank' href='https://wa.me/${tel.startsWith('0')?'31'+tel.slice(1):tel}'>💬 App</a>`:'')+`</div>`;
+           +(tel?`<a class='knop tel' target='_blank' href='https://wa.me/${tel.startsWith('0')?'31'+tel.slice(1):tel}'>💬 App</a>`:'')+`</div>`});
+      }
+      items.sort((a,b)=>a.d-b.d);
+      let out='',vorige='';
+      for(const it of items){
+        const kop=dagen[it.d.getDay()]+' '+it.d.getDate()+'-'+(it.d.getMonth()+1);
+        if(dagFilter<0&&kop!==vorige){out+=`<div style='font-weight:700;margin:.5rem 0 .2rem'>${kop}</div>`;vorige=kop;}
+        out+=it.html;
       }
       P.innerHTML = n? out : '<div class="hint">Geen klussen voor deze dag in de planning 🎉</div>';
     }catch(e){P.innerHTML='<div class="hint">Kon planning niet lezen — check de sheet-link. <a href="#" onclick="localStorage.removeItem(\'plansheet\');laadPlanning();return false;">opnieuw instellen</a></div>';}
