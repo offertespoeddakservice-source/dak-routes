@@ -78,6 +78,11 @@ for (const b of buurten){
 
 buurtenLaag.addTo(map); stratenLaag.addTo(map); doneLaag.addTo(map);
 L.control.layers(null, {'Buurten':buurtenLaag,'Straten':stratenLaag,'Gedaan':doneLaag}).addTo(map);
-map.fitBounds(buurtenLaag.getBounds().pad(0.1));
+map.setView([51.65,5.3],10); // vangnet: altijd Brabant, ook als bounds stuk zijn
+try{
+  const b = buurtenLaag.getBounds();
+  if(b.isValid() && Math.abs(b.getCenter().lat-51.6)<2 && Math.abs(b.getCenter().lng-5.3)<2)
+    map.fitBounds(b.pad(0.1));
+}catch(e){}
 const ts=document.getElementById('t-straten');if(ts)ts.href=localStorage.getItem('laatste_plan')||'begin_lijst.html';
 </script></body></html>
