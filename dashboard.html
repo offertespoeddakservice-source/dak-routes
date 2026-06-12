@@ -1,6 +1,8 @@
 <!doctype html><html lang="nl"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>📊 Cijfers</title><style>
+<title>📊 Cijfers</title>
+<script>(function(){var P='4040';if(localStorage.getItem('sitepin')===P)return;var p=prompt('🔒 PIN?');if(p===P){localStorage.setItem('sitepin',P);return;}location.replace('about:blank');})();</script>
+<style>
 .tabs{display:flex;gap:.3rem;flex-wrap:wrap;font-size:.8rem;margin-bottom:.6rem;}.tabs a{background:#fff;border-radius:8px;padding:.35rem .55rem;text-decoration:none;color:#1a73e8;font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.06);}
 body{font-family:-apple-system,sans-serif;background:#f5f5f7;margin:0 auto;padding:.7rem;max-width:600px;color:#1c1c1e;}
 h1{font-size:1.2rem;margin:.3rem 0;}
@@ -18,7 +20,7 @@ h1{font-size:1.2rem;margin:.3rem 0;}
 .rij span{color:#555;}
 .hint{font-size:.78rem;color:#888;margin:.3rem 0;}
 </style></head><body>
-<div class="tabs"><a href="index.html">🏠</a><a href="vandaag.html">📅 Planning</a><a href="begin_lijst.html">📋 Buurten</a><a href="#" id="t-straten">🚶 Straten</a><a href="kaart.html">🗺️ Kaart</a><a href="dashboard.html">📊 Cijfers</a><a href="feedback.html">💬 Feedback</a></div>
+<div class="tabs"><a href="index.html">🏠</a><a href="vandaag.html">📅 Planning</a><a href="opvolgen.html">✅ Opvolgen</a><a href="begin_lijst.html">📋 Buurten</a><a href="#" id="t-straten">🚶 Straten</a><a href="kaart.html">🗺️ Kaart</a><a href="dashboard.html">📊 Cijfers</a><a href="pitch.html">📣 Pitch</a><a href="feedback.html">💬 Feedback</a></div>
 <h1>📊 Cijfers — terugkijken</h1>
 <div class="hint">Alles komt live uit je sheets en je straat-log. Niks bijhouden — gewoon kijken.</div>
 <div class="per">
@@ -38,8 +40,11 @@ const dagen=['zo','ma','di','wo','do','vr','za'];
 const maanden=['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
 const vandaag=new Date();
 let per='dag';
-let recs=[];          // {d, omzet, klus, offerte, verkocht, done, go}
+let recs=[];          // {d, omzet(wit), klus, offerte, verkocht, done, go}
 let tijden={};        // ymd -> {min,max} (ms) uit straat_log
+let verkochtRows=[];  // {d, key, bedrag} uit offerte-uitkomsten ('verkocht ... €X')
+let factNamen=new Set();
+function nkey(n){return String(n||'').toLowerCase().replace(/[^a-z0-9]/g,'');}
 
 function ymd(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function pDate(v){const m=String(v==null?'':v).match(/Date\((\d+),(\d+),(\d+)(?:,(\d+),(\d+),(\d+))?/);
@@ -62,23 +67,32 @@ function zet(p){per=p;
 
 function render(){
   const groepen={};
+  const leeg=(l)=>({l:l,omzet:0,zwart:0,klus:0,offerte:0,verkocht:0,done:0,go:0,uren:0,dgn:new Set()});
   for(const r of recs){
     const {k,l}=pkey(r.d);
-    const g=groepen[k]||(groepen[k]={l:l,omzet:0,klus:0,offerte:0,verkocht:0,done:0,go:0,uren:0,dgn:new Set()});
+    const g=groepen[k]||(groepen[k]=leeg(l));
     g.omzet+=r.omzet||0; g.klus+=r.klus||0; g.offerte+=r.offerte||0; g.verkocht+=r.verkocht||0;
     g.done+=r.done||0; g.go+=r.go||0;
     if(r.done||r.go)g.dgn.add(ymd(r.d));
   }
+  // ⚫ zwart = verkocht in offerte-sheet zónder factuur erbij (⚪ wit = facturen-omzet)
+  for(const v of verkochtRows){
+    if(v.key&&factNamen.has(v.key))continue;
+    const {k,l}=pkey(v.d);
+    const g=groepen[k]||(groepen[k]=leeg(l));
+    g.zwart+=v.bedrag||0;
+  }
   // looptijd (eerste→laatste log-actie per dag) bij de juiste periode optellen
   for(const [dag,t] of Object.entries(tijden)){
     const d=new Date(dag+'T12:00:00'); const {k,l}=pkey(d);
-    const g=groepen[k]||(groepen[k]={l:l,omzet:0,klus:0,offerte:0,verkocht:0,done:0,go:0,uren:0,dgn:new Set()});
+    const g=groepen[k]||(groepen[k]=leeg(l));
     if(t.max>t.min) g.uren+=(t.max-t.min)/36e5;
   }
   const keys=Object.keys(groepen).sort().reverse();
   const html=(g)=>{
     const delen=[];
-    if(g.omzet)delen.push('💶 '+geld(g.omzet));
+    if(g.omzet||g.zwart)delen.push('💶 '+geld(g.omzet+g.zwart)+(g.zwart?' (⚪ '+geld(g.omzet)+' · ⚫ '+geld(g.zwart)+')':''));
+    if(g.omzet)delen.push('🧾 btw '+geld(g.omzet*21/121));
     if(g.klus)delen.push('🔧 '+g.klus+' klus'+(g.klus>1?'sen':''));
     if(g.offerte)delen.push('📄 '+g.offerte+' offertes');
     if(g.verkocht)delen.push('✅ '+g.verkocht+' verkocht');
@@ -90,11 +104,14 @@ function render(){
   const nuK=pkey(vandaag).k;
   const top=groepen[nuK];
   document.getElementById('topkaart').innerHTML = '<b>Nu: '+pkey(vandaag).l+'</b><div class="cijfers">'
-    +'<div><span class="n">'+geld(top?top.omzet:0)+'</span><span class="t">omzet</span></div>'
+    +'<div><span class="n">'+geld(top?top.omzet+top.zwart:0)+'</span><span class="t">omzet</span></div>'
+    +'<div><span class="n">'+geld(top?top.omzet:0)+'</span><span class="t">⚪ wit (factuur)</span></div>'
+    +'<div><span class="n">'+geld(top?top.zwart:0)+'</span><span class="t">⚫ zwart</span></div>'
+    +'<div><span class="n">'+geld(top?top.omzet*21/121:0)+'</span><span class="t">🧾 btw opzij</span></div>'
     +'<div><span class="n">'+(top?top.klus:0)+'</span><span class="t">klussen</span></div>'
-    +'<div><span class="n">'+(top?top.offerte:0)+'</span><span class="t">offertes</span></div>'
     +'<div><span class="n">'+(top?top.done:0)+'</span><span class="t">straten af</span></div>'
-    +'<div><span class="n">'+(top?top.uren.toFixed(1):'0')+'u</span><span class="t">actief</span></div></div>';
+    +'<div><span class="n">'+(top?top.uren.toFixed(1):'0')+'u</span><span class="t">actief</span></div></div>'
+    +'<div class="hint">🧾 = 21/121 van je wit-omzet apart zetten voor de btw-aangifte. ⚫ = verkocht-uitkomsten zonder factuur.</div>';
   document.getElementById('lijst').innerHTML = keys.filter(k=>k!==nuK).slice(0,60).map(k=>
     '<div class="rij"><b>'+groepen[k].l+'</b><span>'+html(groepen[k])+'</span></div>').join('')
     || '<div class="hint">Nog geen eerdere periodes — dit vult zich vanzelf.</div>';
@@ -108,12 +125,17 @@ window.__off=function(r){
   try{
     const cols=r.table.cols.map(c=>(c.label||'').toLowerCase());
     const ix=(n)=>cols.findIndex(c=>c.includes(n));
-    const iTs=ix('timestamp')>=0?ix('timestamp'):0, iToel=ix('toelichting'), iVerk=ix('analyseren');
+    const iTs=ix('timestamp')>=0?ix('timestamp'):0, iToel=ix('toelichting'), iVerk=ix('analyseren'), iNm=ix('naam');
     for(const row of r.table.rows){
       const c=row.c; if(!c)continue;
       const d=pDate(c[iTs]&&c[iTs].v); if(!d)continue;
       const alles=(String(iToel>=0&&c[iToel]&&c[iToel].v||'')+' '+String(iVerk>=0&&c[iVerk]&&c[iVerk].v||'')).toLowerCase();
-      recs.push({d:d, offerte:1, verkocht:/verkocht/.test(alles)?1:0});
+      const vk=/verkocht/.test(alles);
+      recs.push({d:d, offerte:1, verkocht:vk?1:0});
+      if(vk){
+        const m=alles.match(/verkocht[^€0-9]*€?\s*([0-9][0-9.,]*)/);
+        verkochtRows.push({d:d, key:nkey(iNm>=0&&c[iNm]&&c[iNm].v), bedrag:m?parseFloat(m[1].replace(',','.')):0});
+      }
     }
   }catch(e){}
   klaar();
@@ -122,9 +144,11 @@ window.__fac=function(r){
   try{
     const cols=r.table.cols.map(c=>(c.label||'').toLowerCase());
     const ix=(n)=>cols.findIndex(c=>c.includes(n));
-    const iDat=ix('datum werkzaamheden'), iFd=ix('factuur datum'), iTs=ix('timestamp'), iTot=ix('totaal inclusief');
+    const iDat=ix('datum werkzaamheden'), iFd=ix('factuur datum'), iTs=ix('timestamp'), iTot=ix('totaal inclusief'), iNm=ix('naam');
     for(const row of r.table.rows){
       const c=row.c; if(!c)continue;
+      const nm=iNm>=0&&c[iNm]&&String(c[iNm].v||'').trim();
+      if(nm)factNamen.add(nkey(nm));
       const d=pDate(c[iDat]&&c[iDat].v)||pDate(iFd>=0&&c[iFd]&&c[iFd].v)||pDate(iTs>=0&&c[iTs]&&c[iTs].v);
       if(!d)continue;
       const tot=iTot>=0&&c[iTot]&&parseFloat(String(c[iTot].v).replace(/[^0-9.,-]/g,'').replace(',','.'))||0;

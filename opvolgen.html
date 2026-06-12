@@ -1,0 +1,154 @@
+<!doctype html><html lang="nl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>✅ Opvolgen</title>
+<script>(function(){var P='4040';if(localStorage.getItem('sitepin')===P)return;var p=prompt('🔒 PIN?');if(p===P){localStorage.setItem('sitepin',P);return;}location.replace('about:blank');})();</script>
+<style>
+.tabs{display:flex;gap:.3rem;flex-wrap:wrap;font-size:.8rem;margin-bottom:.6rem;}.tabs a{background:#fff;border-radius:8px;padding:.35rem .55rem;text-decoration:none;color:#1a73e8;font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.06);}
+body{font-family:-apple-system,sans-serif;background:#f5f5f7;margin:0 auto;padding:.7rem;max-width:600px;color:#1c1c1e;}
+h1{font-size:1.2rem;margin:.3rem 0;}
+h2{font-size:1rem;margin:.9rem 0 .3rem;}
+.hint{font-size:.78rem;color:#888;margin:.3rem 0;}
+.kaart{background:#fff;border-radius:11px;padding:.6rem .8rem;margin:.45rem 0;box-shadow:0 1px 2px rgba(0,0,0,.06);font-size:.88rem;}
+.kaart b{font-size:.95rem;}
+.kaart.dicht{opacity:.6;}
+.status{font-size:.75rem;color:#1a9850;font-weight:600;margin:.15rem 0;}
+.knop{display:inline-block;border:none;color:#fff;text-decoration:none;padding:.4rem .65rem;border-radius:7px;font-size:.78rem;font-weight:600;margin:.2rem .25rem 0 0;cursor:pointer;}
+.k-wa{background:#25d366;}.k-wa2{background:#0a8f43;}.k-afs{background:#1a73e8;}.k-vk{background:#7b1fa2;}.k-gi{background:#9aa0a6;}
+.tpl{background:#fff;border-radius:10px;padding:.6rem .8rem;margin:.4rem 0;font-size:.84rem;box-shadow:0 1px 2px rgba(0,0,0,.05);}
+.tpl b{display:block;margin-bottom:.2rem;}
+.tpl .txt{background:#f5f7fa;border-radius:7px;padding:.45rem .6rem;white-space:pre-wrap;line-height:1.45;}
+.kopieer{border:none;background:#e8f0fe;color:#1a73e8;border-radius:7px;padding:.3rem .6rem;font-size:.75rem;font-weight:700;cursor:pointer;margin-top:.3rem;}
+</style></head><body>
+<div class="tabs"><a href="index.html">🏠</a><a href="vandaag.html">📅 Planning</a><a href="opvolgen.html">✅ Opvolgen</a><a href="begin_lijst.html">📋 Buurten</a><a href="#" id="t-straten">🚶 Straten</a><a href="kaart.html">🗺️ Kaart</a><a href="dashboard.html">📊 Cijfers</a><a href="pitch.html">📣 Pitch</a><a href="feedback.html">💬 Feedback</a></div>
+<h1>✅ Opvolgen</h1>
+<div class="hint">Alles komt live uit je offerte-sheet. Elke knop die je tikt wordt gelogd — de lijst onthoudt het, óók morgen. Mensen met een factuur vallen er automatisch uit.</div>
+
+<div id="afspraken"></div>
+<div id="open"><div class="hint">laden…</div></div>
+<details><summary style="cursor:pointer;font-weight:600;color:#777;margin-top:.7rem;">✖ Afgesloten / al klant</summary><div id="dicht"></div></details>
+
+<h2>📝 Berichten-templates</h2>
+<div class="hint">De knoppen hierboven gebruiken deze teksten automatisch. Kopiëren kan ook.</div>
+<div id="tpls"></div>
+
+<script>
+const LOGURL='https://script.google.com/macros/s/AKfycbzMkmZKeadRlwNxTzl9io-vftCurSiGP2lz2rDFLSkVVADnzjOkwzqoHlstRCFyj1ppjA/exec';
+const SHEETS = ['1PF_2fViLo7MasoTIw5vuba4MzxvOvAl_OKl7tMBBZgY','1K7Pns_wrwX0X5liDe3P9Wx3LWcMT5icjw1IA6Na53X8'];
+const vandaag=new Date();
+function nkey(n){return String(n||'').toLowerCase().replace(/[^a-z0-9]/g,'');}
+function log(actie,naam){try{fetch(LOGURL+'?'+new URLSearchParams({buurt:'OPVOLG',straat:naam,actie:actie}),{mode:'no-cors'});}catch(e){}}
+function st(key){try{return JSON.parse(localStorage.getItem('opv_'+key)||'{}');}catch(e){return {};}}
+function zetSt(key,veld){const s=st(key);s[veld]=new Date().toISOString().slice(0,10);localStorage.setItem('opv_'+key,JSON.stringify(s));}
+
+const TPLS = {
+ app1:{naam:'1e opvolg-app (buurt-frame)',txt:(vn)=>'Hoi '+vn+', donderdag zijn we weer bij u in de buurt. We zouden de klus dan meteen kunnen meenemen — scheelt u de voorrijkosten. Zal ik \'m inplannen, of liever niet? Allebei prima 👍'},
+ app2:{naam:'2e reminder (laatste keer)',txt:(vn)=>'Hoi '+vn+', ik ben m\'n planning aan het opruimen 🙂 U staat er nog tussen — zal ik de klus inplannen of de offerte laten vervallen? Kort ja of nee is genoeg, allebei prima 👍'},
+ afspraak:{naam:'Afspraak-bevestiging',txt:(vn)=>'Top '+vn+'! Ik zet u in de planning. U krijgt die ochtend een appje wanneer ik eraan kom — u hoeft er niet voor thuis te blijven 👍'},
+ klaar:{naam:'Klus klaar (met foto)',txt:(vn)=>'Goedendag '+vn+', de klus is klaar — foto hierbij 📸 Alles netjes achtergelaten. Het factuurtje volgt. Bedankt voor het vertrouwen!'},
+ review:{naam:'Review-vraag (na tevreden reactie)',txt:(vn)=>'Fijn dat u tevreden bent '+vn+'! Zou u dat in een korte Google-review willen zetten? Helpt mij enorm: [review-link]. En zal ik volgend jaar weer langskomen voor de goten?'},
+};
+
+let opvolg=[], factNamen=new Set(), sheetIdx=0, logKlaar=false;
+
+window.__opv=function(r){
+  try{
+    const cols=r.table.cols.map(c=>(c.label||'').toLowerCase());
+    const ix=(n)=>cols.findIndex(c=>c.includes(n));
+    const iNaam=ix('naam'), iTel=ix('telefoon'), iSrv=ix('service'),
+          iToel=ix('toelichting'), iVerk=ix('analyseren'), iTs=ix('timestamp')>=0?ix('timestamp'):ix('tijd');
+    if(sheetIdx===0){
+      for(const row of r.table.rows){
+        const c=row.c; if(!c)continue;
+        const naam=c[iNaam]&&String(c[iNaam].v||'').trim(); const tel=String(c[iTel]&&c[iTel].v||'').replace(/\D/g,'');
+        if(!naam||!tel)continue;
+        const alles=(String(c[iToel]&&c[iToel].v||'')+' '+String(iVerk>=0&&c[iVerk]&&c[iVerk].v||'')).toLowerCase();
+        const srv=String(c[iSrv]&&c[iSrv].v||'');
+        if(/verkocht|afgevallen|niks|niet thuis|gedaan/.test(alles))continue;
+        const isTw=/twijfel/.test(alles), isOf=/offerte/.test(srv.toLowerCase());
+        if(!isTw&&!isOf)continue;
+        let dgn='';
+        const tm=iTs>=0&&c[iTs]&&String(c[iTs].v||'').match(/Date\((\d+),(\d+),(\d+)/);
+        if(tm){const dd=new Date(+tm[1],+tm[2],+tm[3]);dgn=Math.floor((vandaag-dd)/864e5);}
+        opvolg.push({naam:naam,key:nkey(naam),tel:tel,dgn:dgn,srv:srv.slice(0,60),badge:isTw?'🤔 twijfel':'📄 offerte open'});
+      }
+    } else {
+      for(const row of r.table.rows){
+        const c=row.c; if(!c)continue;
+        const naam=c[iNaam]&&String(c[iNaam].v||'').trim();
+        if(naam)factNamen.add(nkey(naam));
+      }
+    }
+  }catch(e){}
+  sheetIdx++;
+  if(sheetIdx<2){laad(1);return;}
+  render();
+};
+// straat_log teruglezen zodat status overal klopt (ook op een ander apparaat)
+window.__slog=function(r){
+  try{
+    for(const row of r.table.rows){
+      const c=row.c; if(!c||!c[1])continue;
+      if(String(c[1].v||'')!=='OPVOLG')continue;
+      const naam=String(c[2]&&c[2].v||''), actie=String(c[3]&&c[3].v||'');
+      const key=nkey(naam); if(!key)continue;
+      const m={'opvolg: 1e app':'app1','opvolg: 2e app':'app2','opvolg: afspraak':'afspraak','opvolg: geen interesse':'gi','opvolg: verkocht':'verkocht'};
+      if(m[actie]){const s=st(key);if(!s[m[actie]]){s[m[actie]]='eerder';localStorage.setItem('opv_'+key,JSON.stringify(s));}}
+    }
+  }catch(e){}
+  logKlaar=true; if(sheetIdx>=2)render();
+};
+
+function wa(tel,txt){return 'https://wa.me/'+(tel.startsWith('0')?'31'+tel.slice(1):tel)+'?text='+encodeURIComponent(txt);}
+
+function actie(key,naam,wat){
+  zetSt(key,wat==='1e app'?'app1':wat==='2e app'?'app2':wat==='afspraak'?'afspraak':wat==='verkocht'?'verkocht':'gi');
+  log('opvolg: '+wat,naam);
+  render();
+}
+
+function render(){
+  const A=[],O=[],D=[];
+  const gezien=new Set();
+  for(const o of opvolg){
+    if(gezien.has(o.key+o.dgn))continue; gezien.add(o.key+o.dgn);
+    const s=st(o.key);
+    const vn=o.naam.split(' ')[0];
+    let statusTekst=[];
+    if(s.app1)statusTekst.push('💬 1e app: '+s.app1);
+    if(s.app2)statusTekst.push('💬 2e app: '+s.app2);
+    const stHtml=statusTekst.length?`<div class='status'>${statusTekst.join(' · ')}</div>`:'';
+    if(factNamen.has(o.key)){D.push(`<div class='kaart dicht'><b>${o.naam}</b> · ✅ al klant (staat in facturen)</div>`);continue;}
+    if(s.gi){D.push(`<div class='kaart dicht'><b>${o.naam}</b> · ✖ geen interesse (${s.gi})</div>`);continue;}
+    if(s.verkocht){D.push(`<div class='kaart dicht'><b>${o.naam}</b> · ✅ verkocht (${s.verkocht}) — zet 'm in de offerte-sheet als je wilt</div>`);continue;}
+    const appKnop = !s.app1
+      ? `<a class='knop k-wa' href='${wa(o.tel,TPLS.app1.txt(vn))}' target='_blank' onclick="actie('${o.key}','${o.naam.replace(/'/g,'')}','1e app')">💬 1e opvolg-app</a>`
+      : (!s.app2 ? `<a class='knop k-wa2' href='${wa(o.tel,TPLS.app2.txt(vn))}' target='_blank' onclick="actie('${o.key}','${o.naam.replace(/'/g,'')}','2e app')">💬 2e reminder</a>`
+                 : `<span class='hint'>2 apps verstuurd — wachten of afsluiten</span>`);
+    const rest = `<button class='knop k-afs' onclick="actie('${o.key}','${o.naam.replace(/'/g,'')}','afspraak')">📅 Afspraak!</button>`
+               + `<button class='knop k-vk' onclick="actie('${o.key}','${o.naam.replace(/'/g,'')}','verkocht')">✅ Verkocht</button>`
+               + `<button class='knop k-gi' onclick="actie('${o.key}','${o.naam.replace(/'/g,'')}','geen interesse')">✖ Geen interesse</button>`;
+    const kaart=`<div class='kaart'><b>${o.naam}</b> · ${o.badge}${o.dgn!==''?' · '+o.dgn+' dgn':''}<br><span class='hint'>${o.srv}</span>${stHtml}<div>${appKnop}<br>${rest}</div></div>`;
+    if(s.afspraak)A.push(`<div class='kaart'><b>${o.naam}</b> · 📅 afspraak gemaakt (${s.afspraak})<br><span class='hint'>Zet de datum in de offerte-sheet bij 'Datum werkzaamheden' → komt vanzelf in je klusdag-planning.</span><br><a class='knop k-wa' href='${wa(o.tel,TPLS.afspraak.txt(vn))}' target='_blank'>💬 Bevestig-app</a><button class='knop k-gi' onclick="actie('${o.key}','${o.naam.replace(/'/g,'')}','geen interesse')">✖ toch niet</button></div>`);
+    else O.push(kaart);
+  }
+  document.getElementById('afspraken').innerHTML=A.length?'<h2>📅 Afspraak gemaakt — inplannen!</h2>'+A.join(''):'';
+  document.getElementById('open').innerHTML=O.length?'<h2>📬 Open ('+O.length+')</h2>'+O.join(''):'<div class="hint">Niks open — lekker bezig 💪</div>';
+  document.getElementById('dicht').innerHTML=D.join('')||'<div class="hint">nog leeg</div>';
+}
+
+// templates tonen + kopieer
+document.getElementById('tpls').innerHTML=Object.values(TPLS).map((t,i)=>
+  `<div class='tpl'><b>${t.naam}</b><div class='txt' id='tt${i}'>${t.txt('[naam]')}</div><button class='kopieer' onclick="navigator.clipboard.writeText(document.getElementById('tt${i}').textContent).then(()=>this.textContent='✓ gekopieerd')">📋 Kopieer</button></div>`).join('');
+
+function laad(i){
+  const s=document.createElement('script');
+  s.src='https://docs.google.com/spreadsheets/d/'+SHEETS[i]+'/gviz/tq?tqx=out:json;responseHandler:__opv';
+  s.onerror=()=>{sheetIdx++;if(sheetIdx<2)laad(1);else render();};
+  document.body.appendChild(s);
+}
+laad(0);
+const sl=document.createElement('script');
+sl.src='https://docs.google.com/spreadsheets/d/'+SHEETS[0]+'/gviz/tq?tqx=out:json;responseHandler:__slog&sheet=straat_log&headers=0';
+document.body.appendChild(sl);
+const ts=document.getElementById('t-straten');if(ts)ts.href=localStorage.getItem('laatste_plan')||'begin_lijst.html';
+</script></body></html>

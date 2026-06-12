@@ -1,6 +1,13 @@
 <!doctype html><html lang="nl"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>📅 Vandaag</title><style>
+<title>📅 Vandaag</title>
+<script>(function(){var P='4040';if(localStorage.getItem('sitepin')===P)return;var p=prompt('🔒 PIN?');if(p===P){localStorage.setItem('sitepin',P);return;}location.replace('about:blank');})();</script>
+<style>
+.afform{background:#f5f7fa;border-radius:8px;padding:.5rem;margin-top:.35rem;font-size:.82rem;}
+.afv{margin:.25rem 0;}
+.afk{border:1px solid #ccc;background:#fff;border-radius:6px;padding:.25rem .55rem;font-size:.76rem;margin:.1rem .15rem;cursor:pointer;}
+.afk.aan{background:#1a73e8;color:#fff;border-color:#1a73e8;}
+.afnot{width:100%;border:1px solid #ddd;border-radius:6px;padding:.4rem;font-size:.8rem;margin:.25rem 0;box-sizing:border-box;}
 .tabs{display:flex;gap:.3rem;flex-wrap:wrap;font-size:.8rem;margin-bottom:.6rem;}.tabs a{background:#fff;border-radius:8px;padding:.35rem .55rem;text-decoration:none;color:#1a73e8;font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.06);}
 .allesbtn{border:none;background:#e8f0fe;color:#1a73e8;border-radius:7px;padding:.25rem .6rem;font-size:.75rem;font-weight:700;cursor:pointer;float:right;}
 body{font-family:-apple-system,sans-serif;background:#f5f5f7;margin:0 auto;padding:.7rem;max-width:600px;color:#1c1c1e;}
@@ -32,7 +39,7 @@ details summary{cursor:pointer;font-weight:600;color:#1a73e8;}
 .dagkeuze button{border:1px solid #ccc;background:#fff;border-radius:7px;padding:.35rem .7rem;font-size:.8rem;cursor:pointer;}
 .dagkeuze button.act{background:#333;color:#333;background:#333;color:#fff;border-color:#333;}
 </style></head><body>
-<div class="tabs"><a href="index.html">🏠</a><a href="vandaag.html">📅 Planning</a><a href="begin_lijst.html">📋 Buurten</a><a href="#" id="t-straten">🚶 Straten</a><a href="kaart.html">🗺️ Kaart</a><a href="dashboard.html">📊 Cijfers</a><a href="feedback.html">💬 Feedback</a></div>
+<div class="tabs"><a href="index.html">🏠</a><a href="vandaag.html">📅 Planning</a><a href="opvolgen.html">✅ Opvolgen</a><a href="begin_lijst.html">📋 Buurten</a><a href="#" id="t-straten">🚶 Straten</a><a href="kaart.html">🗺️ Kaart</a><a href="dashboard.html">📊 Cijfers</a><a href="pitch.html">📣 Pitch</a><a href="feedback.html">💬 Feedback</a></div>
 <h1>📅 Vandaag</h1>
 <div class="groet" id="groet"></div>
 <div class="modes">
@@ -89,6 +96,59 @@ details summary{cursor:pointer;font-weight:600;color:#1a73e8;}
 // Sheets (link-leesbaar): [0] = offerte/planning, [1] = facturen (Datum werkzaamheden)
 const LOGURL='https://script.google.com/macros/s/AKfycbzMkmZKeadRlwNxTzl9io-vftCurSiGP2lz2rDFLSkVVADnzjOkwzqoHlstRCFyj1ppjA/exec';
 function log(actie,straat){try{fetch(LOGURL+'?'+new URLSearchParams({buurt:'VANDAAG',straat:straat||'-',actie:actie}),{mode:'no-cors'});}catch(e){}}
+function logb(buurt,actie,straat){try{fetch(LOGURL+'?'+new URLSearchParams({buurt:buurt,straat:straat||'-',actie:actie}),{mode:'no-cors'});}catch(e){}}
+function nkey(n){return String(n||'').toLowerCase().replace(/[^a-z0-9]/g,'');}
+function opvSt(key){try{return JSON.parse(localStorage.getItem('opv_'+key)||'{}');}catch(e){return {};}}
+
+// ---- klus afronden (knoppen → sheet, geen los sheet-werk) ----
+const afData={}, afNamen={};
+function afBtn(ki,g,v){return `<button class="afk" onclick="afKies(${ki},'${g}','${v}',this)">${v}</button>`;}
+function afForm(ki){
+  return `<div class="afform" id="af_${ki}" style="display:none">
+  <div class="afv"><b>Nok besproken?</b> ${afBtn(ki,'nok','ja')}${afBtn(ki,'nok','nee')}</div>
+  <div class="afv"><b>Reactie klant:</b> ${afBtn(ki,'reactie','positief')}${afBtn(ki,'reactie','later')}${afBtn(ki,'reactie','nee')}</div>
+  <div class="afv"><b>Upsell gespot:</b> ${afBtn(ki,'upsell','nok')}${afBtn(ki,'upsell','goot')}${afBtn(ki,'upsell','vogelwering')}${afBtn(ki,'upsell','lood')}${afBtn(ki,'upsell','niks')}</div>
+  <div class="afv"><b>Betaald:</b> ${afBtn(ki,'betaald','contant')}${afBtn(ki,'betaald','factuur volgt')}${afBtn(ki,'betaald','nog niet')}</div>
+  <input class="afnot" id="afn_${ki}" placeholder="✏️ extra notitie — alles wat geen knop heeft">
+  <div class="afv"><b>📸 Foto:</b> <input type="file" accept="image/*" capture="environment" id="aff_${ki}" style="font-size:.75rem"></div>
+  <button class="knop" style="border:none;background:#1a9850" onclick="afOpslaan(${ki})">📤 Opslaan → komt in je sheet</button>
+  </div>`;
+}
+function afToggle(ki){const d=document.getElementById('af_'+ki);if(d)d.style.display=d.style.display==='none'?'':'none';}
+function afKies(ki,g,v,btn){
+  afData[ki]=afData[ki]||{};
+  if(g==='upsell'){const a=afData[ki].upsell=afData[ki].upsell||[];const i=a.indexOf(v);
+    if(i>=0){a.splice(i,1);btn.classList.remove('aan');}else{a.push(v);btn.classList.add('aan');}return;}
+  afData[ki][g]=v;
+  [...btn.parentElement.querySelectorAll('button')].forEach(b=>b.classList.remove('aan'));
+  btn.classList.add('aan');
+}
+function fotoUp(file,naam){
+  const img=new Image();const rd=new FileReader();
+  rd.onload=()=>{img.onload=()=>{
+    const c=document.createElement('canvas');const sch=Math.min(1,1200/Math.max(img.width,img.height));
+    c.width=Math.round(img.width*sch);c.height=Math.round(img.height*sch);
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+    const b64=c.toDataURL('image/jpeg',0.72);
+    try{fetch(LOGURL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({buurt:'KLUS',straat:naam,actie:'foto',foto:b64})});}catch(e){}
+    logb('KLUS','foto gemaakt',naam);
+  };img.src=rd.result;};
+  rd.readAsDataURL(file);
+}
+function afOpslaan(ki){
+  const d=afData[ki]||{};const ni=document.getElementById('afn_'+ki);const not=ni?ni.value.trim():'';
+  const delen=[];
+  if(d.nok)delen.push('nok besproken='+d.nok);
+  if(d.reactie)delen.push('reactie='+d.reactie);
+  if(d.upsell&&d.upsell.length)delen.push('upsell='+d.upsell.join('+'));
+  if(d.betaald)delen.push('betaald='+d.betaald);
+  if(not)delen.push('notitie: '+not);
+  logb('KLUS','klus afgerond · '+(delen.join(' · ')||'geen details'),afNamen[ki]);
+  const f=document.getElementById('aff_'+ki);
+  if(f&&f.files&&f.files[0])fotoUp(f.files[0],afNamen[ki]);
+  document.getElementById('af_'+ki).innerHTML='<div class="hint">✅ opgeslagen — staat in je sheet (tab straat_log)</div>';
+}
 const SHEETS = ['1PF_2fViLo7MasoTIw5vuba4MzxvOvAl_OKl7tMBBZgY','1K7Pns_wrwX0X5liDe3P9Wx3LWcMT5icjw1IA6Na53X8'];
 const vandaag = new Date(); const dagISO = vandaag.toISOString().slice(0,10);
 const dagen=['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'];
@@ -166,7 +226,8 @@ function render(){
   P.innerHTML = items.length? out : '<div class="hint">Geen klussen voor deze dag 🎉</div>';
 }
 
-let sheetIdx = 0; let opvolg=[]; let betalen=[];
+let sheetIdx = 0; let opvolg=[]; let betalen=[]; let factNamen=new Set();
+function opvZet(key,veld){const s=opvSt(key);s[veld]=new Date().toISOString().slice(0,10);localStorage.setItem('opv_'+key,JSON.stringify(s));}
 window.__plan=function(r){
   try{
     const cols=r.table.cols.map(c=>(c.label||'').toLowerCase());
@@ -190,7 +251,7 @@ window.__plan=function(r){
         if(tm){const dd=new Date(+tm[1],+tm[2],+tm[3]);dgn=Math.floor((vandaag-dd)/864e5);if(isOf&&dgn<4)continue;}
         const vn=naam.split(' ')[0];
         const msg=encodeURIComponent('Hoi '+vn+', donderdag zijn we weer bij u in de buurt. We zouden de klus dan meteen kunnen meenemen — scheelt u de voorrijkosten. Zal ik \'m inplannen, of liever niet? Allebei prima 👍');
-        opvolg.push({naam:naam,dgn:dgn,badge:isTw?'🤔 twijfel':'📄 offerte open',
+        opvolg.push({naam:naam,key:nkey(naam),dgn:dgn,badge:isTw?'🤔 twijfel':'📄 offerte open',
           wa:'https://wa.me/'+(tel.startsWith('0')?'31'+tel.slice(1):tel)+'?text='+msg});
       }
     }
@@ -200,6 +261,8 @@ window.__plan=function(r){
             iIdl=ix('ideal'), iFnr=ix('factuurnr');
       for(const row of r.table.rows){
         const c=row.c; if(!c)continue;
+        const nm=c[iNaam]&&String(c[iNaam].v||'').trim();
+        if(nm)factNamen.add(nkey(nm));
         const ntbRaw=iNtb>=0&&c[iNtb]&&c[iNtb].v;
         const ntb=parseFloat(String(ntbRaw==null?'':ntbRaw).replace(/[^0-9.,-]/g,'').replace(',','.'))||0;
         if(ntb<=0)continue;
@@ -232,9 +295,12 @@ window.__plan=function(r){
       if(sl.includes('nok')||sl.includes('vorst'))tas='🎒 Nok/specie-tas';
       if(sl.includes('lood')||sl.includes('schoorsteen'))tas='🎒 Lood-tas';
       if(sl.includes('dakkapel'))tas='🎒 Poets-tas';
+      const ki=alleKlussen.length; afNamen[ki]=String(naam);
       alleKlussen.push({d:d,html:`<div class='klus'><b>${naam}</b>${tv?' · '+tv:''}${prijs?' · €'+String(prijs).replace('€',''):''}<br>${adr}<br><span class='hint'>${srv.slice(0,80)} · <b>${tas}</b></span><br>`
         +`<a class='knop' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(adr)}&travelmode=driving'>🚗 Navigeer</a>`
-        +(tel?`<a class='knop tel' target='_blank' href='https://wa.me/${tel.startsWith('0')?'31'+tel.slice(1):tel}'>💬 App</a>`:'')+`</div>`});
+        +(tel?`<a class='knop tel' target='_blank' href='https://wa.me/${tel.startsWith('0')?'31'+tel.slice(1):tel}'>💬 App</a>`:'')
+        +`<button class='knop' style='border:none;background:#7b1fa2' onclick='afToggle(${ki})'>✅ Afronden</button>`
+        +afForm(ki)+`</div>`});
     }
   }catch(e){}
   sheetIdx++;
@@ -252,11 +318,19 @@ window.__plan=function(r){
       +(o.wa?`<a class='knop' data-n='${o.naam.replace(/'/g,'')}' style='background:#e08c00' href='${o.wa}' target='_blank'>💶 Herinnering</a>`:`<span class='hint'>geen 06 in de sheet</span>`)+`</div>`).join('');
     document.getElementById('betaallijst').querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>log('betaalherinnering: '+a.dataset.n,'-')));
   }
-  if(opvolg.length){
+  // al-klant (facturen) en afgesloten/afspraak (✅ Opvolgen-pagina) eruit filteren
+  const open=opvolg.filter(o=>{const s=opvSt(o.key);return !factNamen.has(o.key)&&!s.gi&&!s.afspraak&&!s.verkocht;});
+  if(open.length){
     document.getElementById('opvolgblok').style.display='';
-    document.getElementById('opvN').textContent='('+opvolg.length+')';
-    document.getElementById('opvolglijst').innerHTML=opvolg.slice(0,20).map(o=>
-      `<div class='klus'><b>${o.naam}</b> · ${o.badge}${o.dgn!==''?' · '+o.dgn+' dgn':''} <a class='knop' style='background:#25d366' href='${o.wa}' target='_blank'>💬 Opvolg-app</a></div>`).join('');
+    document.getElementById('opvN').textContent='('+open.length+')';
+    document.getElementById('opvolglijst').innerHTML=open.slice(0,5).map(o=>
+      `<div class='klus'><b>${o.naam}</b> · ${o.badge}${o.dgn!==''?' · '+o.dgn+' dgn':''} <a class='knop' data-k='${o.key}' data-n='${o.naam.replace(/'/g,'')}' style='background:#25d366' href='${o.wa}' target='_blank'>💬 ${opvSt(o.key).app1?'2e reminder':'Opvolg-app'}</a></div>`).join('')
+      +`<div class='hint' style='margin-top:.4rem'><a href='opvolgen.html'><b>→ Alle ${open.length} opvolgingen + afspraak/geen-interesse knoppen + templates</b></a></div>`;
+    document.getElementById('opvolglijst').querySelectorAll('a[data-k]').forEach(a=>a.addEventListener('click',()=>{
+      const w=opvSt(a.dataset.k).app1?'2e app':'1e app';
+      opvZet(a.dataset.k,w==='1e app'?'app1':'app2');
+      logb('OPVOLG','opvolg: '+w,a.dataset.n);
+    }));
   }
   document.getElementById('autotekst').textContent =
     nVandaag>0 ? `🤖 automatisch herkend: ${nVandaag} klus(sen) gepland vandaag → klusdag`
