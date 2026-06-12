@@ -239,7 +239,20 @@ function render(){
   P.innerHTML = items.length? out : '<div class="hint">Geen klussen voor deze dag 🎉</div>';
 }
 
-let sheetIdx = 0; let opvolg=[]; let betalen=[]; let factNamen=new Set();
+let sheetIdx = 0; let opvolg=[]; let betalen=[];
+const betaalWegSet=JSON.parse(localStorage.getItem('betaal_weg')||'{}');
+function betaalWeg(k){betaalWegSet[k]=1;localStorage.setItem('betaal_weg',JSON.stringify(betaalWegSet));log('betaal_weg: '+k,'-');renderBetalen();}
+function renderBetalen(){
+  const lijst=betalen.filter(o=>!betaalWegSet[o.key]);
+  if(!lijst.length){document.getElementById('betaalblok').style.display='none';return;}
+  document.getElementById('betaalblok').style.display='';
+  document.getElementById('betN').textContent='('+lijst.length+')';
+  document.getElementById('betaallijst').innerHTML=lijst.slice(0,20).map(o=>
+    `<div class='klus'><b>${o.naam}</b> · €${o.bedrag.toFixed(2).replace('.',',')}${o.over?' · ⚠️ over vervaldatum':(o.dgn!==null?' · '+o.dgn+' dgn open':'')} `
+    +(o.wa?`<a class='knop' data-n='${o.naam.replace(/'/g,'')}' style='background:#e08c00' href='${o.wa}' target='_blank'>💶 Herinnering</a>`:`<span class='hint'>geen 06 in de sheet</span>`)
+    +`<button class='allesbtn' title='weghalen uit deze lijst' onclick='betaalWeg(${JSON.stringify(o.key)})'>✕ weg</button></div>`).join('');
+  document.getElementById('betaallijst').querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>log('betaalherinnering: '+a.dataset.n,'-')));
+} let factNamen=new Set();
 function opvZet(key,veld){const s=opvSt(key);s[veld]=new Date().toISOString().slice(0,10);localStorage.setItem('opv_'+key,JSON.stringify(s));}
 window.__plan=function(r){
   try{
@@ -279,7 +292,9 @@ window.__plan=function(r){
         const ntbRaw=iNtb>=0&&c[iNtb]&&c[iNtb].v;
         const ntb=parseFloat(String(ntbRaw==null?'':ntbRaw).replace(/[^0-9.,-]/g,'').replace(',','.'))||0;
         if(ntb<=0)continue;
-        const naam=String(c[iNaam]&&c[iNaam].v||'?').trim();
+        const naamKols=cols.map((cc,j)=>cc.includes('naam')?j:-1).filter(j=>j>=0);
+        let naam=''; for(const j of naamKols){const w=String(c[j]&&c[j].v||'').trim(); if(w){naam=w;break;}}
+        naam=naam||'?';
         const tel=String(c[iTel]&&c[iTel].v||'').replace(/\D/g,'');
         const pd=(i)=>{const m=i>=0&&c[i]&&String(c[i].v||'').match(/Date\((\d+),(\d+),(\d+)/);return m?new Date(+m[1],+m[2],+m[3]):null;};
         const fd=pd(iFdat)||pd(iTs), vv=pd(iVerv);
@@ -290,7 +305,7 @@ window.__plan=function(r){
         const link=iIdl>=0&&c[iIdl]&&String(c[iIdl].v||'').trim()||'';
         const vn=naam.split(' ')[0];
         const msg=encodeURIComponent('Goedendag '+vn+', een vriendelijke herinnering: factuur'+(fnr?' '+fnr:'')+' van €'+ntb.toFixed(2).replace('.',',')+' staat nog open. '+(link?'Betalen kan direct via deze link: '+link:'Het rekeningnummer staat op de factuur.')+' Alvast bedankt! 🙏 Rens — Spoed Dak Service');
-        betalen.push({naam:naam,bedrag:ntb,dgn:dgn,over:over,
+        betalen.push({key:String(fnr||naam)+'|'+ntb.toFixed(2),naam:naam,bedrag:ntb,dgn:dgn,over:over,
           wa:tel.length>=10?'https://wa.me/'+(tel.startsWith('0')?'31'+tel.slice(1):tel)+'?text='+msg:null});
       }
     }
@@ -324,14 +339,7 @@ window.__plan=function(r){
   const man = localStorage.getItem('dagmode_man_'+dagISO);
   const auto = nVandaag>0?'klus':'loop';
   if(!man) zetMode(auto,false);
-  if(betalen.length){
-    document.getElementById('betaalblok').style.display='';
-    document.getElementById('betN').textContent='('+betalen.length+')';
-    document.getElementById('betaallijst').innerHTML=betalen.slice(0,20).map(o=>
-      `<div class='klus'><b>${o.naam}</b> · €${o.bedrag.toFixed(2).replace('.',',')}${o.over?' · ⚠️ over vervaldatum':(o.dgn!==null?' · '+o.dgn+' dgn open':'')} `
-      +(o.wa?`<a class='knop' data-n='${o.naam.replace(/'/g,'')}' style='background:#e08c00' href='${o.wa}' target='_blank'>💶 Herinnering</a>`:`<span class='hint'>geen 06 in de sheet</span>`)+`</div>`).join('');
-    document.getElementById('betaallijst').querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>log('betaalherinnering: '+a.dataset.n,'-')));
-  }
+  renderBetalen();
   // al-klant (facturen) en afgesloten/afspraak (✅ Opvolgen-pagina) eruit filteren
   const open=opvolg.filter(o=>{const s=opvSt(o.key);return !factNamen.has(o.key)&&!s.gi&&!s.afspraak&&!s.verkocht;});
   if(open.length){
