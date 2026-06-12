@@ -1,0 +1,97 @@
+<!doctype html><html lang="nl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>👷 Werklijst</title>
+<style>
+body{font-family:-apple-system,sans-serif;background:#f5f5f7;margin:0 auto;padding:.8rem;max-width:600px;color:#1c1c1e;}
+h1{font-size:1.2rem;margin:.3rem 0;}
+.hint{font-size:.78rem;color:#888;margin:.3rem 0;}
+.kaart{background:#fff;border-radius:11px;padding:.6rem .8rem;margin:.45rem 0;box-shadow:0 1px 2px rgba(0,0,0,.06);font-size:.9rem;}
+.kaart.af{opacity:.55;}
+.knop{display:inline-block;border:none;color:#fff;text-decoration:none;padding:.45rem .7rem;border-radius:7px;font-size:.8rem;font-weight:600;margin:.2rem .25rem 0 0;cursor:pointer;}
+.k-nav{background:#34a853;}.k-klaar{background:#333;}.k-s1{background:#1a73e8;}.k-s2{background:#7b1fa2;}.k-up{background:#e08c00;}.k-not{background:#9aa0a6;}
+.naam{font-weight:700;font-size:1rem;}
+.login{background:#fff;border-radius:12px;padding:1rem;margin-top:2rem;box-shadow:0 1px 3px rgba(0,0,0,.08);}
+.login input{width:100%;border:1px solid #ddd;border-radius:8px;padding:.6rem;font-size:1rem;margin:.3rem 0;box-sizing:border-box;}
+.login button{width:100%;border:none;background:#1a73e8;color:#fff;border-radius:8px;padding:.7rem;font-size:1rem;font-weight:700;margin-top:.4rem;}
+.kop{background:#1c1c1e;color:#fff;border-radius:10px;padding:.5rem .8rem;font-size:.85rem;margin:.4rem 0;display:flex;justify-content:space-between;align-items:center;}
+.uitlog{background:none;border:1px solid #777;color:#fff;border-radius:6px;padding:.2rem .5rem;font-size:.7rem;}
+</style></head><body>
+<h1>👷 Werklijst — Spoed Dak Service</h1>
+
+<div class="login" id="login">
+  <b>Inloggen</b>
+  <input id="l-naam" placeholder="Je naam">
+  <input id="l-code" type="password" inputmode="numeric" placeholder="Je code">
+  <button onclick="inloggen()">Inloggen</button>
+  <div class="hint">Geen code? Vraag Rens.</div>
+</div>
+
+<div id="app" style="display:none">
+  <div class="kop"><span>Ingelogd: <b id="wie"></b></span><button class="uitlog" onclick="uitloggen()">uitloggen</button></div>
+  <div class="hint">Dit zijn jouw straten voor vandaag. Per straat: <b>elke deur</b> aanbellen met de €40 goten-pitch. Tik wat er gebeurt — dat is je hele administratie. Sales = jouw geld 💪</div>
+  <div id="lijst"><div class="hint">straten laden…</div></div>
+</div>
+
+<script>
+const LOGURL='https://script.google.com/macros/s/AKfycbzMkmZKeadRlwNxTzl9io-vftCurSiGP2lz2rDFLSkVVADnzjOkwzqoHlstRCFyj1ppjA/exec';
+const SHEET='1PF_2fViLo7MasoTIw5vuba4MzxvOvAl_OKl7tMBBZgY';
+// Codes per medewerker — vraag Claude om namen/codes toe te voegen of te wijzigen.
+const WERKERS={'demo':'1111'};
+let WIE=null;
+
+function inloggen(){
+  const n=document.getElementById('l-naam').value.trim().toLowerCase();
+  const c=document.getElementById('l-code').value.trim();
+  if(WERKERS[n]&&WERKERS[n]===c){WIE=n;localStorage.setItem('werker',n);start();}
+  else alert('Naam of code klopt niet.');
+}
+function uitloggen(){localStorage.removeItem('werker');location.reload();}
+function logw(actie,straat){try{fetch(LOGURL+'?'+new URLSearchParams({buurt:'WERK',straat:straat,actie:WIE+': '+actie}),{mode:'no-cors'});}catch(e){}}
+
+let straten={}; // key -> {straat,buurt,lat,lon,af}
+window.__wl=function(r){
+  try{
+    for(const row of r.table.rows){
+      const c=row.c; if(!c||!c[1])continue;
+      const buurt=String(c[1].v||''), straat=String(c[2]&&c[2].v||''), actie=String(c[3]&&c[3].v||'');
+      if(buurt==='KLAARZET'){
+        const key=straat.toLowerCase();
+        if(actie.startsWith('klaarzet_weg')){delete straten[key];continue;}
+        const m=actie.match(/@([\d.]+),([\d.]+)(?:\s*·\s*(.*))?/);
+        straten[key]={straat:straat,buurt:m&&m[3]?m[3]:'',lat:m?+m[1]:null,lon:m?+m[2]:null,af:false};
+      }
+      if(buurt==='WERK'&&/: (straat )?klaar/.test(actie)){
+        const key=straat.toLowerCase();
+        if(straten[key])straten[key].af=true;
+      }
+    }
+  }catch(e){}
+  render();
+};
+function render(){
+  const L=document.getElementById('lijst');
+  const items=Object.values(straten);
+  if(!items.length){L.innerHTML='<div class="hint">Nog geen straten klaargezet — check bij Rens.</div>';return;}
+  L.innerHTML=items.sort((a,b)=>a.af-b.af).map((s,i)=>{
+    const e=s.straat.replace(/'/g,'');
+    return `<div class='kaart${s.af?' af':''}'><span class='naam'>${s.straat}</span>${s.buurt?' · '+s.buurt:''}${s.af?' · ✅ KLAAR':''}<br>`
+      +(s.lat?`<a class='knop k-nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lon}&travelmode=walking'>🚶 Hierheen</a>`:'')
+      +`<button class='knop k-s1' onclick="logw('sale 1 kant €40','${e}');alert('Gelogd ✓ — vergeet naam + 06 niet in het formulier!')">💰 Sale 1 kant</button>`
+      +`<button class='knop k-s2' onclick="logw('sale 2 kanten €40','${e}');alert('Gelogd ✓ — vergeet naam + 06 niet in het formulier!')">💰💰 Sale 2 kanten</button>`
+      +`<button class='knop k-up' onclick="var n=prompt('Wat zag/besprak je? (bijv. losse nok, kapotte goot)');if(n){logw('upsell-lead: '+n,'${e}');alert('Top! Gelogd ✓')}">⭐ Upsell-lead</button>`
+      +`<button class='knop k-not' onclick="var n=prompt('Notitie:');if(n)logw('notitie: '+n,'${e}')">✏️</button>`
+      +`<button class='knop k-klaar' onclick="logw('straat klaar','${e}');this.closest('.kaart').classList.add('af')">✅ Straat klaar</button>`
+      +`</div>`;
+  }).join('');
+}
+function start(){
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').style.display='';
+  document.getElementById('wie').textContent=WIE;
+  const s=document.createElement('script');
+  s.src='https://docs.google.com/spreadsheets/d/'+SHEET+'/gviz/tq?tqx=out:json;responseHandler:__wl&sheet=straat_log&headers=0';
+  document.body.appendChild(s);
+}
+const opgeslagen=localStorage.getItem('werker');
+if(opgeslagen&&WERKERS[opgeslagen]){WIE=opgeslagen;start();}
+</script></body></html>

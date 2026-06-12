@@ -20,7 +20,7 @@ h1{font-size:1.2rem;margin:.3rem 0;}
 .rij span{color:#555;}
 .hint{font-size:.78rem;color:#888;margin:.3rem 0;}
 </style></head><body>
-<div class="tabs"><a href="index.html">🏠</a><a href="vandaag.html">📅 Planning</a><a href="opvolgen.html">✅ Opvolgen</a><a href="begin_lijst.html">📋 Buurten</a><a href="#" id="t-straten">🚶 Straten</a><a href="kaart.html">🗺️ Kaart</a><a href="dashboard.html">📊 Cijfers</a><a href="pitch.html">📣 Pitch</a><a href="feedback.html">💬 Feedback</a></div>
+<div class="tabs"><a href="index.html">🏠</a><a href="vandaag.html">📅 Planning</a><a href="opvolgen.html">✅ Opvolgen</a><a href="begin_lijst.html">📋 Buurten</a><a href="#" id="t-straten">🚶 Straten</a><a href="kaart.html">🗺️ Kaart</a><a href="dashboard.html">📊 Cijfers</a><a href="financieel.html">💶 Financieel</a><a href="pitch.html">📣 Pitch</a><a href="feedback.html">💬 Feedback</a></div>
 <h1>📊 Cijfers — terugkijken</h1>
 <div class="hint">Alles komt live uit je sheets en je straat-log. Niks bijhouden — gewoon kijken.</div>
 <div class="per">
@@ -67,11 +67,11 @@ function zet(p){per=p;
 
 function render(){
   const groepen={};
-  const leeg=(l)=>({l:l,omzet:0,zwart:0,klus:0,offerte:0,verkocht:0,done:0,go:0,uren:0,dgn:new Set()});
+  const leeg=(l)=>({l:l,omzet:0,zwart:0,kosten:0,klus:0,offerte:0,verkocht:0,done:0,go:0,uren:0,dgn:new Set()});
   for(const r of recs){
     const {k,l}=pkey(r.d);
     const g=groepen[k]||(groepen[k]=leeg(l));
-    g.omzet+=r.omzet||0; g.klus+=r.klus||0; g.offerte+=r.offerte||0; g.verkocht+=r.verkocht||0;
+    g.omzet+=r.omzet||0; g.kosten+=r.kosten||0; g.klus+=r.klus||0; g.offerte+=r.offerte||0; g.verkocht+=r.verkocht||0;
     g.done+=r.done||0; g.go+=r.go||0;
     if(r.done||r.go)g.dgn.add(ymd(r.d));
   }
@@ -92,6 +92,8 @@ function render(){
   const html=(g)=>{
     const delen=[];
     if(g.omzet||g.zwart)delen.push('💶 '+geld(g.omzet+g.zwart)+(g.zwart?' (⚪ '+geld(g.omzet)+' · ⚫ '+geld(g.zwart)+')':''));
+    if(g.kosten)delen.push('💸 '+geld(g.kosten)+' kosten');
+    if((g.omzet||g.zwart)&&g.kosten)delen.push('📈 winst '+geld(g.omzet+g.zwart-g.kosten));
     if(g.omzet)delen.push('🧾 btw '+geld(g.omzet*21/121));
     if(g.klus)delen.push('🔧 '+g.klus+' klus'+(g.klus>1?'sen':''));
     if(g.offerte)delen.push('📄 '+g.offerte+' offertes');
@@ -107,6 +109,8 @@ function render(){
     +'<div><span class="n">'+geld(top?top.omzet+top.zwart:0)+'</span><span class="t">omzet</span></div>'
     +'<div><span class="n">'+geld(top?top.omzet:0)+'</span><span class="t">⚪ wit (factuur)</span></div>'
     +'<div><span class="n">'+geld(top?top.zwart:0)+'</span><span class="t">⚫ zwart</span></div>'
+    +'<div><span class="n">'+geld(top?top.kosten:0)+'</span><span class="t">💸 kosten</span></div>'
+    +'<div><span class="n">'+geld(top?top.omzet+top.zwart-top.kosten:0)+'</span><span class="t">📈 winst</span></div>'
     +'<div><span class="n">'+geld(top?top.omzet*21/121:0)+'</span><span class="t">🧾 btw opzij</span></div>'
     +'<div><span class="n">'+(top?top.klus:0)+'</span><span class="t">klussen</span></div>'
     +'<div><span class="n">'+(top?top.done:0)+'</span><span class="t">straten af</span></div>'
@@ -162,7 +166,15 @@ window.__log=function(r){
     for(const row of r.table.rows){
       const c=row.c; if(!c||!c[0])continue;
       const d=pDate(c[0].v); if(!d)continue;
+      const buurt=String(c[1]&&c[1].v||'');
       const actie=String(c[3]&&c[3].v||'').toLowerCase();
+      if(buurt==='KOSTEN'){
+        const bm=actie.match(/€\s*([0-9][0-9.,]*)/);
+        const dm=actie.match(/datum=(\d{4}-\d{2}-\d{2})/);
+        const kd=dm?new Date(dm[1]+'T12:00:00'):d;
+        if(bm)recs.push({d:kd,kosten:parseFloat(bm[1].replace(',','.'))||0});
+        continue;
+      }
       const dag=ymd(d), t=tijden[dag]||(tijden[dag]={min:d.getTime(),max:d.getTime()});
       t.min=Math.min(t.min,d.getTime()); t.max=Math.max(t.max,d.getTime());
       if(actie==='done')recs.push({d:d,done:1});

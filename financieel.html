@@ -1,0 +1,125 @@
+<!doctype html><html lang="nl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>💶 Financieel</title>
+<script>(function(){var P='4040';if(localStorage.getItem('sitepin')===P)return;var p=prompt('🔒 PIN?');if(p===P){localStorage.setItem('sitepin',P);return;}location.replace('about:blank');})();</script>
+<style>
+.tabs{display:flex;gap:.3rem;flex-wrap:wrap;font-size:.8rem;margin-bottom:.6rem;}.tabs a{background:#fff;border-radius:8px;padding:.35rem .55rem;text-decoration:none;color:#1a73e8;font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.06);}
+body{font-family:-apple-system,sans-serif;background:#f5f5f7;margin:0 auto;padding:.7rem;max-width:600px;color:#1c1c1e;}
+h1{font-size:1.2rem;margin:.3rem 0;}
+h2{font-size:1rem;margin:.8rem 0 .3rem;}
+.hint{font-size:.78rem;color:#888;margin:.3rem 0;}
+.kaart{background:#fff;border-radius:11px;padding:.6rem .8rem;margin:.45rem 0;box-shadow:0 1px 2px rgba(0,0,0,.06);font-size:.88rem;}
+.knop{display:inline-block;border:none;color:#fff;text-decoration:none;padding:.4rem .65rem;border-radius:7px;font-size:.78rem;font-weight:600;margin:.2rem .25rem 0 0;cursor:pointer;}
+.k-aan{background:#e08c00;}.k-eind{background:#1a9850;}.k-her{background:#d73027;}
+.blok{background:#fff;border-radius:11px;padding:.7rem .9rem;margin:.5rem 0;box-shadow:0 1px 2px rgba(0,0,0,.06);}
+.veld{width:100%;border:1px solid #ddd;border-radius:7px;padding:.5rem;font-size:.88rem;margin:.25rem 0;box-sizing:border-box;}
+.catk{border:1px solid #ccc;background:#fff;border-radius:6px;padding:.3rem .6rem;font-size:.78rem;margin:.12rem;cursor:pointer;}
+.catk.aan{background:#1a73e8;color:#fff;border-color:#1a73e8;}
+.regel{font-size:.82rem;border-bottom:1px dashed #eee;padding:.3rem 0;}
+</style></head><body>
+<div class="tabs"><a href="index.html">🏠</a><a href="vandaag.html">📅 Planning</a><a href="opvolgen.html">✅ Opvolgen</a><a href="begin_lijst.html">📋 Buurten</a><a href="#" id="t-straten">🚶 Straten</a><a href="kaart.html">🗺️ Kaart</a><a href="dashboard.html">📊 Cijfers</a><a href="financieel.html">💶 Financieel</a><a href="pitch.html">📣 Pitch</a><a href="feedback.html">💬 Feedback</a></div>
+<h1>💶 Financieel</h1>
+
+<h2>📄 Facturen — aanbetaling & eindbetaling</h2>
+<div class="hint">Per klant uit je facturen-sheet. De knop maakt het hele bericht: <b>altijd met factuurnummer</b> en duidelijk of het een aanbetaling of eindbetaling is. Er wordt níks verstuurd tot jij in WhatsApp op verzenden drukt.</div>
+<div id="facturen"><div class="hint">laden…</div></div>
+
+<h2>💸 Kosten invullen (bonnetjes, brandstof, materiaal)</h2>
+<div class="blok">
+  <input class="veld" type="date" id="k-datum">
+  <input class="veld" type="number" inputmode="decimal" id="k-bedrag" placeholder="Bedrag in € (bijv. 23,50)">
+  <div><button class="catk" onclick="kCat('materiaal',this)">🧱 materiaal</button><button class="catk" onclick="kCat('brandstof',this)">⛽ brandstof</button><button class="catk" onclick="kCat('gereedschap',this)">🔧 gereedschap</button><button class="catk" onclick="kCat('overig',this)">📦 overig</button></div>
+  <input class="veld" id="k-oms" placeholder="✏️ omschrijving (bijv. Gamma kit + schroeven)">
+  <button class="knop" style="background:#1a73e8" onclick="kostenOpslaan()">📤 Opslaan → sheet</button>
+  <div class="hint">Datum mag in het verleden — zo kan je dagen terug nog invullen. Alles telt mee in 📊 Cijfers (kosten + winst).</div>
+</div>
+<h2>🧾 Laatst ingevulde kosten</h2>
+<div id="kostenlijst" class="blok"><div class="hint">laden…</div></div>
+
+<script>
+const LOGURL='https://script.google.com/macros/s/AKfycbzMkmZKeadRlwNxTzl9io-vftCurSiGP2lz2rDFLSkVVADnzjOkwzqoHlstRCFyj1ppjA/exec';
+const SHEETS = ['1PF_2fViLo7MasoTIw5vuba4MzxvOvAl_OKl7tMBBZgY','1K7Pns_wrwX0X5liDe3P9Wx3LWcMT5icjw1IA6Na53X8'];
+function logb(buurt,actie,straat){try{fetch(LOGURL+'?'+new URLSearchParams({buurt:buurt,straat:straat||'-',actie:actie}),{mode:'no-cors'});}catch(e){}}
+function geldS(n){return '€'+n.toFixed(2).replace('.',',');}
+document.getElementById('k-datum').value=new Date().toISOString().slice(0,10);
+
+// ---- facturen ----
+window.__fin=function(r){
+  try{
+    const cols=r.table.cols.map(c=>(c.label||'').toLowerCase());
+    const ix=(n)=>cols.findIndex(c=>c.includes(n));
+    const iNm=ix('naam'), iTel=ix('telefoon'), iTot=ix('totaal inclusief'), iVold=ix('reeds voldaan'),
+          iNtb=ix('nog te betalen'), iFnr=ix('factuurnr'), iIdl=ix('ideal');
+    const out=[];
+    for(const row of r.table.rows){
+      const c=row.c; if(!c)continue;
+      const naam=iNm>=0&&c[iNm]&&String(c[iNm].v||'').trim(); if(!naam)continue;
+      const pf=(i)=>i>=0&&c[i]&&parseFloat(String(c[i].v).replace(/[^0-9.,-]/g,'').replace(',','.'))||0;
+      const tot=pf(iTot), vold=pf(iVold), ntb=pf(iNtb);
+      const tel=String(iTel>=0&&c[iTel]&&c[iTel].v||'').replace(/\D/g,'');
+      const fnr=iFnr>=0&&c[iFnr]&&String(c[iFnr].v||'').trim()||'';
+      const link=iIdl>=0&&c[iIdl]&&String(c[iIdl].v||'').trim()||'';
+      if(tot<=0&&ntb<=0)continue;
+      out.push({naam,tel,tot,vold,ntb,fnr,link});
+    }
+    out.reverse(); // nieuwste bovenaan
+    window.__facs=out;
+    const F=document.getElementById('facturen');
+    F.innerHTML = out.length ? out.slice(0,30).map((f,i)=>{
+      const status = f.ntb>0 ? '🔴 open: '+geldS(f.ntb) : (f.vold>0?'🟢 voldaan':'');
+      return `<div class='kaart'><b>${f.naam}</b>${f.fnr?' · factuur '+f.fnr:' · ⚠️ nog geen factuurnr in sheet'}${f.tot?' · totaal '+geldS(f.tot):''}<br><span class='hint'>${status}</span><br>`
+        +`<button class='knop k-aan' onclick='stuur(${i},"aanbetaling")'>💶 Aanbetaling-app</button>`
+        +`<button class='knop k-eind' onclick='stuur(${i},"eindbetaling")'>📄 Eindfactuur-app</button></div>`;
+    }).join('') : '<div class="hint">Nog geen facturen gevonden.</div>';
+  }catch(e){document.getElementById('facturen').innerHTML='<div class="hint">kon facturen niet laden</div>';}
+};
+function stuur(i,soort){
+  const f=window.__facs[i]; if(!f)return;
+  const vn=f.naam.split(' ')[0];
+  let bedrag;
+  if(soort==='aanbetaling'){
+    const sugg=Math.round(f.tot*0.3);
+    const inp=prompt('Aanbetaling in € (voorstel = 30%):', sugg||'');
+    if(inp===null)return; bedrag=parseFloat(String(inp).replace(',','.'))||sugg;
+  } else {
+    bedrag = f.ntb>0 ? f.ntb : Math.max(0, f.tot - f.vold);
+  }
+  const fnrTxt = f.fnr ? 'factuur '+f.fnr : 'de factuur';
+  const soortTxt = soort==='aanbetaling' ? 'de aanbetaling' : 'de eindbetaling';
+  const msg='Goedendag '+vn+', hierbij '+soortTxt+' voor '+fnrTxt+': '+geldS(bedrag)+'. '
+    +(f.link?'Betalen kan direct via deze link: '+f.link+'. ':'Het rekeningnummer staat op de factuur, graag o.v.v. het factuurnummer. ')
+    +'Alvast bedankt! 🙏 Rens — Spoed Dak Service';
+  logb('FACTUUR',soort+'-app '+geldS(bedrag)+(f.fnr?' · factuur '+f.fnr:''),f.naam);
+  if(f.tel.length>=10) window.open('https://wa.me/'+(f.tel.startsWith('0')?'31'+f.tel.slice(1):f.tel)+'?text='+encodeURIComponent(msg),'_blank');
+  else { navigator.clipboard&&navigator.clipboard.writeText(msg); alert('Geen 06 in de sheet — bericht is gekopieerd, plak \'m zelf.'); }
+}
+
+// ---- kosten ----
+let kcat='overig';
+function kCat(c,btn){kcat=c;[...btn.parentElement.querySelectorAll('button')].forEach(b=>b.classList.remove('aan'));btn.classList.add('aan');}
+function kostenOpslaan(){
+  const d=document.getElementById('k-datum').value;
+  const b=parseFloat(String(document.getElementById('k-bedrag').value).replace(',','.'));
+  const o=document.getElementById('k-oms').value.trim();
+  if(!b){alert('Vul een bedrag in');return;}
+  logb('KOSTEN','€'+b.toFixed(2)+' · '+(o||'-')+' · datum='+d,kcat);
+  document.getElementById('k-bedrag').value='';document.getElementById('k-oms').value='';
+  const kl=document.getElementById('kostenlijst');
+  kl.innerHTML='<div class="regel">✅ '+d+' · €'+b.toFixed(2).replace('.',',')+' · '+kcat+(o?' · '+o:'')+'</div>'+kl.innerHTML;
+}
+// laatst ingevulde kosten uit straat_log
+window.__kost=function(r){
+  try{
+    const rijen=[];
+    for(const row of r.table.rows){
+      const c=row.c; if(!c||!c[1]||String(c[1].v||'')!=='KOSTEN')continue;
+      rijen.push('<div class="regel">'+String(c[3]&&c[3].v||'')+' <span class="hint">('+String(c[2]&&c[2].v||'')+')</span></div>');
+    }
+    document.getElementById('kostenlijst').innerHTML=rijen.length?rijen.reverse().slice(0,15).join(''):'<div class="hint">nog niks ingevuld</div>';
+  }catch(e){}
+};
+function laad(src,h){const s=document.createElement('script');s.src=src;document.body.appendChild(s);}
+laad('https://docs.google.com/spreadsheets/d/'+SHEETS[1]+'/gviz/tq?tqx=out:json;responseHandler:__fin');
+laad('https://docs.google.com/spreadsheets/d/'+SHEETS[0]+'/gviz/tq?tqx=out:json;responseHandler:__kost&sheet=straat_log&headers=0');
+const ts=document.getElementById('t-straten');if(ts)ts.href=localStorage.getItem('laatste_plan')||'begin_lijst.html';
+</script></body></html>
