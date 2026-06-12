@@ -25,6 +25,9 @@ a.terug{font-size:.85rem;color:#1a73e8;text-decoration:none;}
 .ai{font-size:.72rem;font-weight:700;padding:.1rem .45rem;border-radius:5px;color:#fff;}
 .ai-go{background:#1a9850;}.ai-meh{background:#fdae61;}
 .nokb{font-size:.68rem;font-weight:700;padding:.1rem .4rem;border-radius:5px;color:#fff;}
+.eigrij{display:flex;gap:.3rem;flex-wrap:wrap;margin:.25rem 0;}
+.eig{font-size:.7rem;font-weight:700;padding:.12rem .45rem;border-radius:5px;color:#fff;background:#999;}
+.eig-goed{background:#1a9850;}.eig-meh{background:#e08c00;}.eig-fout{background:#d73027;}
 .nok-goed{background:#1a9850;}.nok-fout{background:#d73027;}.nok-onb{background:#999;}
 .nokzoom{margin-top:3px;}.nokzoom img{width:100%;border-radius:6px;display:block;}
 .nokcap{font-size:.66rem;color:#888;text-align:center;}
@@ -56,20 +59,21 @@ a.terug{font-size:.85rem;color:#1a73e8;text-decoration:none;}
 .ai-skip{background:#d73027;}
 .svlink{display:inline-block;color:#1a73e8;font-size:.8rem;margin-top:.35rem;text-decoration:none;}
 </style></head><body>
-<div class="tabs"><a href="../index.html">🏠</a><a href="../vandaag.html">📅 Planning</a><a href="../begin_lijst.html">📋 Buurten</a><a href="#" id="t-straten">🚶 Straten</a><a href="../kaart.html">🗺️ Kaart</a><a href="../feedback.html">💬 Feedback</a></div>
+<div class="tabs"><a href="../index.html">🏠</a><a href="../vandaag.html">📅 Planning</a><a href="../begin_lijst.html">📋 Buurten</a><a href="#" id="t-straten">🚶 Straten</a><a href="../kaart.html">🗺️ Kaart</a><a href="../dashboard.html">📊 Cijfers</a><a href="../feedback.html">💬 Feedback</a></div>
 <h1>🗺️ De Notel — straatplan</h1>
 <div class='intro'>🎯 = bouwjaar 1955-1980. Bekijk de 3 foto's (begin/midden/eind): is de <b>nok halfrond</b>?
 De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b>DONE</b> als je 'm gelopen hebt.</div>
 <div class='blok-review'><input id='buurtrev' placeholder='⭐ Review over de hele buurt (sfeer, type mensen, concurrent gezien...)'><button onclick='bewaarBuurtrev()'>Opslaan</button></div>
 <div class='bar'><div id='routes'></div><div class='klok'><button class='k-start' onclick='klok("start")'>▶ Start</button><button class='k-pauze' id='pauzebtn' onclick='klokPauze()'>⏸ Pauze</button><button class='k-fin' onclick='klok("finish")'>🏁 Klaar</button><span id='tijdtxt'></span></div><button class='sorteer' id='sortbtn' onclick='toggleSort()'>⭐ GO eerst</button><div class='teller' id='teller'>—</div></div>
+<div class='intro' id='weerstrip' style='display:none'></div>
 <div class='testblok'><b>🧪 START-TEST — pak deze eerst (≈180 huizen)</b><div class='trij'><a href='#s_Castaert'>Castaert</a> · 103 huizen · TWIJFEL</div><div class='trij'><a href='#s_de_Korenaar'>de Korenaar</a> · 77 huizen · TWIJFEL</div><div class='tuitleg'>Dichtste straten naast elkaar. Loopt het hier niet binnen de test → wijk is niks, pak een alternatief (onderaan).</div><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.51144149,5.31541583&travelmode=driving' target='_blank'>🚗 Naar de test-straten</a></div>
 <div id='lijst'>
 
-        <div class='straat' id='s_Nevenakker' data-init='twijfel' data-lat='51.51253281' data-lon='5.31624511'>
+        <div class='straat' id='s_Nevenakker' data-init='twijfel' data-lat='51.51253281' data-lon='5.31624511' data-koop='100'>
           <div class='kop'><span class='nr'>1</span>
             <span class='naam'>Nevenakker</span>
             <span class='bj bj-meh'>🟡 1990</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Kopgevel jaren 90 — pannen alleen aan rand zichtbaar.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Kopgevel jaren 90 — pannen alleen aan rand zichtbaar.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_Nevenakker_begin.jpg' loading='lazy'><figcaption>begin nr6</figcaption></figure><figure><img src='fotos/BU08230002_Nevenakker_midden.jpg' loading='lazy'><figcaption>midden nr16</figcaption></figure><figure><img src='fotos/BU08230002_Nevenakker_eind.jpg' loading='lazy'><figcaption>eind nr26</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_Nevenakker_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -84,11 +88,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("Nevenakker","Nevenakker")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Reeck' data-init='twijfel' data-lat='51.5121429' data-lon='5.31641099'>
+        <div class='straat' id='s_Reeck' data-init='twijfel' data-lat='51.5121429' data-lon='5.31641099' data-koop='100'>
           <div class='kop'><span class='nr'>2</span>
             <span class='naam'>Reeck</span>
             <span class='bj bj-meh'>🟡 1990</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Hoekpand met balkon jaren 80-90, deels panelen.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span> <span class='eig eig-goed'>👴 40% 65+</span></div><div class='reden'>Hoekpand met balkon jaren 80-90, deels panelen.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_Reeck_begin.jpg' loading='lazy'><figcaption>begin nr2</figcaption></figure><figure><img src='fotos/BU08230002_Reeck_midden.jpg' loading='lazy'><figcaption>midden nr6</figcaption></figure><figure><img src='fotos/BU08230002_Reeck_eind.jpg' loading='lazy'><figcaption>eind nr9</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_Reeck_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -103,11 +107,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("Reeck","Reeck")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Mostakker' data-init='twijfel' data-lat='51.51136623' data-lon='5.31631636'>
+        <div class='straat' id='s_Mostakker' data-init='twijfel' data-lat='51.51136623' data-lon='5.31631636' data-koop='100'>
           <div class='kop'><span class='nr'>3</span>
             <span class='naam'>Mostakker</span>
             <span class='bj bj-meh'>🟡 1990</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>2-kap jaren 90-00 — waarschijnlijk te nieuw.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>2-kap jaren 90-00 — waarschijnlijk te nieuw.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_Mostakker_begin.jpg' loading='lazy'><figcaption>begin nr3</figcaption></figure><figure><img src='fotos/BU08230002_Mostakker_midden.jpg' loading='lazy'><figcaption>midden nr7</figcaption></figure><figure><img src='fotos/BU08230002_Mostakker_eind.jpg' loading='lazy'><figcaption>eind nr14</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_Mostakker_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -122,11 +126,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("Mostakker","Mostakker")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Struikakker' data-init='twijfel' data-lat='51.51111952' data-lon='5.31565195'>
+        <div class='straat' id='s_Struikakker' data-init='twijfel' data-lat='51.51111952' data-lon='5.31565195' data-koop='100'>
           <div class='kop'><span class='nr'>4</span>
             <span class='naam'>Struikakker</span>
             <span class='bj bj-meh'>🟡 1990</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Hoekhuis vol panelen, jaren 80-90.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Hoekhuis vol panelen, jaren 80-90.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_Struikakker_begin.jpg' loading='lazy'><figcaption>begin nr3</figcaption></figure><figure><img src='fotos/BU08230002_Struikakker_midden.jpg' loading='lazy'><figcaption>midden nr8</figcaption></figure><figure><img src='fotos/BU08230002_Struikakker_eind.jpg' loading='lazy'><figcaption>eind nr12</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_Struikakker_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -141,11 +145,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("Struikakker","Struikakker")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Castaert' data-init='twijfel' data-lat='51.51144149' data-lon='5.31541583'>
+        <div class='straat' id='s_Castaert' data-init='twijfel' data-lat='51.51144149' data-lon='5.31541583' data-koop='100'>
           <div class='kop'><span class='nr'>5</span>
             <span class='naam'>Castaert</span>
             <span class='bj bj-meh'>🟡 1989</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Rijtjes jaren 85-95, bruine pannen, witte dakkapellen — randgeval qua leeftijd.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Rijtjes jaren 85-95, bruine pannen, witte dakkapellen — randgeval qua leeftijd.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_Castaert_begin.jpg' loading='lazy'><figcaption>begin nr18</figcaption></figure><figure><img src='fotos/BU08230002_Castaert_midden.jpg' loading='lazy'><figcaption>midden nr51</figcaption></figure><figure><img src='fotos/BU08230002_Castaert_eind.jpg' loading='lazy'><figcaption>eind nr86</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_Castaert_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -160,11 +164,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("Castaert","Castaert")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Cloete' data-init='twijfel' data-lat='51.51045519' data-lon='5.3154352'>
+        <div class='straat' id='s_Cloete' data-init='twijfel' data-lat='51.51045519' data-lon='5.3154352' data-koop='88'>
           <div class='kop'><span class='nr'>6</span>
             <span class='naam'>Cloete</span>
             <span class='bj bj-meh'>🟡 1986</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Herenhuis-stijl jaren 85-95, donkere pannen + dakramen — randgeval.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 88% koop</span> <span class='eig eig-fout'>🏬 50% flats</span></div><div class='reden' style='color:#a3231a'>⚠️ Vooral huur/flats — niet jouw doelgroep, lage prioriteit</div><div class='reden'>Herenhuis-stijl jaren 85-95, donkere pannen + dakramen — randgeval.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_Cloete_begin.jpg' loading='lazy'><figcaption>begin nr12</figcaption></figure><figure><img src='fotos/BU08230002_Cloete_midden.jpg' loading='lazy'><figcaption>midden nr34</figcaption></figure><figure><img src='fotos/BU08230002_Cloete_eind.jpg' loading='lazy'><figcaption>eind nr58</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_Cloete_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -179,11 +183,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("Cloete","Cloete")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Haverhof' data-init='go' data-lat='51.51023472' data-lon='5.3164586'>
+        <div class='straat' id='s_Haverhof' data-init='go' data-lat='51.51023472' data-lon='5.3164586' data-koop='100'>
           <div class='kop'><span class='nr'>7</span>
             <span class='naam'>Haverhof</span>
             <span class='bj bj-meh'>🟡 1986</span><span class='ai ai-go'>AI: GO</span><span class='nokb nok-goed'>nok: HALFROND</span><span class='nokb nok-goed'>pannen: OUD</span></div>
-          <div class='reden'>Nok-zoom: gebolde vorstenrij + 2 schoorstenen, mos op randen.</div><div class='haakjes'>💰 gespot: oude halfronde nok, 2 schoorstenen (lood), mosranden</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Nok-zoom: gebolde vorstenrij + 2 schoorstenen, mos op randen.</div><div class='haakjes'>💰 gespot: oude halfronde nok, 2 schoorstenen (lood), mosranden</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_Haverhof_begin.jpg' loading='lazy'><figcaption>begin nr4</figcaption></figure><figure><img src='fotos/BU08230002_Haverhof_midden.jpg' loading='lazy'><figcaption>midden nr11</figcaption></figure><figure><img src='fotos/BU08230002_Haverhof_eind.jpg' loading='lazy'><figcaption>eind nr21</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_Haverhof_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -198,11 +202,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("Haverhof","Haverhof")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_de_Korenaar' data-init='twijfel' data-lat='51.50948699' data-lon='5.31768803'>
+        <div class='straat' id='s_de_Korenaar' data-init='twijfel' data-lat='51.50948699' data-lon='5.31768803' data-koop='77'>
           <div class='kop'><span class='nr'>8</span>
             <span class='naam'>de Korenaar</span>
             <span class='bj bj-goed'>🟢 1982</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Geschakeld jaren 85-95 met puntgevels en balkons — atypisch.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 77% koop</span> <span class='eig eig-fout'>🏢 18% corporatie</span></div><div class='reden'>Geschakeld jaren 85-95 met puntgevels en balkons — atypisch.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_deKorenaar_begin.jpg' loading='lazy'><figcaption>begin nr13</figcaption></figure><figure><img src='fotos/BU08230002_deKorenaar_midden.jpg' loading='lazy'><figcaption>midden nr37</figcaption></figure><figure><img src='fotos/BU08230002_deKorenaar_eind.jpg' loading='lazy'><figcaption>eind nr71</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_deKorenaar_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -217,11 +221,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("de_Korenaar","de Korenaar")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_de_Zeilen' data-init='twijfel' data-lat='51.50931797' data-lon='5.31792973'>
+        <div class='straat' id='s_de_Zeilen' data-init='twijfel' data-lat='51.50931797' data-lon='5.31792973' data-koop='70'>
           <div class='kop'><span class='nr'>9</span>
             <span class='naam'>de Zeilen</span>
             <span class='bj bj-top'>🎯 1977</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONDUIDELIJK</span><span class='nokb nok-goed'>pannen: OUD</span></div>
-          <div class='reden'>Oude pannen + mos; nok onduidelijk.</div><div class='haakjes'>💰 gespot: mos op dak (reiniging)</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 70% koop</span></div><div class='reden'>Oude pannen + mos; nok onduidelijk.</div><div class='haakjes'>💰 gespot: mos op dak (reiniging)</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_deZeilen_begin.jpg' loading='lazy'><figcaption>begin nr2</figcaption></figure><figure><img src='fotos/BU08230002_deZeilen_midden.jpg' loading='lazy'><figcaption>midden nr6</figcaption></figure><figure><img src='fotos/BU08230002_deZeilen_eind.jpg' loading='lazy'><figcaption>eind nr11</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_deZeilen_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -236,11 +240,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("de_Zeilen","de Zeilen")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_de_Kruibok' data-init='twijfel' data-lat='51.50904977' data-lon='5.31742657'>
+        <div class='straat' id='s_de_Kruibok' data-init='twijfel' data-lat='51.50904977' data-lon='5.31742657' data-koop='80'>
           <div class='kop'><span class='nr'>10</span>
             <span class='naam'>de Kruibok</span>
             <span class='bj bj-top'>🎯 1977</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONDUIDELIJK</span><span class='nokb nok-goed'>pannen: OUD</span></div>
-          <div class='reden'>Pannen oud+mos, maar nok valt buiten beeld — ter plekke checken.</div><div class='haakjes'>💰 gespot: mos op dak (reiniging)</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 80% koop</span> <span class='eig eig-goed'>👴 43% 65+</span></div><div class='reden'>Pannen oud+mos, maar nok valt buiten beeld — ter plekke checken.</div><div class='haakjes'>💰 gespot: mos op dak (reiniging)</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_deKruibok_begin.jpg' loading='lazy'><figcaption>begin nr3</figcaption></figure><figure><img src='fotos/BU08230002_deKruibok_midden.jpg' loading='lazy'><figcaption>midden nr9</figcaption></figure><figure><img src='fotos/BU08230002_deKruibok_eind.jpg' loading='lazy'><figcaption>eind nr14</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_deKruibok_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -255,11 +259,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("de_Kruibok","de Kruibok")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_de_Zwaarden' data-init='go' data-lat='51.50886355' data-lon='5.31651274'>
+        <div class='straat' id='s_de_Zwaarden' data-init='go' data-lat='51.50886355' data-lon='5.31651274' data-koop='80'>
           <div class='kop'><span class='nr'>11</span>
             <span class='naam'>de Zwaarden</span>
             <span class='bj bj-top'>🎯 1977</span><span class='ai ai-go'>AI: GO</span><span class='nokb nok-goed'>nok: HALFROND</span><span class='nokb nok-goed'>pannen: OUD</span></div>
-          <div class='reden'>Nok-zoom: duidelijk halfronde vorsten + pijpen, oude pannen.</div><div class='haakjes'>💰 gespot: oude halfronde nok, ontluchtingspijpen</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 80% koop</span></div><div class='reden'>Nok-zoom: duidelijk halfronde vorsten + pijpen, oude pannen.</div><div class='haakjes'>💰 gespot: oude halfronde nok, ontluchtingspijpen</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_deZwaarden_begin.jpg' loading='lazy'><figcaption>begin nr3</figcaption></figure><figure><img src='fotos/BU08230002_deZwaarden_midden.jpg' loading='lazy'><figcaption>midden nr7</figcaption></figure><figure><img src='fotos/BU08230002_deZwaarden_eind.jpg' loading='lazy'><figcaption>eind nr13</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_deZwaarden_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -274,11 +278,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("de_Zwaarden","de Zwaarden")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_de_lange_Spruit' data-init='twijfel' data-lat='51.50833128' data-lon='5.31532834'>
+        <div class='straat' id='s_de_lange_Spruit' data-init='twijfel' data-lat='51.50833128' data-lon='5.31532834' data-koop='80'>
           <div class='kop'><span class='nr'>12</span>
             <span class='naam'>de lange Spruit</span>
             <span class='bj bj-top'>🎯 1977</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONDUIDELIJK</span><span class='nokb nok-goed'>pannen: OUD</span></div>
-          <div class='reden'>Noklijn oogt recht — mogelijk vlak, checken.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 80% koop</span></div><div class='reden'>Noklijn oogt recht — mogelijk vlak, checken.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_delangeSpruit_begin.jpg' loading='lazy'><figcaption>begin nr2</figcaption></figure><figure><img src='fotos/BU08230002_delangeSpruit_midden.jpg' loading='lazy'><figcaption>midden nr6</figcaption></figure><figure><img src='fotos/BU08230002_delangeSpruit_eind.jpg' loading='lazy'><figcaption>eind nr13</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_delangeSpruit_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -293,7 +297,7 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("de_lange_Spruit","de lange Spruit")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_de_korte_Spruit' data-init='go' data-lat='51.50863551' data-lon='5.31482866'>
+        <div class='straat' id='s_de_korte_Spruit' data-init='go' data-lat='51.50863551' data-lon='5.31482866' data-koop=''>
           <div class='kop'><span class='nr'>13</span>
             <span class='naam'>de korte Spruit</span>
             <span class='bj bj-top'>🎯 1977</span><span class='ai ai-go'>AI: GO</span><span class='nokb nok-goed'>nok: HALFROND</span><span class='nokb nok-goed'>pannen: OUD</span></div>
@@ -312,11 +316,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("de_korte_Spruit","de korte Spruit")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_de_Baansteen' data-init='twijfel' data-lat='51.50794646' data-lon='5.31696651'>
+        <div class='straat' id='s_de_Baansteen' data-init='twijfel' data-lat='51.50794646' data-lon='5.31696651' data-koop='70'>
           <div class='kop'><span class='nr'>14</span>
             <span class='naam'>de Baansteen</span>
             <span class='bj bj-top'>🎯 1978</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Flauw dak met donkergrijze pannen — oogt netjes/mogelijk vernieuwd.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 70% koop</span> <span class='eig eig-fout'>🏢 40% corporatie</span> <span class='eig eig-goed'>👴 50% 65+</span></div><div class='reden'>Flauw dak met donkergrijze pannen — oogt netjes/mogelijk vernieuwd.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_deBaansteen_begin.jpg' loading='lazy'><figcaption>begin nr5</figcaption></figure><figure><img src='fotos/BU08230002_deBaansteen_midden.jpg' loading='lazy'><figcaption>midden nr13</figcaption></figure><figure><img src='fotos/BU08230002_deBaansteen_eind.jpg' loading='lazy'><figcaption>eind nr21</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_deBaansteen_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -331,7 +335,7 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("de_Baansteen","de Baansteen")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_de_Pinbalk' data-init='twijfel' data-lat='51.50815765' data-lon='5.31752881'>
+        <div class='straat' id='s_de_Pinbalk' data-init='twijfel' data-lat='51.50815765' data-lon='5.31752881' data-koop=''>
           <div class='kop'><span class='nr'>15</span>
             <span class='naam'>de Pinbalk</span>
             <span class='bj bj-top'>🎯 1978</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONDUIDELIJK</span><span class='nokb nok-goed'>pannen: OUD</span></div>
@@ -350,11 +354,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("de_Pinbalk","de Pinbalk")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_de_Toog' data-init='twijfel' data-lat='51.50840076' data-lon='5.31843979'>
+        <div class='straat' id='s_de_Toog' data-init='twijfel' data-lat='51.50840076' data-lon='5.31843979' data-koop='100'>
           <div class='kop'><span class='nr'>16</span>
             <span class='naam'>de Toog</span>
             <span class='bj bj-top'>🎯 1977</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONDUIDELIJK</span><span class='nokb nok-goed'>pannen: OUD</span></div>
-          <div class='reden'>Oude pannen + mos; nok boven kader.</div><div class='haakjes'>💰 gespot: mos op dak (reiniging)</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Oude pannen + mos; nok boven kader.</div><div class='haakjes'>💰 gespot: mos op dak (reiniging)</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_deToog_begin.jpg' loading='lazy'><figcaption>begin nr5</figcaption></figure><figure><img src='fotos/BU08230002_deToog_midden.jpg' loading='lazy'><figcaption>midden nr15</figcaption></figure><figure><img src='fotos/BU08230002_deToog_eind.jpg' loading='lazy'><figcaption>eind nr32</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_deToog_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -369,11 +373,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("de_Toog","de Toog")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_het_Bovenwiel' data-init='twijfel' data-lat='51.50810516' data-lon='5.31883152'>
+        <div class='straat' id='s_het_Bovenwiel' data-init='twijfel' data-lat='51.50810516' data-lon='5.31883152' data-koop='80'>
           <div class='kop'><span class='nr'>17</span>
             <span class='naam'>het Bovenwiel</span>
             <span class='bj bj-top'>🎯 1977</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONDUIDELIJK</span><span class='nokb nok-goed'>pannen: OUD</span></div>
-          <div class='reden'>Tegenlicht; nok niet te beoordelen.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 80% koop</span></div><div class='reden'>Tegenlicht; nok niet te beoordelen.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_hetBovenwiel_begin.jpg' loading='lazy'><figcaption>begin nr4</figcaption></figure><figure><img src='fotos/BU08230002_hetBovenwiel_midden.jpg' loading='lazy'><figcaption>midden nr11</figcaption></figure><figure><img src='fotos/BU08230002_hetBovenwiel_eind.jpg' loading='lazy'><figcaption>eind nr19</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_hetBovenwiel_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -388,11 +392,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("het_Bovenwiel","het Bovenwiel")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_de_Vang' data-init='twijfel' data-lat='51.50737487' data-lon='5.31920548'>
+        <div class='straat' id='s_de_Vang' data-init='twijfel' data-lat='51.50737487' data-lon='5.31920548' data-koop='70'>
           <div class='kop'><span class='nr'>18</span>
             <span class='naam'>de Vang</span>
             <span class='bj bj-top'>🎯 1977</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONDUIDELIJK</span><span class='nokb nok-goed'>pannen: OUD</span></div>
-          <div class='reden'>Noklijn oogt strak — mogelijk vlakke vorst, checken.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 70% koop</span> <span class='eig eig-fout'>🏢 25% corporatie</span></div><div class='reden'>Noklijn oogt strak — mogelijk vlakke vorst, checken.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_deVang_begin.jpg' loading='lazy'><figcaption>begin nr4</figcaption></figure><figure><img src='fotos/BU08230002_deVang_midden.jpg' loading='lazy'><figcaption>midden nr11</figcaption></figure><figure><img src='fotos/BU08230002_deVang_eind.jpg' loading='lazy'><figcaption>eind nr21</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_deVang_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -407,11 +411,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("de_Vang","de Vang")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_de_Wieg' data-init='twijfel' data-lat='51.50712527' data-lon='5.31865911'>
+        <div class='straat' id='s_de_Wieg' data-init='twijfel' data-lat='51.50712527' data-lon='5.31865911' data-koop='80'>
           <div class='kop'><span class='nr'>19</span>
             <span class='naam'>de Wieg</span>
             <span class='bj bj-top'>🎯 1977</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONDUIDELIJK</span><span class='nokb nok-goed'>pannen: OUD</span></div>
-          <div class='reden'>Noklijn strak/recht — geen duidelijke bolling zichtbaar.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 80% koop</span> <span class='eig eig-fout'>🏢 20% corporatie</span></div><div class='reden'>Noklijn strak/recht — geen duidelijke bolling zichtbaar.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_deWieg_begin.jpg' loading='lazy'><figcaption>begin nr5</figcaption></figure><figure><img src='fotos/BU08230002_deWieg_midden.jpg' loading='lazy'><figcaption>midden nr13</figcaption></figure><figure><img src='fotos/BU08230002_deWieg_eind.jpg' loading='lazy'><figcaption>eind nr25</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_deWieg_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -426,11 +430,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("de_Wieg","de Wieg")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Kremerstraat' data-init='twijfel' data-lat='51.50644867' data-lon='5.31828216'>
+        <div class='straat' id='s_Kremerstraat' data-init='twijfel' data-lat='51.50644867' data-lon='5.31828216' data-koop='80'>
           <div class='kop'><span class='nr'>20</span>
             <span class='naam'>Kremerstraat</span>
             <span class='bj bj-top'>🎯 1968</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Donkere pannen + grote dakkapel-opbouwen met beplating.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 80% koop</span></div><div class='reden'>Donkere pannen + grote dakkapel-opbouwen met beplating.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_Kremerstraat_begin.jpg' loading='lazy'><figcaption>begin nr3</figcaption></figure><figure><img src='fotos/BU08230002_Kremerstraat_midden.jpg' loading='lazy'><figcaption>midden nr9</figcaption></figure><figure><img src='fotos/BU08230002_Kremerstraat_eind.jpg' loading='lazy'><figcaption>eind nr14</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_Kremerstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -445,11 +449,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("Kremerstraat","Kremerstraat")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_van_Tuldenstraat' data-init='twijfel' data-lat='51.50589777' data-lon='5.31817855'>
+        <div class='straat' id='s_van_Tuldenstraat' data-init='twijfel' data-lat='51.50589777' data-lon='5.31817855' data-koop='96'>
           <div class='kop'><span class='nr'>21</span>
             <span class='naam'>van Tuldenstraat</span>
             <span class='bj bj-top'>🎯 1972</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONDUIDELIJK</span><span class='nokb nok-goed'>pannen: OUD</span></div>
-          <div class='reden'>Mooie verweerde pannen; nok boven kader.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 96% koop</span> <span class='eig eig-goed'>👴 33% 65+</span></div><div class='reden'>Mooie verweerde pannen; nok boven kader.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_vanTuldenstraa_begin.jpg' loading='lazy'><figcaption>begin nr6</figcaption></figure><figure><img src='fotos/BU08230002_vanTuldenstraa_midden.jpg' loading='lazy'><figcaption>midden nr20</figcaption></figure><figure><img src='fotos/BU08230002_vanTuldenstraa_eind.jpg' loading='lazy'><figcaption>eind nr33</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_vanTuldenstraa_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -464,11 +468,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("van_Tuldenstraat","van Tuldenstraat")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Hoppenbrouwerstraat' data-init='twijfel' data-lat='51.50616604' data-lon='5.31926606'>
+        <div class='straat' id='s_Hoppenbrouwerstraat' data-init='twijfel' data-lat='51.50616604' data-lon='5.31926606' data-koop='100'>
           <div class='kop'><span class='nr'>22</span>
             <span class='naam'>Hoppenbrouwerstraat</span>
             <span class='bj bj-top'>🎯 1970</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONDUIDELIJK</span><span class='nokb nok-goed'>pannen: OUD</span></div>
-          <div class='reden'>Flauwe kap, noklijn strak — mogelijk vlakke vorst.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Flauwe kap, noklijn strak — mogelijk vlakke vorst.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_Hoppenbrouwers_begin.jpg' loading='lazy'><figcaption>begin nr3</figcaption></figure><figure><img src='fotos/BU08230002_Hoppenbrouwers_midden.jpg' loading='lazy'><figcaption>midden nr9</figcaption></figure><figure><img src='fotos/BU08230002_Hoppenbrouwers_eind.jpg' loading='lazy'><figcaption>eind nr14</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_Hoppenbrouwers_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -483,11 +487,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("Hoppenbrouwerstraat","Hoppenbrouwerstraat")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_de_Reep' data-init='twijfel' data-lat='51.50735631' data-lon='5.32024068'>
+        <div class='straat' id='s_de_Reep' data-init='twijfel' data-lat='51.50735631' data-lon='5.32024068' data-koop='100'>
           <div class='kop'><span class='nr'>24</span>
             <span class='naam'>de Reep</span>
             <span class='bj bj-top'>🎯 1979</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Hoekpand met balkon (maisonnette-achtig), deels panelen.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Hoekpand met balkon (maisonnette-achtig), deels panelen.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_deReep_begin.jpg' loading='lazy'><figcaption>begin nr3</figcaption></figure><figure><img src='fotos/BU08230002_deReep_midden.jpg' loading='lazy'><figcaption>midden nr9</figcaption></figure><figure><img src='fotos/BU08230002_deReep_eind.jpg' loading='lazy'><figcaption>eind nr16</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_deReep_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -502,11 +506,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("de_Reep","de Reep")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_het_Luiwerk' data-init='go' data-lat='51.5080667' data-lon='5.32020933'>
+        <div class='straat' id='s_het_Luiwerk' data-init='go' data-lat='51.5080667' data-lon='5.32020933' data-koop='90'>
           <div class='kop'><span class='nr'>25</span>
             <span class='naam'>het Luiwerk</span>
             <span class='bj bj-top'>🎯 1978</span><span class='ai ai-go'>AI: GO</span><span class='nokb nok-goed'>nok: HALFROND</span><span class='nokb nok-goed'>pannen: OUD</span></div>
-          <div class='reden'>Nok-zoom: ronde vorsten + schoorsteen, oude golvende pannen.</div><div class='haakjes'>💰 gespot: oude halfronde nok, schoorsteen (loodwerk)</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 90% koop</span> <span class='eig eig-goed'>👴 34% 65+</span></div><div class='reden'>Nok-zoom: ronde vorsten + schoorsteen, oude golvende pannen.</div><div class='haakjes'>💰 gespot: oude halfronde nok, schoorsteen (loodwerk)</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_hetLuiwerk_begin.jpg' loading='lazy'><figcaption>begin nr3</figcaption></figure><figure><img src='fotos/BU08230002_hetLuiwerk_midden.jpg' loading='lazy'><figcaption>midden nr13</figcaption></figure><figure><img src='fotos/BU08230002_hetLuiwerk_eind.jpg' loading='lazy'><figcaption>eind nr21</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_hetLuiwerk_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -521,11 +525,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("het_Luiwerk","het Luiwerk")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_van_Heesterbeeckstraat' data-init='twijfel' data-lat='51.50800285' data-lon='5.32129803'>
+        <div class='straat' id='s_van_Heesterbeeckstraat' data-init='twijfel' data-lat='51.50800285' data-lon='5.32129803' data-koop='86'>
           <div class='kop'><span class='nr'>26</span>
             <span class='naam'>van Heesterbeeckstraat</span>
             <span class='bj bj-top'>🎯 1980</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Daken grotendeels vol panelen, jaren 80-90.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 86% koop</span></div><div class='reden'>Daken grotendeels vol panelen, jaren 80-90.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_vanHeesterbeec_begin.jpg' loading='lazy'><figcaption>begin nr6</figcaption></figure><figure><img src='fotos/BU08230002_vanHeesterbeec_midden.jpg' loading='lazy'><figcaption>midden nr16</figcaption></figure><figure><img src='fotos/BU08230002_vanHeesterbeec_eind.jpg' loading='lazy'><figcaption>eind nr26</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_vanHeesterbeec_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -540,11 +544,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("van_Heesterbeeckstraat","van Heesterbeeckstraat")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Beertramsstraat' data-init='twijfel' data-lat='51.50770297' data-lon='5.32223473'>
+        <div class='straat' id='s_Beertramsstraat' data-init='twijfel' data-lat='51.50770297' data-lon='5.32223473' data-koop='100'>
           <div class='kop'><span class='nr'>27</span>
             <span class='naam'>Beertramsstraat</span>
             <span class='bj bj-top'>🎯 1980</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Foto toont garageboxen — woningen zelf niet goed in beeld, ter plekke checken.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span> <span class='eig eig-goed'>👴 33% 65+</span></div><div class='reden'>Foto toont garageboxen — woningen zelf niet goed in beeld, ter plekke checken.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_Beertramsstraa_begin.jpg' loading='lazy'><figcaption>begin nr6</figcaption></figure><figure><img src='fotos/BU08230002_Beertramsstraa_midden.jpg' loading='lazy'><figcaption>midden nr1002</figcaption></figure><figure><img src='fotos/BU08230002_Beertramsstraa_eind.jpg' loading='lazy'><figcaption>eind nr1014</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_Beertramsstraa_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -559,11 +563,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("Beertramsstraat","Beertramsstraat")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_van_Aerlestraat' data-init='twijfel' data-lat='51.50793611' data-lon='5.32242218'>
+        <div class='straat' id='s_van_Aerlestraat' data-init='twijfel' data-lat='51.50793611' data-lon='5.32242218' data-koop='89'>
           <div class='kop'><span class='nr'>28</span>
             <span class='naam'>van Aerlestraat</span>
             <span class='bj bj-top'>🎯 1980</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONDUIDELIJK</span><span class='nokb nok-goed'>pannen: OUD</span></div>
-          <div class='reden'>Noklijn oogt strak; mos aanwezig — ter plekke checken.</div><div class='haakjes'>💰 gespot: mos op dak (reiniging)</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 89% koop</span> <span class='eig eig-goed'>👴 36% 65+</span></div><div class='reden'>Noklijn oogt strak; mos aanwezig — ter plekke checken.</div><div class='haakjes'>💰 gespot: mos op dak (reiniging)</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_vanAerlestraat_begin.jpg' loading='lazy'><figcaption>begin nr8</figcaption></figure><figure><img src='fotos/BU08230002_vanAerlestraat_midden.jpg' loading='lazy'><figcaption>midden nr24</figcaption></figure><figure><img src='fotos/BU08230002_vanAerlestraat_eind.jpg' loading='lazy'><figcaption>eind nr40</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_vanAerlestraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -578,11 +582,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("van_Aerlestraat","van Aerlestraat")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_van_Mellincrodestraat' data-init='go' data-lat='51.50813614' data-lon='5.32352201'>
+        <div class='straat' id='s_van_Mellincrodestraat' data-init='go' data-lat='51.50813614' data-lon='5.32352201' data-koop='80'>
           <div class='kop'><span class='nr'>29</span>
             <span class='naam'>van Mellincrodestraat</span>
             <span class='bj bj-top'>🎯 1980</span><span class='ai ai-go'>AI: GO</span><span class='nokb nok-goed'>nok: HALFROND</span><span class='nokb nok-goed'>pannen: OUD</span></div>
-          <div class='reden'>Nok-zoom: vorsten MET MOS — halfrond + onderhouds-upsell.</div><div class='haakjes'>💰 gespot: oude nok MET MOS op de vorsten — reiniging + herstel</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 80% koop</span> <span class='eig eig-goed'>👴 31% 65+</span></div><div class='reden'>Nok-zoom: vorsten MET MOS — halfrond + onderhouds-upsell.</div><div class='haakjes'>💰 gespot: oude nok MET MOS op de vorsten — reiniging + herstel</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_vanMellincrode_begin.jpg' loading='lazy'><figcaption>begin nr4</figcaption></figure><figure><img src='fotos/BU08230002_vanMellincrode_midden.jpg' loading='lazy'><figcaption>midden nr12</figcaption></figure><figure><img src='fotos/BU08230002_vanMellincrode_eind.jpg' loading='lazy'><figcaption>eind nr26</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_vanMellincrode_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -597,11 +601,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("van_Mellincrodestraat","van Mellincrodestraat")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Notel' data-init='go' data-lat='51.50891952' data-lon='5.32425153'>
+        <div class='straat' id='s_Notel' data-init='go' data-lat='51.50891952' data-lon='5.32425153' data-koop='90'>
           <div class='kop'><span class='nr'>30</span>
             <span class='naam'>Notel</span>
             <span class='bj bj-goed'>🟢 1982</span><span class='ai ai-go'>AI: GO</span><span class='nokb nok-goed'>nok: HALFROND?</span><span class='nokb nok-goed'>pannen: OUD</span></div>
-          <div class='reden'>Vooroorlogs keramisch, steile kap — nok niet in beeld, profiel klopt.</div><div class='haakjes'>💰 gespot: vooroorlogse keramiek, 2 schoorstenen (lood)</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 90% koop</span></div><div class='reden'>Vooroorlogs keramisch, steile kap — nok niet in beeld, profiel klopt.</div><div class='haakjes'>💰 gespot: vooroorlogse keramiek, 2 schoorstenen (lood)</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_Notel_midden.jpg' loading='lazy'><figcaption>midden nr17</figcaption></figure><figure><img src='fotos/BU08230002_Notel_eind.jpg' loading='lazy'><figcaption>eind nr30</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_Notel_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -616,11 +620,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("Notel","Notel")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Snijdersstraat' data-init='twijfel' data-lat='51.5088964' data-lon='5.32269385'>
+        <div class='straat' id='s_Snijdersstraat' data-init='twijfel' data-lat='51.5088964' data-lon='5.32269385' data-koop='80'>
           <div class='kop'><span class='nr'>31</span>
             <span class='naam'>Snijdersstraat</span>
             <span class='bj bj-top'>🎯 1980</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Rijen jaren 80 met flauwe dakhelling.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 80% koop</span></div><div class='reden'>Rijen jaren 80 met flauwe dakhelling.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_Snijdersstraat_begin.jpg' loading='lazy'><figcaption>begin nr4</figcaption></figure><figure><img src='fotos/BU08230002_Snijdersstraat_midden.jpg' loading='lazy'><figcaption>midden nr10</figcaption></figure><figure><img src='fotos/BU08230002_Snijdersstraat_eind.jpg' loading='lazy'><figcaption>eind nr16</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_Snijdersstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -635,11 +639,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("Snijdersstraat","Snijdersstraat")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_het_Veld' data-init='twijfel' data-lat='51.509655' data-lon='5.32213457'>
+        <div class='straat' id='s_het_Veld' data-init='twijfel' data-lat='51.509655' data-lon='5.32213457' data-koop='100'>
           <div class='kop'><span class='nr'>32</span>
             <span class='naam'>het Veld</span>
             <span class='bj bj-goed'>🟢 1982</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Schuin pannendak achter boom — zicht beperkt.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Schuin pannendak achter boom — zicht beperkt.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_hetVeld_begin.jpg' loading='lazy'><figcaption>begin nr6</figcaption></figure><figure><img src='fotos/BU08230002_hetVeld_midden.jpg' loading='lazy'><figcaption>midden nr16</figcaption></figure><figure><img src='fotos/BU08230002_hetVeld_eind.jpg' loading='lazy'><figcaption>eind nr35</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_hetVeld_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -654,11 +658,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("het_Veld","het Veld")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_de_Dries' data-init='twijfel' data-lat='51.51026994' data-lon='5.32250975'>
+        <div class='straat' id='s_de_Dries' data-init='twijfel' data-lat='51.51026994' data-lon='5.32250975' data-koop='60'>
           <div class='kop'><span class='nr'>33</span>
             <span class='naam'>de Dries</span>
             <span class='bj bj-goed'>🟢 1983</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Kopgevel jaren 80-90 + schoorsteen.</div>
+          <div class='eigrij'><span class='eig eig-meh'>🔑 60% koop</span> <span class='eig eig-fout'>🏢 33% corporatie</span></div><div class='reden'>Kopgevel jaren 80-90 + schoorsteen.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_deDries_begin.jpg' loading='lazy'><figcaption>begin nr6</figcaption></figure><figure><img src='fotos/BU08230002_deDries_midden.jpg' loading='lazy'><figcaption>midden nr17</figcaption></figure><figure><img src='fotos/BU08230002_deDries_eind.jpg' loading='lazy'><figcaption>eind nr28</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_deDries_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -673,11 +677,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("de_Dries","de Dries")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_de_Eeusel' data-init='twijfel' data-lat='51.51054168' data-lon='5.32235279'>
+        <div class='straat' id='s_de_Eeusel' data-init='twijfel' data-lat='51.51054168' data-lon='5.32235279' data-koop=''>
           <div class='kop'><span class='nr'>34</span>
             <span class='naam'>de Eeusel</span>
             <span class='bj bj-goed'>🟢 1982</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Kopgevel steile kap jaren 85-95.</div>
+          <div class='eigrij'><span class='eig eig-fout'>🏢 67% corporatie</span></div><div class='reden'>Kopgevel steile kap jaren 85-95.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_deEeusel_begin.jpg' loading='lazy'><figcaption>begin nr3</figcaption></figure><figure><img src='fotos/BU08230002_deEeusel_midden.jpg' loading='lazy'><figcaption>midden nr8</figcaption></figure><figure><img src='fotos/BU08230002_deEeusel_eind.jpg' loading='lazy'><figcaption>eind nr18</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_deEeusel_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -692,11 +696,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("de_Eeusel","de Eeusel")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_de_Beempd' data-init='twijfel' data-lat='51.51040842' data-lon='5.32295337'>
+        <div class='straat' id='s_de_Beempd' data-init='twijfel' data-lat='51.51040842' data-lon='5.32295337' data-koop='100'>
           <div class='kop'><span class='nr'>35</span>
             <span class='naam'>de Beempd</span>
             <span class='bj bj-goed'>🟢 1983</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Hoekpand met veel zonnepanelen; pannen eronder donker, schoorsteen aanwezig.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Hoekpand met veel zonnepanelen; pannen eronder donker, schoorsteen aanwezig.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_deBeempd_begin.jpg' loading='lazy'><figcaption>begin nr8</figcaption></figure><figure><img src='fotos/BU08230002_deBeempd_midden.jpg' loading='lazy'><figcaption>midden nr20</figcaption></figure><figure><img src='fotos/BU08230002_deBeempd_eind.jpg' loading='lazy'><figcaption>eind nr33</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_deBeempd_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -711,11 +715,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("de_Beempd","de Beempd")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_de_Donk' data-init='twijfel' data-lat='51.51114171' data-lon='5.32203304'>
+        <div class='straat' id='s_de_Donk' data-init='twijfel' data-lat='51.51114171' data-lon='5.32203304' data-koop='74'>
           <div class='kop'><span class='nr'>36</span>
             <span class='naam'>de Donk</span>
             <span class='bj bj-goed'>🟢 1983</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Rijtjes jaren 80, bruine pannen — kan prima zijn, leeftijd randgeval.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 74% koop</span> <span class='eig eig-fout'>🏢 67% corporatie</span></div><div class='reden'>Rijtjes jaren 80, bruine pannen — kan prima zijn, leeftijd randgeval.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_deDonk_begin.jpg' loading='lazy'><figcaption>begin nr7</figcaption></figure><figure><img src='fotos/BU08230002_deDonk_midden.jpg' loading='lazy'><figcaption>midden nr19</figcaption></figure><figure><img src='fotos/BU08230002_deDonk_eind.jpg' loading='lazy'><figcaption>eind nr31</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_deDonk_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -730,11 +734,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("de_Donk","de Donk")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_de_Plaatse' data-init='twijfel' data-lat='51.50998497' data-lon='5.32115525'>
+        <div class='straat' id='s_de_Plaatse' data-init='twijfel' data-lat='51.50998497' data-lon='5.32115525' data-koop='84'>
           <div class='kop'><span class='nr'>37</span>
             <span class='naam'>de Plaatse</span>
             <span class='bj bj-goed'>🟢 1982</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONDUIDELIJK</span><span class='nokb nok-goed'>pannen: OUD</span></div>
-          <div class='reden'>Oude donkere pannen; nok niet in beeld.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 84% koop</span> <span class='eig eig-goed'>👴 38% 65+</span></div><div class='reden'>Oude donkere pannen; nok niet in beeld.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_dePlaatse_begin.jpg' loading='lazy'><figcaption>begin nr6</figcaption></figure><figure><img src='fotos/BU08230002_dePlaatse_midden.jpg' loading='lazy'><figcaption>midden nr17</figcaption></figure><figure><img src='fotos/BU08230002_dePlaatse_eind.jpg' loading='lazy'><figcaption>eind nr27</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_dePlaatse_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -749,11 +753,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("de_Plaatse","de Plaatse")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_de_Gaanderij' data-init='twijfel' data-lat='51.50904929' data-lon='5.31880679'>
+        <div class='straat' id='s_de_Gaanderij' data-init='twijfel' data-lat='51.50904929' data-lon='5.31880679' data-koop='100'>
           <div class='kop'><span class='nr'>38</span>
             <span class='naam'>de Gaanderij</span>
             <span class='bj bj-top'>🎯 1977</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Vrijstaand jaren 90-00, dak vol panelen — waarschijnlijk te nieuw.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span> <span class='eig eig-goed'>👴 35% 65+</span></div><div class='reden'>Vrijstaand jaren 90-00, dak vol panelen — waarschijnlijk te nieuw.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_deGaanderij_begin.jpg' loading='lazy'><figcaption>begin nr7</figcaption></figure><figure><img src='fotos/BU08230002_deGaanderij_midden.jpg' loading='lazy'><figcaption>midden nr20</figcaption></figure><figure><img src='fotos/BU08230002_deGaanderij_eind.jpg' loading='lazy'><figcaption>eind nr41</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_deGaanderij_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -768,11 +772,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("de_Gaanderij","de Gaanderij")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Steenakkerstraat' data-init='twijfel' data-lat='51.50705596' data-lon='5.31711408'>
+        <div class='straat' id='s_Steenakkerstraat' data-init='twijfel' data-lat='51.50705596' data-lon='5.31711408' data-koop='80'>
           <div class='kop'><span class='nr'>39</span>
             <span class='naam'>Steenakkerstraat</span>
             <span class='bj bj-top'>🎯 1968</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONDUIDELIJK</span><span class='nokb nok-goed'>pannen: OUD</span></div>
-          <div class='reden'>Tegenlicht — nok niet te beoordelen.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 80% koop</span></div><div class='reden'>Tegenlicht — nok niet te beoordelen.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_Steenakkerstra_begin.jpg' loading='lazy'><figcaption>begin nr4</figcaption></figure><figure><img src='fotos/BU08230002_Steenakkerstra_midden.jpg' loading='lazy'><figcaption>midden nr12</figcaption></figure><figure><img src='fotos/BU08230002_Steenakkerstra_eind.jpg' loading='lazy'><figcaption>eind nr18</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_Steenakkerstra_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -787,11 +791,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("Steenakkerstraat","Steenakkerstraat")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Raamslegerstraat' data-init='twijfel' data-lat='51.50656496' data-lon='5.31727679'>
+        <div class='straat' id='s_Raamslegerstraat' data-init='twijfel' data-lat='51.50656496' data-lon='5.31727679' data-koop='100'>
           <div class='kop'><span class='nr'>40</span>
             <span class='naam'>Raamslegerstraat</span>
             <span class='bj bj-top'>🎯 1968</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONDUIDELIJK</span><span class='nokb nok-goed'>pannen: OUD</span></div>
-          <div class='reden'>Oude pannen + mos; nok niet zichtbaar.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Oude pannen + mos; nok niet zichtbaar.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_Raamslegerstra_begin.jpg' loading='lazy'><figcaption>begin nr4</figcaption></figure><figure><img src='fotos/BU08230002_Raamslegerstra_midden.jpg' loading='lazy'><figcaption>midden nr11</figcaption></figure><figure><img src='fotos/BU08230002_Raamslegerstra_eind.jpg' loading='lazy'><figcaption>eind nr18</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_Raamslegerstra_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -806,11 +810,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("Raamslegerstraat","Raamslegerstraat")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Schoemekerstraat' data-init='go' data-lat='51.50677152' data-lon='5.31633827'>
+        <div class='straat' id='s_Schoemekerstraat' data-init='go' data-lat='51.50677152' data-lon='5.31633827' data-koop='80'>
           <div class='kop'><span class='nr'>41</span>
             <span class='naam'>Schoemekerstraat</span>
             <span class='bj bj-top'>🎯 1968</span><span class='ai ai-go'>AI: GO</span><span class='nokb nok-goed'>nok: HALFROND</span><span class='nokb nok-goed'>pannen: OUD</span></div>
-          <div class='reden'>Nok-zoom: ronde vorsten + pijpen (panelen ernaast — geen probleem).</div><div class='haakjes'>💰 gespot: oude halfronde nok</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 80% koop</span></div><div class='reden'>Nok-zoom: ronde vorsten + pijpen (panelen ernaast — geen probleem).</div><div class='haakjes'>💰 gespot: oude halfronde nok</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_Schoemekerstra_begin.jpg' loading='lazy'><figcaption>begin nr5</figcaption></figure><figure><img src='fotos/BU08230002_Schoemekerstra_midden.jpg' loading='lazy'><figcaption>midden nr13</figcaption></figure><figure><img src='fotos/BU08230002_Schoemekerstra_eind.jpg' loading='lazy'><figcaption>eind nr21</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_Schoemekerstra_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -825,11 +829,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("Schoemekerstraat","Schoemekerstraat")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Ekkermanstraat' data-init='twijfel' data-lat='51.50708546' data-lon='5.31547431'>
+        <div class='straat' id='s_Ekkermanstraat' data-init='twijfel' data-lat='51.50708546' data-lon='5.31547431' data-koop='80'>
           <div class='kop'><span class='nr'>42</span>
             <span class='naam'>Ekkermanstraat</span>
             <span class='bj bj-top'>🎯 1968</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Rijen jaren 80-90, bruine pannen — randgeval leeftijd.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 80% koop</span></div><div class='reden'>Rijen jaren 80-90, bruine pannen — randgeval leeftijd.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_Ekkermanstraat_begin.jpg' loading='lazy'><figcaption>begin nr3</figcaption></figure><figure><img src='fotos/BU08230002_Ekkermanstraat_midden.jpg' loading='lazy'><figcaption>midden nr7</figcaption></figure><figure><img src='fotos/BU08230002_Ekkermanstraat_eind.jpg' loading='lazy'><figcaption>eind nr11</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_Ekkermanstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -844,11 +848,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("Ekkermanstraat","Ekkermanstraat")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_van_Eschstraat' data-init='twijfel' data-lat='51.5050341' data-lon='5.31525416'>
+        <div class='straat' id='s_van_Eschstraat' data-init='twijfel' data-lat='51.5050341' data-lon='5.31525416' data-koop='100'>
           <div class='kop'><span class='nr'>43</span>
             <span class='naam'>van Eschstraat</span>
             <span class='bj bj-top'>🎯 1965</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Vrijstaand jaren 95-05 — waarschijnlijk te nieuw.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span> <span class='eig eig-goed'>👴 33% 65+</span></div><div class='reden'>Vrijstaand jaren 95-05 — waarschijnlijk te nieuw.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_vanEschstraat_begin.jpg' loading='lazy'><figcaption>begin nr2</figcaption></figure><figure><img src='fotos/BU08230002_vanEschstraat_midden.jpg' loading='lazy'><figcaption>midden nr6</figcaption></figure><figure><img src='fotos/BU08230002_vanEschstraat_eind.jpg' loading='lazy'><figcaption>eind nr10</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_vanEschstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -863,11 +867,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("van_Eschstraat","van Eschstraat")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_van_Beeckstraat' data-init='twijfel' data-lat='51.50489216' data-lon='5.3159415'>
+        <div class='straat' id='s_van_Beeckstraat' data-init='twijfel' data-lat='51.50489216' data-lon='5.3159415' data-koop='90'>
           <div class='kop'><span class='nr'>44</span>
             <span class='naam'>van Beeckstraat</span>
             <span class='bj bj-top'>🎯 1970</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Flauw dak met beplating — nok nauwelijks zichtbaar.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 90% koop</span> <span class='eig eig-goed'>👴 50% 65+</span></div><div class='reden'>Flauw dak met beplating — nok nauwelijks zichtbaar.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_vanBeeckstraat_begin.jpg' loading='lazy'><figcaption>begin nr5</figcaption></figure><figure><img src='fotos/BU08230002_vanBeeckstraat_midden.jpg' loading='lazy'><figcaption>midden nr13</figcaption></figure><figure><img src='fotos/BU08230002_vanBeeckstraat_eind.jpg' loading='lazy'><figcaption>eind nr19</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_vanBeeckstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -882,11 +886,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("van_Beeckstraat","van Beeckstraat")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Bestseweg' data-init='twijfel' data-lat='51.50456339' data-lon='5.31631089'>
+        <div class='straat' id='s_Bestseweg' data-init='twijfel' data-lat='51.50456339' data-lon='5.31631089' data-koop='80'>
           <div class='kop'><span class='nr'>45</span>
             <span class='naam'>Bestseweg</span>
             <span class='bj bj-goed'>🟢 1947</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Vrijstaande villa jaren 90-00 — waarschijnlijk te nieuw.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 80% koop</span></div><div class='reden'>Vrijstaande villa jaren 90-00 — waarschijnlijk te nieuw.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_Bestseweg_begin.jpg' loading='lazy'><figcaption>begin nr7</figcaption></figure><figure><img src='fotos/BU08230002_Bestseweg_midden.jpg' loading='lazy'><figcaption>midden nr14</figcaption></figure><figure><img src='fotos/BU08230002_Bestseweg_eind.jpg' loading='lazy'><figcaption>eind nr36</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_Bestseweg_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -901,11 +905,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("Bestseweg","Bestseweg")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_van_der_Hofstatstraat' data-init='twijfel' data-lat='51.50505301' data-lon='5.31706198'>
+        <div class='straat' id='s_van_der_Hofstatstraat' data-init='twijfel' data-lat='51.50505301' data-lon='5.31706198' data-koop='100'>
           <div class='kop'><span class='nr'>46</span>
             <span class='naam'>van der Hofstatstraat</span>
             <span class='bj bj-top'>🎯 1975</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Donkere pannen + dakramen, boom blokkeert deels.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span> <span class='eig eig-goed'>👴 33% 65+</span></div><div class='reden'>Donkere pannen + dakramen, boom blokkeert deels.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_vanderHofstats_begin.jpg' loading='lazy'><figcaption>begin nr4</figcaption></figure><figure><img src='fotos/BU08230002_vanderHofstats_midden.jpg' loading='lazy'><figcaption>midden nr10</figcaption></figure><figure><img src='fotos/BU08230002_vanderHofstats_eind.jpg' loading='lazy'><figcaption>eind nr1002</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_vanderHofstats_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -920,11 +924,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("van_der_Hofstatstraat","van der Hofstatstraat")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_van_Audenhovenstraat' data-init='go' data-lat='51.50506532' data-lon='5.31760406'>
+        <div class='straat' id='s_van_Audenhovenstraat' data-init='go' data-lat='51.50506532' data-lon='5.31760406' data-koop='100'>
           <div class='kop'><span class='nr'>47</span>
             <span class='naam'>van Audenhovenstraat</span>
             <span class='bj bj-top'>🎯 1975</span><span class='ai ai-go'>AI: GO</span><span class='nokb nok-goed'>nok: HALFROND</span><span class='nokb nok-goed'>pannen: OUD</span></div>
-          <div class='reden'>Nok-zoom: ronde vorsten op de noklijn, oude pannen + mos.</div><div class='haakjes'>💰 gespot: oude halfronde nok, mos, 2 schoorstenen</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span> <span class='eig eig-goed'>👴 33% 65+</span></div><div class='reden'>Nok-zoom: ronde vorsten op de noklijn, oude pannen + mos.</div><div class='haakjes'>💰 gespot: oude halfronde nok, mos, 2 schoorstenen</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_vanAudenhovens_begin.jpg' loading='lazy'><figcaption>begin nr3</figcaption></figure><figure><img src='fotos/BU08230002_vanAudenhovens_midden.jpg' loading='lazy'><figcaption>midden nr9</figcaption></figure><figure><img src='fotos/BU08230002_vanAudenhovens_eind.jpg' loading='lazy'><figcaption>eind nr1002</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_vanAudenhovens_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -939,11 +943,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("van_Audenhovenstraat","van Audenhovenstraat")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_van_den_Laeckstraat' data-init='twijfel' data-lat='51.50502181' data-lon='5.31888552'>
+        <div class='straat' id='s_van_den_Laeckstraat' data-init='twijfel' data-lat='51.50502181' data-lon='5.31888552' data-koop=''>
           <div class='kop'><span class='nr'>48</span>
             <span class='naam'>van den Laeckstraat</span>
             <span class='bj bj-top'>🎯 1975</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Gemengd: 2-kap vol panelen + moderne aanbouw.</div>
+          <div class='eigrij'><span class='eig eig-goed'>👴 33% 65+</span></div><div class='reden'>Gemengd: 2-kap vol panelen + moderne aanbouw.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_vandenLaeckstr_begin.jpg' loading='lazy'><figcaption>begin nr3</figcaption></figure><figure><img src='fotos/BU08230002_vandenLaeckstr_midden.jpg' loading='lazy'><figcaption>midden nr8</figcaption></figure><figure><img src='fotos/BU08230002_vandenLaeckstr_eind.jpg' loading='lazy'><figcaption>eind nr1003</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_vandenLaeckstr_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -958,11 +962,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("van_den_Laeckstraat","van den Laeckstraat")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Oude_Bestseweg' data-init='twijfel' data-lat='51.50483579' data-lon='5.32112005'>
+        <div class='straat' id='s_Oude_Bestseweg' data-init='twijfel' data-lat='51.50483579' data-lon='5.32112005' data-koop='100'>
           <div class='kop'><span class='nr'>49</span>
             <span class='naam'>Oude Bestseweg</span>
             <span class='bj bj-top'>🎯 1973</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Bungalow-achtig achter boom — zicht beperkt.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Bungalow-achtig achter boom — zicht beperkt.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_OudeBestseweg_begin.jpg' loading='lazy'><figcaption>begin nr7</figcaption></figure><figure><img src='fotos/BU08230002_OudeBestseweg_midden.jpg' loading='lazy'><figcaption>midden nr14</figcaption></figure><figure><img src='fotos/BU08230002_OudeBestseweg_eind.jpg' loading='lazy'><figcaption>eind nr24</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_OudeBestseweg_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -977,7 +981,7 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("Oude_Bestseweg","Oude Bestseweg")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Meervenstraat' data-init='twijfel' data-lat='51.50556586' data-lon='5.32130011'>
+        <div class='straat' id='s_Meervenstraat' data-init='twijfel' data-lat='51.50556586' data-lon='5.32130011' data-koop=''>
           <div class='kop'><span class='nr'>50</span>
             <span class='naam'>Meervenstraat</span>
             <span class='bj bj-top'>🎯 1973</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
@@ -996,11 +1000,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("Meervenstraat","Meervenstraat")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Snellaertsstraat' data-init='twijfel' data-lat='51.505484' data-lon='5.32254393'>
+        <div class='straat' id='s_Snellaertsstraat' data-init='twijfel' data-lat='51.505484' data-lon='5.32254393' data-koop='100'>
           <div class='kop'><span class='nr'>51</span>
             <span class='naam'>Snellaertsstraat</span>
             <span class='bj bj-top'>🎯 1978</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Alleen pad/groen in beeld — ter plekke checken.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span> <span class='eig eig-goed'>👴 36% 65+</span></div><div class='reden'>Alleen pad/groen in beeld — ter plekke checken.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_Snellaertsstra_begin.jpg' loading='lazy'><figcaption>begin nr5</figcaption></figure><figure><img src='fotos/BU08230002_Snellaertsstra_midden.jpg' loading='lazy'><figcaption>midden nr11</figcaption></figure><figure><img src='fotos/BU08230002_Snellaertsstra_eind.jpg' loading='lazy'><figcaption>eind nr19</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_Snellaertsstra_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -1015,11 +1019,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("Snellaertsstraat","Snellaertsstraat")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_de_Kastanjehof' data-init='go' data-lat='51.50631455' data-lon='5.32627698'>
+        <div class='straat' id='s_de_Kastanjehof' data-init='go' data-lat='51.50631455' data-lon='5.32627698' data-koop='100'>
           <div class='kop'><span class='nr'>52</span>
             <span class='naam'>de Kastanjehof</span>
             <span class='bj bj-goed'>🟢 1981</span><span class='ai ai-go'>AI: GO</span><span class='nokb nok-goed'>nok: HALFROND</span><span class='nokb nok-goed'>pannen: OUD</span></div>
-          <div class='reden'>Nok-zoom: ronde vorsten op nok én hoekkepers, vooroorlogs.</div><div class='haakjes'>💰 gespot: oude nok + hoekkepers, vooroorlogs — premium klus</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span> <span class='eig eig-goed'>👴 30% 65+</span></div><div class='reden'>Nok-zoom: ronde vorsten op nok én hoekkepers, vooroorlogs.</div><div class='haakjes'>💰 gespot: oude nok + hoekkepers, vooroorlogs — premium klus</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_deKastanjehof_begin.jpg' loading='lazy'><figcaption>begin nr3</figcaption></figure><figure><img src='fotos/BU08230002_deKastanjehof_midden.jpg' loading='lazy'><figcaption>midden nr9</figcaption></figure><figure><img src='fotos/BU08230002_deKastanjehof_eind.jpg' loading='lazy'><figcaption>eind nr15</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_deKastanjehof_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -1034,11 +1038,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("de_Kastanjehof","de Kastanjehof")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_de_Baljuw' data-init='twijfel' data-lat='51.50261625' data-lon='5.31921039'>
+        <div class='straat' id='s_de_Baljuw' data-init='twijfel' data-lat='51.50261625' data-lon='5.31921039' data-koop='100'>
           <div class='kop'><span class='nr'>53</span>
             <span class='naam'>de Baljuw</span>
             <span class='bj bj-top'>🎯 1972</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Kopgevel — dak niet zichtbaar.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Kopgevel — dak niet zichtbaar.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_deBaljuw_begin.jpg' loading='lazy'><figcaption>begin nr4</figcaption></figure><figure><img src='fotos/BU08230002_deBaljuw_midden.jpg' loading='lazy'><figcaption>midden nr11</figcaption></figure><figure><img src='fotos/BU08230002_deBaljuw_eind.jpg' loading='lazy'><figcaption>eind nr18</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_deBaljuw_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -1053,11 +1057,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("de_Baljuw","de Baljuw")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_de_Schepen' data-init='twijfel' data-lat='51.50222542' data-lon='5.31834981'>
+        <div class='straat' id='s_de_Schepen' data-init='twijfel' data-lat='51.50222542' data-lon='5.31834981' data-koop='100'>
           <div class='kop'><span class='nr'>54</span>
             <span class='naam'>de Schepen</span>
             <span class='bj bj-top'>🎯 1972</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Kopgevel achter bomen — zicht beperkt.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Kopgevel achter bomen — zicht beperkt.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_deSchepen_begin.jpg' loading='lazy'><figcaption>begin nr4</figcaption></figure><figure><img src='fotos/BU08230002_deSchepen_midden.jpg' loading='lazy'><figcaption>midden nr12</figcaption></figure><figure><img src='fotos/BU08230002_deSchepen_eind.jpg' loading='lazy'><figcaption>eind nr20</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_deSchepen_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -1072,11 +1076,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("de_Schepen","de Schepen")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_de_Rentmeester' data-init='twijfel' data-lat='51.50193832' data-lon='5.3174731'>
+        <div class='straat' id='s_de_Rentmeester' data-init='twijfel' data-lat='51.50193832' data-lon='5.3174731' data-koop='100'>
           <div class='kop'><span class='nr'>55</span>
             <span class='naam'>de Rentmeester</span>
             <span class='bj bj-top'>🎯 1972</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Kopgevel achter bomen — geen zicht.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Kopgevel achter bomen — geen zicht.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_deRentmeester_begin.jpg' loading='lazy'><figcaption>begin nr4</figcaption></figure><figure><img src='fotos/BU08230002_deRentmeester_midden.jpg' loading='lazy'><figcaption>midden nr12</figcaption></figure><figure><img src='fotos/BU08230002_deRentmeester_eind.jpg' loading='lazy'><figcaption>eind nr20</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_deRentmeester_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -1091,11 +1095,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("de_Rentmeester","de Rentmeester")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_de_Vorster' data-init='twijfel' data-lat='51.50351749' data-lon='5.31727172'>
+        <div class='straat' id='s_de_Vorster' data-init='twijfel' data-lat='51.50351749' data-lon='5.31727172' data-koop='100'>
           <div class='kop'><span class='nr'>56</span>
             <span class='naam'>de Vorster</span>
             <span class='bj bj-top'>🎯 1972</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Atypische leisteen-gevelbekleding, dak vol panelen.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Atypische leisteen-gevelbekleding, dak vol panelen.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_deVorster_begin.jpg' loading='lazy'><figcaption>begin nr5</figcaption></figure><figure><img src='fotos/BU08230002_deVorster_midden.jpg' loading='lazy'><figcaption>midden nr13</figcaption></figure><figure><img src='fotos/BU08230002_deVorster_eind.jpg' loading='lazy'><figcaption>eind nr20</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_deVorster_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -1110,11 +1114,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("de_Vorster","de Vorster")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_de_Schout' data-init='twijfel' data-lat='51.50371438' data-lon='5.31765264'>
+        <div class='straat' id='s_de_Schout' data-init='twijfel' data-lat='51.50371438' data-lon='5.31765264' data-koop='100'>
           <div class='kop'><span class='nr'>57</span>
             <span class='naam'>de Schout</span>
             <span class='bj bj-top'>🎯 1972</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONDUIDELIJK</span><span class='nokb nok-goed'>pannen: OUD</span></div>
-          <div class='reden'>Veel panelen; nok net buiten beeld.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span> <span class='eig eig-goed'>👴 38% 65+</span></div><div class='reden'>Veel panelen; nok net buiten beeld.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_deSchout_begin.jpg' loading='lazy'><figcaption>begin nr4</figcaption></figure><figure><img src='fotos/BU08230002_deSchout_midden.jpg' loading='lazy'><figcaption>midden nr11</figcaption></figure><figure><img src='fotos/BU08230002_deSchout_eind.jpg' loading='lazy'><figcaption>eind nr18</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_deSchout_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -1129,11 +1133,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("de_Schout","de Schout")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_de_Schutter' data-init='twijfel' data-lat='51.50325379' data-lon='5.31586373'>
+        <div class='straat' id='s_de_Schutter' data-init='twijfel' data-lat='51.50325379' data-lon='5.31586373' data-koop='90'>
           <div class='kop'><span class='nr'>58</span>
             <span class='naam'>de Schutter</span>
             <span class='bj bj-top'>🎯 1974</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Boom blokkeert; rij erachter oogt origineel.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 90% koop</span></div><div class='reden'>Boom blokkeert; rij erachter oogt origineel.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_deSchutter_begin.jpg' loading='lazy'><figcaption>begin nr5</figcaption></figure><figure><img src='fotos/BU08230002_deSchutter_midden.jpg' loading='lazy'><figcaption>midden nr13</figcaption></figure><figure><img src='fotos/BU08230002_deSchutter_eind.jpg' loading='lazy'><figcaption>eind nr21</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_deSchutter_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -1148,11 +1152,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("de_Schutter","de Schutter")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Stapakker' data-init='twijfel' data-lat='51.50990539' data-lon='5.31346969'>
+        <div class='straat' id='s_Stapakker' data-init='twijfel' data-lat='51.50990539' data-lon='5.31346969' data-koop='83'>
           <div class='kop'><span class='nr'>59</span>
             <span class='naam'>Stapakker</span>
             <span class='bj bj-meh'>🟡 1989</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>2-onder-1-kap jaren 85-95, pannen netjes — mogelijk nieuwer/vlakke pan.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 83% koop</span> <span class='eig eig-fout'>🏢 29% corporatie</span> <span class='eig eig-goed'>👴 33% 65+</span></div><div class='reden'>2-onder-1-kap jaren 85-95, pannen netjes — mogelijk nieuwer/vlakke pan.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_Stapakker_begin.jpg' loading='lazy'><figcaption>begin nr6</figcaption></figure><figure><img src='fotos/BU08230002_Stapakker_midden.jpg' loading='lazy'><figcaption>midden nr17</figcaption></figure><figure><img src='fotos/BU08230002_Stapakker_eind.jpg' loading='lazy'><figcaption>eind nr28</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_Stapakker_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -1167,11 +1171,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("Stapakker","Stapakker")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Oude_Grintweg' data-init='go' data-lat='51.51014737' data-lon='5.31185278'>
+        <div class='straat' id='s_Oude_Grintweg' data-init='go' data-lat='51.51014737' data-lon='5.31185278' data-koop='60'>
           <div class='kop'><span class='nr'>60</span>
             <span class='naam'>Oude Grintweg</span>
             <span class='bj bj-top'>🎯 1957</span><span class='ai ai-go'>AI: GO</span><span class='nokb nok-goed'>nok: HALFROND?</span><span class='nokb nok-goed'>pannen: OUD</span></div>
-          <div class='reden'>Vooroorlogs keramisch (rode pannen) — vorst vrijwel zeker halfrond.</div><div class='haakjes'>💰 gespot: vooroorlogse keramiek, 2 schoorstenen (lood)</div>
+          <div class='eigrij'><span class='eig eig-meh'>🔑 60% koop</span> <span class='eig eig-fout'>🏢 25% corporatie</span> <span class='eig eig-fout'>🏬 31% flats</span> <span class='eig eig-goed'>👴 32% 65+</span></div><div class='reden'>Vooroorlogs keramisch (rode pannen) — vorst vrijwel zeker halfrond.</div><div class='haakjes'>💰 gespot: vooroorlogse keramiek, 2 schoorstenen (lood)</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_OudeGrintweg_begin.jpg' loading='lazy'><figcaption>begin nr57</figcaption></figure><figure><img src='fotos/BU08230002_OudeGrintweg_midden.jpg' loading='lazy'><figcaption>midden nr59</figcaption></figure><figure><img src='fotos/BU08230002_OudeGrintweg_eind.jpg' loading='lazy'><figcaption>eind nr59</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_OudeGrintweg_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -1186,11 +1190,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("Oude_Grintweg","Oude Grintweg")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Elsenwas' data-init='twijfel' data-lat='51.51086351' data-lon='5.31282711'>
+        <div class='straat' id='s_Elsenwas' data-init='twijfel' data-lat='51.51086351' data-lon='5.31282711' data-koop='90'>
           <div class='kop'><span class='nr'>61</span>
             <span class='naam'>Elsenwas</span>
             <span class='bj bj-meh'>🟡 1989</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONDUIDELIJK</span><span class='nokb nok-goed'>pannen: OUD</span></div>
-          <div class='reden'>Prachtige oude keramiek + panelen, maar nok buiten beeld.</div><div class='haakjes'>💰 gespot: oude keramiek, 2 schoorstenen (lood)</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 90% koop</span></div><div class='reden'>Prachtige oude keramiek + panelen, maar nok buiten beeld.</div><div class='haakjes'>💰 gespot: oude keramiek, 2 schoorstenen (lood)</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_Elsenwas_begin.jpg' loading='lazy'><figcaption>begin nr3</figcaption></figure><figure><img src='fotos/BU08230002_Elsenwas_midden.jpg' loading='lazy'><figcaption>midden nr9</figcaption></figure><figure><img src='fotos/BU08230002_Elsenwas_eind.jpg' loading='lazy'><figcaption>eind nr18</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_Elsenwas_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -1205,11 +1209,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("Elsenwas","Elsenwas")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Moerevelt' data-init='go' data-lat='51.51116867' data-lon='5.31300159'>
+        <div class='straat' id='s_Moerevelt' data-init='go' data-lat='51.51116867' data-lon='5.31300159' data-koop='100'>
           <div class='kop'><span class='nr'>62</span>
             <span class='naam'>Moerevelt</span>
             <span class='bj bj-meh'>🟡 1992</span><span class='ai ai-go'>AI: GO</span><span class='nokb nok-goed'>nok: HALFROND?</span><span class='nokb nok-goed'>pannen: OUD</span></div>
-          <div class='reden'>Boerderij-keramiek; nok deels buiten beeld maar keper oogt rond.</div><div class='haakjes'>💰 gespot: boerderijkeramiek, 2 schoorstenen (lood)</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Boerderij-keramiek; nok deels buiten beeld maar keper oogt rond.</div><div class='haakjes'>💰 gespot: boerderijkeramiek, 2 schoorstenen (lood)</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_Moerevelt_begin.jpg' loading='lazy'><figcaption>begin nr3</figcaption></figure><figure><img src='fotos/BU08230002_Moerevelt_midden.jpg' loading='lazy'><figcaption>midden nr8</figcaption></figure><figure><img src='fotos/BU08230002_Moerevelt_eind.jpg' loading='lazy'><figcaption>eind nr13</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_Moerevelt_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -1224,11 +1228,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("Moerevelt","Moerevelt")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Garstakker' data-init='twijfel' data-lat='51.51192149' data-lon='5.31321851'>
+        <div class='straat' id='s_Garstakker' data-init='twijfel' data-lat='51.51192149' data-lon='5.31321851' data-koop='100'>
           <div class='kop'><span class='nr'>63</span>
             <span class='naam'>Garstakker</span>
             <span class='bj bj-meh'>🟡 1992</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Kopgevel jaren 90, strak metselwerk.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Kopgevel jaren 90, strak metselwerk.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_Garstakker_begin.jpg' loading='lazy'><figcaption>begin nr4</figcaption></figure><figure><img src='fotos/BU08230002_Garstakker_midden.jpg' loading='lazy'><figcaption>midden nr10</figcaption></figure><figure><img src='fotos/BU08230002_Garstakker_eind.jpg' loading='lazy'><figcaption>eind nr17</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_Garstakker_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -1243,11 +1247,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='done' onclick='markDone("Garstakker","Garstakker")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Sleebos' data-init='twijfel' data-lat='51.51234351' data-lon='5.3147405'>
+        <div class='straat' id='s_Sleebos' data-init='twijfel' data-lat='51.51234351' data-lon='5.3147405' data-koop='72'>
           <div class='kop'><span class='nr'>64</span>
             <span class='naam'>Sleebos</span>
             <span class='bj bj-meh'>🟡 1992</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Flauw dak, grijze pannen — nok nauwelijks zichtbaar.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 72% koop</span> <span class='eig eig-fout'>🏢 29% corporatie</span> <span class='eig eig-goed'>👴 30% 65+</span></div><div class='reden'>Flauw dak, grijze pannen — nok nauwelijks zichtbaar.</div>
           <div class='fotos'><figure><img src='fotos/BU08230002_Sleebos_begin.jpg' loading='lazy'><figcaption>begin nr6</figcaption></figure><figure><img src='fotos/BU08230002_Sleebos_midden.jpg' loading='lazy'><figcaption>midden nr17</figcaption></figure><figure><img src='fotos/BU08230002_Sleebos_eind.jpg' loading='lazy'><figcaption>eind nr34</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08230002_Sleebos_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -1278,6 +1282,21 @@ localStorage.setItem('laatste_plan','straatplan/'+location.pathname.split('/').p
 const tsx=document.getElementById('t-straten');if(tsx)tsx.href=location.pathname.split('/').pop();
 const code='BU08230002', naam='De Notel';
 const SHEET_URL='https://script.google.com/macros/s/AKfycbzMkmZKeadRlwNxTzl9io-vftCurSiGP2lz2rDFLSkVVADnzjOkwzqoHlstRCFyj1ppjA/exec';
+// weer in déze buurt (open-meteo, gratis) — regen per uur
+fetch('https://api.open-meteo.com/v1/forecast?latitude=51.5079&longitude=5.3183&hourly=precipitation,precipitation_probability&timezone=Europe%2FAmsterdam&forecast_days=1')
+.then(r=>r.json()).then(w=>{
+  const H=w.hourly, nu=new Date().getHours();
+  let chips='', eerste=null;
+  for(let h=Math.max(7,nu); h<=21; h++){
+    const mm=H.precipitation[h]||0, p=H.precipitation_probability[h]||0;
+    const nat=mm>=0.1&&p>=30;
+    if(nat&&eerste===null)eerste=h;
+    chips+='<span style="display:inline-block;min-width:1.9rem;text-align:center;padding:.1rem 0;margin:.06rem;border-radius:5px;font-size:.68rem;background:'+(nat?'#cfe3ff':'#f0f0f2')+'">'+h+'u<br>'+(nat?'🌧':'·')+'</span>';
+  }
+  const ws=document.getElementById('weerstrip');
+  ws.innerHTML=(eerste===null?'☀️ <b>Droog tot 21:00 in deze buurt</b>':'🌧️ <b>Regen hier rond '+eerste+':00</b>'+(eerste-nu<2?' — nu niet starten?':' — nog '+(eerste-nu)+' uur droog'))+'<div style="margin-top:.2rem">'+chips+'</div>';
+  ws.style.display='';
+}).catch(()=>{});
 const v=JSON.parse(localStorage.getItem('plan_'+code)||'{}');
 const done=JSON.parse(localStorage.getItem('done_'+code)||'{}');
 const lijst=document.getElementById('lijst');
@@ -1362,7 +1381,7 @@ document.querySelectorAll('.notitie').forEach(inp=>inp.addEventListener('change'
   log('notitie: '+inp.value, el?el.querySelector('.naam').textContent:k);
 }));
 let sortMode=localStorage.getItem('sort_'+code)||'route';
-function prio(el){const vd=cur(el.id.slice(2));if(vd==='skip')return 3;if(vd==='go')return 0;if(vd==='meh'||vd==='twijfel')return 1;return 2;}
+function prio(el){const vd=cur(el.id.slice(2));const koop=el.dataset.koop===''?null:+el.dataset.koop;const huur=(koop!==null&&koop<45);if(vd==='skip')return 3;if(vd==='go')return huur?1:0;if(vd==='meh'||vd==='twijfel')return 1;return 2;}
 function dist2(a,b){const dx=(+a.dataset.lat)-(+b.dataset.lat);const dy=((+a.dataset.lon)-(+b.dataset.lon))*0.62;return dx*dx+dy*dy;}
 function nnSort(els, vanaf){
   if(els.length<2) return els;

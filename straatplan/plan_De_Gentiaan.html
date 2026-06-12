@@ -25,6 +25,9 @@ a.terug{font-size:.85rem;color:#1a73e8;text-decoration:none;}
 .ai{font-size:.72rem;font-weight:700;padding:.1rem .45rem;border-radius:5px;color:#fff;}
 .ai-go{background:#1a9850;}.ai-meh{background:#fdae61;}
 .nokb{font-size:.68rem;font-weight:700;padding:.1rem .4rem;border-radius:5px;color:#fff;}
+.eigrij{display:flex;gap:.3rem;flex-wrap:wrap;margin:.25rem 0;}
+.eig{font-size:.7rem;font-weight:700;padding:.12rem .45rem;border-radius:5px;color:#fff;background:#999;}
+.eig-goed{background:#1a9850;}.eig-meh{background:#e08c00;}.eig-fout{background:#d73027;}
 .nok-goed{background:#1a9850;}.nok-fout{background:#d73027;}.nok-onb{background:#999;}
 .nokzoom{margin-top:3px;}.nokzoom img{width:100%;border-radius:6px;display:block;}
 .nokcap{font-size:.66rem;color:#888;text-align:center;}
@@ -56,20 +59,21 @@ a.terug{font-size:.85rem;color:#1a73e8;text-decoration:none;}
 .ai-skip{background:#d73027;}
 .svlink{display:inline-block;color:#1a73e8;font-size:.8rem;margin-top:.35rem;text-decoration:none;}
 </style></head><body>
-<div class="tabs"><a href="../index.html">🏠</a><a href="../vandaag.html">📅 Planning</a><a href="../begin_lijst.html">📋 Buurten</a><a href="#" id="t-straten">🚶 Straten</a><a href="../kaart.html">🗺️ Kaart</a><a href="../feedback.html">💬 Feedback</a></div>
+<div class="tabs"><a href="../index.html">🏠</a><a href="../vandaag.html">📅 Planning</a><a href="../begin_lijst.html">📋 Buurten</a><a href="#" id="t-straten">🚶 Straten</a><a href="../kaart.html">🗺️ Kaart</a><a href="../dashboard.html">📊 Cijfers</a><a href="../feedback.html">💬 Feedback</a></div>
 <h1>🗺️ De Gentiaan — straatplan</h1>
 <div class='intro'>🎯 = bouwjaar 1955-1980. Bekijk de 3 foto's (begin/midden/eind): is de <b>nok halfrond</b>?
 De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b>DONE</b> als je 'm gelopen hebt.</div>
 <div class='blok-review'><input id='buurtrev' placeholder='⭐ Review over de hele buurt (sfeer, type mensen, concurrent gezien...)'><button onclick='bewaarBuurtrev()'>Opslaan</button></div>
 <div class='bar'><div id='routes'></div><div class='klok'><button class='k-start' onclick='klok("start")'>▶ Start</button><button class='k-pauze' id='pauzebtn' onclick='klokPauze()'>⏸ Pauze</button><button class='k-fin' onclick='klok("finish")'>🏁 Klaar</button><span id='tijdtxt'></span></div><button class='sorteer' id='sortbtn' onclick='toggleSort()'>⭐ GO eerst</button><div class='teller' id='teller'>—</div></div>
+<div class='intro' id='weerstrip' style='display:none'></div>
 <div class='testblok'><b>🧪 START-TEST — pak deze eerst (≈161 huizen)</b><div class='trij'><a href='#s_Peellaan'>Peellaan</a> · 89 huizen · GO</div><div class='trij'><a href='#s_Oderlaan'>Oderlaan</a> · 72 huizen · GO</div><div class='tuitleg'>Dichtste straten naast elkaar. Loopt het hier niet binnen de test → wijk is niks, pak een alternatief (onderaan).</div><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.52647232,5.48242263&travelmode=driving' target='_blank'>🚗 Naar de test-straten</a></div>
 <div id='lijst'>
 
-        <div class='straat' id='s_Weserlaan' data-init='twijfel' data-lat='51.52874355' data-lon='5.48355472'>
+        <div class='straat' id='s_Weserlaan' data-init='twijfel' data-lat='51.52874355' data-lon='5.48355472' data-koop='49'>
           <div class='kop'><span class='nr'>2</span>
             <span class='naam'>Weserlaan</span>
             <span class='bj bj-meh'>🟡 1988</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Bruine pannen ogen origineel, maar balkons = mogelijk maisonnettes (huur-check).</div>
+          <div class='eigrij'><span class='eig eig-meh'>🔑 49% koop</span> <span class='eig eig-fout'>🏢 78% corporatie</span> <span class='eig eig-fout'>🏬 56% flats</span></div><div class='reden' style='color:#a3231a'>⚠️ Vooral huur/flats — niet jouw doelgroep, lage prioriteit</div><div class='reden'>Bruine pannen ogen origineel, maar balkons = mogelijk maisonnettes (huur-check).</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Weserlaan_begin.jpg' loading='lazy'><figcaption>begin nr10</figcaption></figure><figure><img src='fotos/BU08480001_Weserlaan_midden.jpg' loading='lazy'><figcaption>midden nr28</figcaption></figure><figure><img src='fotos/BU08480001_Weserlaan_eind.jpg' loading='lazy'><figcaption>eind nr46</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Weserlaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -84,11 +88,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Weserlaan","Weserlaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Donaulaan' data-init='twijfel' data-lat='51.52864702' data-lon='5.48309008'>
+        <div class='straat' id='s_Donaulaan' data-init='twijfel' data-lat='51.52864702' data-lon='5.48309008' data-koop='100'>
           <div class='kop'><span class='nr'>3</span>
             <span class='naam'>Donaulaan</span>
             <span class='bj bj-meh'>🟡 1987</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Boom blokkeert vrijwel alles — ter plekke checken.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span> <span class='eig eig-goed'>👴 40% 65+</span></div><div class='reden'>Boom blokkeert vrijwel alles — ter plekke checken.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Donaulaan_begin.jpg' loading='lazy'><figcaption>begin nr4</figcaption></figure><figure><img src='fotos/BU08480001_Donaulaan_midden.jpg' loading='lazy'><figcaption>midden nr12</figcaption></figure><figure><img src='fotos/BU08480001_Donaulaan_eind.jpg' loading='lazy'><figcaption>eind nr22</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Donaulaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -103,11 +107,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Donaulaan","Donaulaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Elbelaan' data-init='twijfel' data-lat='51.52866309' data-lon='5.48118284'>
+        <div class='straat' id='s_Elbelaan' data-init='twijfel' data-lat='51.52866309' data-lon='5.48118284' data-koop='90'>
           <div class='kop'><span class='nr'>4</span>
             <span class='naam'>Elbelaan</span>
             <span class='bj bj-meh'>🟡 1988</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Vrijstaand, kopgevel — pannen alleen aan rand zichtbaar, oogt nieuwer.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 90% koop</span></div><div class='reden'>Vrijstaand, kopgevel — pannen alleen aan rand zichtbaar, oogt nieuwer.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Elbelaan_begin.jpg' loading='lazy'><figcaption>begin nr3</figcaption></figure><figure><img src='fotos/BU08480001_Elbelaan_midden.jpg' loading='lazy'><figcaption>midden nr9</figcaption></figure><figure><img src='fotos/BU08480001_Elbelaan_eind.jpg' loading='lazy'><figcaption>eind nr20</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Elbelaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -122,11 +126,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Elbelaan","Elbelaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Rh_nelaan' data-init='twijfel' data-lat='51.52812044' data-lon='5.47959055'>
+        <div class='straat' id='s_Rh_nelaan' data-init='twijfel' data-lat='51.52812044' data-lon='5.47959055' data-koop='90'>
           <div class='kop'><span class='nr'>5</span>
             <span class='naam'>Rhônelaan</span>
             <span class='bj bj-meh'>🟡 1989</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Dak grotendeels vol zonnepanelen; pannen eronder ogen origineel donker.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 90% koop</span></div><div class='reden'>Dak grotendeels vol zonnepanelen; pannen eronder ogen origineel donker.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Rhnelaan_begin.jpg' loading='lazy'><figcaption>begin nr10</figcaption></figure><figure><img src='fotos/BU08480001_Rhnelaan_midden.jpg' loading='lazy'><figcaption>midden nr25</figcaption></figure><figure><img src='fotos/BU08480001_Rhnelaan_eind.jpg' loading='lazy'><figcaption>eind nr46</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Rhnelaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -141,11 +145,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Rh_nelaan","Rhônelaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Seinelaan' data-init='twijfel' data-lat='51.52780526' data-lon='5.47915425'>
+        <div class='straat' id='s_Seinelaan' data-init='twijfel' data-lat='51.52780526' data-lon='5.47915425' data-koop='100'>
           <div class='kop'><span class='nr'>6</span>
             <span class='naam'>Seinelaan</span>
             <span class='bj bj-meh'>🟡 1990</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Kopgevel in beeld; rij erachter oogt origineel — begin/eind foto&#x27;s checken.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Kopgevel in beeld; rij erachter oogt origineel — begin/eind foto&#x27;s checken.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Seinelaan_begin.jpg' loading='lazy'><figcaption>begin nr10</figcaption></figure><figure><img src='fotos/BU08480001_Seinelaan_midden.jpg' loading='lazy'><figcaption>midden nr28</figcaption></figure><figure><img src='fotos/BU08480001_Seinelaan_eind.jpg' loading='lazy'><figcaption>eind nr53</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Seinelaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -160,11 +164,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Seinelaan","Seinelaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Marnelaan' data-init='twijfel' data-lat='51.52842381' data-lon='5.47797816'>
+        <div class='straat' id='s_Marnelaan' data-init='twijfel' data-lat='51.52842381' data-lon='5.47797816' data-koop='100'>
           <div class='kop'><span class='nr'>7</span>
             <span class='naam'>Marnelaan</span>
             <span class='bj bj-meh'>🟡 1990</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Geschakeld jaren 80-90, kopgevels + garages — randgeval.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Geschakeld jaren 80-90, kopgevels + garages — randgeval.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Marnelaan_begin.jpg' loading='lazy'><figcaption>begin nr6</figcaption></figure><figure><img src='fotos/BU08480001_Marnelaan_midden.jpg' loading='lazy'><figcaption>midden nr18</figcaption></figure><figure><img src='fotos/BU08480001_Marnelaan_eind.jpg' loading='lazy'><figcaption>eind nr36</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Marnelaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -179,11 +183,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Marnelaan","Marnelaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Loirelaan' data-init='twijfel' data-lat='51.52784286' data-lon='5.4770504'>
+        <div class='straat' id='s_Loirelaan' data-init='twijfel' data-lat='51.52784286' data-lon='5.4770504' data-koop='100'>
           <div class='kop'><span class='nr'>8</span>
             <span class='naam'>Loirelaan</span>
             <span class='bj bj-meh'>🟡 1991</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Geschakeld jaren 80-90 met puntgevels — randgeval leeftijd.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Geschakeld jaren 80-90 met puntgevels — randgeval leeftijd.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Loirelaan_begin.jpg' loading='lazy'><figcaption>begin nr4</figcaption></figure><figure><img src='fotos/BU08480001_Loirelaan_midden.jpg' loading='lazy'><figcaption>midden nr12</figcaption></figure><figure><img src='fotos/BU08480001_Loirelaan_eind.jpg' loading='lazy'><figcaption>eind nr19</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Loirelaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -198,11 +202,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Loirelaan","Loirelaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Adourlaan' data-init='twijfel' data-lat='51.52774468' data-lon='5.47614235'>
+        <div class='straat' id='s_Adourlaan' data-init='twijfel' data-lat='51.52774468' data-lon='5.47614235' data-koop='100'>
           <div class='kop'><span class='nr'>9</span>
             <span class='naam'>Adourlaan</span>
             <span class='bj bj-meh'>🟡 1992</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Vrijstaand/villa, donkere pannen ogen origineel — minder loop-efficiënt.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Vrijstaand/villa, donkere pannen ogen origineel — minder loop-efficiënt.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Adourlaan_begin.jpg' loading='lazy'><figcaption>begin nr2</figcaption></figure><figure><img src='fotos/BU08480001_Adourlaan_midden.jpg' loading='lazy'><figcaption>midden nr6</figcaption></figure><figure><img src='fotos/BU08480001_Adourlaan_eind.jpg' loading='lazy'><figcaption>eind nr10</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Adourlaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -217,11 +221,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Adourlaan","Adourlaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Juralaan' data-init='twijfel' data-lat='51.52673118' data-lon='5.47318629'>
+        <div class='straat' id='s_Juralaan' data-init='twijfel' data-lat='51.52673118' data-lon='5.47318629' data-koop='95'>
           <div class='kop'><span class='nr'>11</span>
             <span class='naam'>Juralaan</span>
             <span class='bj bj-meh'>🟡 1988</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Vrijstaand, bruine originele pannen — villa-gebied.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 95% koop</span> <span class='eig eig-goed'>👴 30% 65+</span></div><div class='reden'>Vrijstaand, bruine originele pannen — villa-gebied.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Juralaan_begin.jpg' loading='lazy'><figcaption>begin nr7</figcaption></figure><figure><img src='fotos/BU08480001_Juralaan_midden.jpg' loading='lazy'><figcaption>midden nr20</figcaption></figure><figure><img src='fotos/BU08480001_Juralaan_eind.jpg' loading='lazy'><figcaption>eind nr33</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Juralaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -236,11 +240,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Juralaan","Juralaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Graafschappad' data-init='twijfel' data-lat='51.52621727' data-lon='5.47527476'>
+        <div class='straat' id='s_Graafschappad' data-init='twijfel' data-lat='51.52621727' data-lon='5.47527476' data-koop='100'>
           <div class='kop'><span class='nr'>12</span>
             <span class='naam'>Graafschappad</span>
             <span class='bj bj-top'>🎯 1974</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Rijen jaren 70-80 met donkere pannen + schoorstenen, bomen blokkeren deels.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Rijen jaren 70-80 met donkere pannen + schoorstenen, bomen blokkeren deels.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Graafschappad_begin.jpg' loading='lazy'><figcaption>begin nr5</figcaption></figure><figure><img src='fotos/BU08480001_Graafschappad_midden.jpg' loading='lazy'><figcaption>midden nr16</figcaption></figure><figure><img src='fotos/BU08480001_Graafschappad_eind.jpg' loading='lazy'><figcaption>eind nr34</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Graafschappad_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -255,11 +259,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Graafschappad","Graafschappad")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Sallandpad' data-init='twijfel' data-lat='51.5261086' data-lon='5.47634088'>
+        <div class='straat' id='s_Sallandpad' data-init='twijfel' data-lat='51.5261086' data-lon='5.47634088' data-koop='100'>
           <div class='kop'><span class='nr'>13</span>
             <span class='naam'>Sallandpad</span>
             <span class='bj bj-top'>🎯 1976</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Zicht beperkt; zichtbaar dak is schuin met panelen.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Zicht beperkt; zichtbaar dak is schuin met panelen.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Sallandpad_begin.jpg' loading='lazy'><figcaption>begin nr3</figcaption></figure><figure><img src='fotos/BU08480001_Sallandpad_midden.jpg' loading='lazy'><figcaption>midden nr9</figcaption></figure><figure><img src='fotos/BU08480001_Sallandpad_eind.jpg' loading='lazy'><figcaption>eind nr15</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Sallandpad_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -274,11 +278,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Sallandpad","Sallandpad")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Twentepad' data-init='go' data-lat='51.52630523' data-lon='5.47778226'>
+        <div class='straat' id='s_Twentepad' data-init='go' data-lat='51.52630523' data-lon='5.47778226' data-koop='95'>
           <div class='kop'><span class='nr'>14</span>
             <span class='naam'>Twentepad</span>
             <span class='bj bj-top'>🎯 1973</span><span class='ai ai-go'>AI: GO</span></div>
-          <div class='reden'>Rijen, donkere originele pannen + dakkapellen, jaren 70-80.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 95% koop</span></div><div class='reden'>Rijen, donkere originele pannen + dakkapellen, jaren 70-80.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Twentepad_begin.jpg' loading='lazy'><figcaption>begin nr6</figcaption></figure><figure><img src='fotos/BU08480001_Twentepad_midden.jpg' loading='lazy'><figcaption>midden nr16</figcaption></figure><figure><img src='fotos/BU08480001_Twentepad_eind.jpg' loading='lazy'><figcaption>eind nr26</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Twentepad_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -293,11 +297,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Twentepad","Twentepad")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Veluwepad' data-init='twijfel' data-lat='51.52652943' data-lon='5.47844557'>
+        <div class='straat' id='s_Veluwepad' data-init='twijfel' data-lat='51.52652943' data-lon='5.47844557' data-koop='56'>
           <div class='kop'><span class='nr'>15</span>
             <span class='naam'>Veluwepad</span>
             <span class='bj bj-top'>🎯 1973</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Kopgevel achter boom — geen zicht op het dak.</div>
+          <div class='eigrij'><span class='eig eig-meh'>🔑 56% koop</span> <span class='eig eig-fout'>🏢 48% corporatie</span></div><div class='reden'>Kopgevel achter boom — geen zicht op het dak.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Veluwepad_begin.jpg' loading='lazy'><figcaption>begin nr7</figcaption></figure><figure><img src='fotos/BU08480001_Veluwepad_midden.jpg' loading='lazy'><figcaption>midden nr19</figcaption></figure><figure><img src='fotos/BU08480001_Veluwepad_eind.jpg' loading='lazy'><figcaption>eind nr25</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Veluwepad_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -312,11 +316,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Veluwepad","Veluwepad")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Betuwepad' data-init='go' data-lat='51.52668131' data-lon='5.47962751'>
+        <div class='straat' id='s_Betuwepad' data-init='go' data-lat='51.52668131' data-lon='5.47962751' data-koop='34'>
           <div class='kop'><span class='nr'>16</span>
             <span class='naam'>Betuwepad</span>
             <span class='bj bj-top'>🎯 1973</span><span class='ai ai-go'>AI: GO</span></div>
-          <div class='reden'>Rijen met donkere originele pannen, dakkapel, jaren 70.</div>
+          <div class='eigrij'><span class='eig eig-fout'>🔑 34% koop</span> <span class='eig eig-fout'>🏢 64% corporatie</span></div><div class='reden' style='color:#a3231a'>⚠️ Vooral huur/flats — niet jouw doelgroep, lage prioriteit</div><div class='reden'>Rijen met donkere originele pannen, dakkapel, jaren 70.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Betuwepad_begin.jpg' loading='lazy'><figcaption>begin nr7</figcaption></figure><figure><img src='fotos/BU08480001_Betuwepad_midden.jpg' loading='lazy'><figcaption>midden nr21</figcaption></figure><figure><img src='fotos/BU08480001_Betuwepad_eind.jpg' loading='lazy'><figcaption>eind nr34</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Betuwepad_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -331,11 +335,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Betuwepad","Betuwepad")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Meierijlaan' data-init='go' data-lat='51.52596955' data-lon='5.48170108'>
+        <div class='straat' id='s_Meierijlaan' data-init='go' data-lat='51.52596955' data-lon='5.48170108' data-koop='50'>
           <div class='kop'><span class='nr'>17</span>
             <span class='naam'>Meierijlaan</span>
             <span class='bj bj-top'>🎯 1969</span><span class='ai ai-go'>AI: GO</span></div>
-          <div class='reden'>Rij, bruinrode originele pannen, dakkapel + schoorstenen.</div>
+          <div class='eigrij'><span class='eig eig-meh'>🔑 50% koop</span> <span class='eig eig-fout'>🏢 33% corporatie</span></div><div class='reden'>Rij, bruinrode originele pannen, dakkapel + schoorstenen.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Meierijlaan_begin.jpg' loading='lazy'><figcaption>begin nr3</figcaption></figure><figure><img src='fotos/BU08480001_Meierijlaan_midden.jpg' loading='lazy'><figcaption>midden nr9</figcaption></figure><figure><img src='fotos/BU08480001_Meierijlaan_eind.jpg' loading='lazy'><figcaption>eind nr16</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Meierijlaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -350,11 +354,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Meierijlaan","Meierijlaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Peellaan' data-init='go' data-lat='51.52647232' data-lon='5.48242263'>
+        <div class='straat' id='s_Peellaan' data-init='go' data-lat='51.52647232' data-lon='5.48242263' data-koop='84'>
           <div class='kop'><span class='nr'>18</span>
             <span class='naam'>Peellaan</span>
             <span class='bj bj-top'>🎯 1971</span><span class='ai ai-go'>AI: GO</span></div>
-          <div class='reden'>Donkerbruine pannen, dakkapel, schoorsteen, hout-accenten — origineel.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 84% koop</span></div><div class='reden'>Donkerbruine pannen, dakkapel, schoorsteen, hout-accenten — origineel.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Peellaan_begin.jpg' loading='lazy'><figcaption>begin nr8</figcaption></figure><figure><img src='fotos/BU08480001_Peellaan_midden.jpg' loading='lazy'><figcaption>midden nr38</figcaption></figure><figure><img src='fotos/BU08480001_Peellaan_eind.jpg' loading='lazy'><figcaption>eind nr79</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Peellaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -369,11 +373,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Peellaan","Peellaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Baronielaan' data-init='go' data-lat='51.52598643' data-lon='5.48304123'>
+        <div class='straat' id='s_Baronielaan' data-init='go' data-lat='51.52598643' data-lon='5.48304123' data-koop='100'>
           <div class='kop'><span class='nr'>19</span>
             <span class='naam'>Baronielaan</span>
             <span class='bj bj-top'>🎯 1971</span><span class='ai ai-go'>AI: GO</span></div>
-          <div class='reden'>2-kap, donkere originele pannen, schoorstenen + dakkapel.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>2-kap, donkere originele pannen, schoorstenen + dakkapel.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Baronielaan_begin.jpg' loading='lazy'><figcaption>begin nr4</figcaption></figure><figure><img src='fotos/BU08480001_Baronielaan_midden.jpg' loading='lazy'><figcaption>midden nr11</figcaption></figure><figure><img src='fotos/BU08480001_Baronielaan_eind.jpg' loading='lazy'><figcaption>eind nr17</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Baronielaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -388,11 +392,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Baronielaan","Baronielaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Biesboschlaan' data-init='go' data-lat='51.52610251' data-lon='5.48397812'>
+        <div class='straat' id='s_Biesboschlaan' data-init='go' data-lat='51.52610251' data-lon='5.48397812' data-koop='100'>
           <div class='kop'><span class='nr'>20</span>
             <span class='naam'>Biesboschlaan</span>
             <span class='bj bj-top'>🎯 1971</span><span class='ai ai-go'>AI: GO</span></div>
-          <div class='reden'>Donkergrijze originele pannen, schoorsteen + dakraam, jaren 70.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span> <span class='eig eig-goed'>👴 30% 65+</span></div><div class='reden'>Donkergrijze originele pannen, schoorsteen + dakraam, jaren 70.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Biesboschlaan_begin.jpg' loading='lazy'><figcaption>begin nr4</figcaption></figure><figure><img src='fotos/BU08480001_Biesboschlaan_midden.jpg' loading='lazy'><figcaption>midden nr11</figcaption></figure><figure><img src='fotos/BU08480001_Biesboschlaan_eind.jpg' loading='lazy'><figcaption>eind nr17</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Biesboschlaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -407,7 +411,7 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Biesboschlaan","Biesboschlaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Moezellaan' data-init='go' data-lat='51.526974' data-lon='5.48446993'>
+        <div class='straat' id='s_Moezellaan' data-init='go' data-lat='51.526974' data-lon='5.48446993' data-koop=''>
           <div class='kop'><span class='nr'>21</span>
             <span class='naam'>Moezellaan</span>
             <span class='bj bj-goed'>🟢 1985</span><span class='ai ai-go'>AI: GO</span></div>
@@ -426,11 +430,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Moezellaan","Moezellaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Oderlaan' data-init='go' data-lat='51.52711838' data-lon='5.48379295'>
+        <div class='straat' id='s_Oderlaan' data-init='go' data-lat='51.52711838' data-lon='5.48379295' data-koop='54'>
           <div class='kop'><span class='nr'>22</span>
             <span class='naam'>Oderlaan</span>
             <span class='bj bj-meh'>🟡 1986</span><span class='ai ai-go'>AI: GO</span></div>
-          <div class='reden'>Steile kap, donkere pannen, dakkapellen — origineel jaren 70-80.</div>
+          <div class='eigrij'><span class='eig eig-meh'>🔑 54% koop</span> <span class='eig eig-fout'>🏢 62% corporatie</span> <span class='eig eig-fout'>🏬 36% flats</span></div><div class='reden'>Steile kap, donkere pannen, dakkapellen — origineel jaren 70-80.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Oderlaan_begin.jpg' loading='lazy'><figcaption>begin nr10</figcaption></figure><figure><img src='fotos/BU08480001_Oderlaan_midden.jpg' loading='lazy'><figcaption>midden nr29</figcaption></figure><figure><img src='fotos/BU08480001_Oderlaan_eind.jpg' loading='lazy'><figcaption>eind nr46</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Oderlaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -445,11 +449,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Oderlaan","Oderlaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Afrikalaan' data-init='go' data-lat='51.52544538' data-lon='5.48512949'>
+        <div class='straat' id='s_Afrikalaan' data-init='go' data-lat='51.52544538' data-lon='5.48512949' data-koop='90'>
           <div class='kop'><span class='nr'>28</span>
             <span class='naam'>Afrikalaan</span>
             <span class='bj bj-top'>🎯 1972</span><span class='ai ai-go'>AI: GO</span></div>
-          <div class='reden'>Rijtjes, gele baksteen, donkere pannen + 2 schoorstenen — jaren 50-60 origineel.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 90% koop</span></div><div class='reden'>Rijtjes, gele baksteen, donkere pannen + 2 schoorstenen — jaren 50-60 origineel.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Afrikalaan_begin.jpg' loading='lazy'><figcaption>begin nr9</figcaption></figure><figure><img src='fotos/BU08480001_Afrikalaan_midden.jpg' loading='lazy'><figcaption>midden nr29</figcaption></figure><figure><img src='fotos/BU08480001_Afrikalaan_eind.jpg' loading='lazy'><figcaption>eind nr45</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Afrikalaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -464,11 +468,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Afrikalaan","Afrikalaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Limburglaan' data-init='twijfel' data-lat='51.52475364' data-lon='5.4846669'>
+        <div class='straat' id='s_Limburglaan' data-init='twijfel' data-lat='51.52475364' data-lon='5.4846669' data-koop='100'>
           <div class='kop'><span class='nr'>29</span>
             <span class='naam'>Limburglaan</span>
             <span class='bj bj-top'>🎯 1971</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Veel groen blokkeert; zichtbare dak oogt donker pannendak met dakraam.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Veel groen blokkeert; zichtbare dak oogt donker pannendak met dakraam.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Limburglaan_begin.jpg' loading='lazy'><figcaption>begin nr2</figcaption></figure><figure><img src='fotos/BU08480001_Limburglaan_midden.jpg' loading='lazy'><figcaption>midden nr13</figcaption></figure><figure><img src='fotos/BU08480001_Limburglaan_eind.jpg' loading='lazy'><figcaption>eind nr32</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Limburglaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -483,11 +487,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Limburglaan","Limburglaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Flevoland' data-init='twijfel' data-lat='51.52430456' data-lon='5.48424806'>
+        <div class='straat' id='s_Flevoland' data-init='twijfel' data-lat='51.52430456' data-lon='5.48424806' data-koop='100'>
           <div class='kop'><span class='nr'>30</span>
             <span class='naam'>Flevoland</span>
             <span class='bj bj-meh'>🟡 1988</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Lessenaarsdaken jaren 70-80 — schuin maar atypische nok.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span> <span class='eig eig-goed'>👴 60% 65+</span></div><div class='reden'>Lessenaarsdaken jaren 70-80 — schuin maar atypische nok.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Flevoland_begin.jpg' loading='lazy'><figcaption>begin nr1</figcaption></figure><figure><img src='fotos/BU08480001_Flevoland_midden.jpg' loading='lazy'><figcaption>midden nr11</figcaption></figure><figure><img src='fotos/BU08480001_Flevoland_eind.jpg' loading='lazy'><figcaption>eind nr23</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Flevoland_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -502,11 +506,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Flevoland","Flevoland")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Brabantlaan' data-init='twijfel' data-lat='51.52508789' data-lon='5.48265027'>
+        <div class='straat' id='s_Brabantlaan' data-init='twijfel' data-lat='51.52508789' data-lon='5.48265027' data-koop=''>
           <div class='kop'><span class='nr'>31</span>
             <span class='naam'>Brabantlaan</span>
             <span class='bj bj-top'>🎯 1971</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Rij oogt origineel jaren 60 maar bomen blokkeren zicht.</div>
+          <div class='eigrij'><span class='eig eig-goed'>👴 33% 65+</span></div><div class='reden'>Rij oogt origineel jaren 60 maar bomen blokkeren zicht.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Brabantlaan_begin.jpg' loading='lazy'><figcaption>begin nr2</figcaption></figure><figure><img src='fotos/BU08480001_Brabantlaan_midden.jpg' loading='lazy'><figcaption>midden nr8</figcaption></figure><figure><img src='fotos/BU08480001_Brabantlaan_eind.jpg' loading='lazy'><figcaption>eind nr12</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Brabantlaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -521,11 +525,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Brabantlaan","Brabantlaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Drentelaan' data-init='go' data-lat='51.52387268' data-lon='5.48018674'>
+        <div class='straat' id='s_Drentelaan' data-init='go' data-lat='51.52387268' data-lon='5.48018674' data-koop='100'>
           <div class='kop'><span class='nr'>33</span>
             <span class='naam'>Drentelaan</span>
             <span class='bj bj-top'>🎯 1970</span><span class='ai ai-go'>AI: GO</span></div>
-          <div class='reden'>Geschakeld, oude bruine pannen + schoorstenen, jaren 60-70.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Geschakeld, oude bruine pannen + schoorstenen, jaren 60-70.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Drentelaan_begin.jpg' loading='lazy'><figcaption>begin nr6</figcaption></figure><figure><img src='fotos/BU08480001_Drentelaan_midden.jpg' loading='lazy'><figcaption>midden nr18</figcaption></figure><figure><img src='fotos/BU08480001_Drentelaan_eind.jpg' loading='lazy'><figcaption>eind nr38</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Drentelaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -540,11 +544,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Drentelaan","Drentelaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Gelderlandlaan' data-init='twijfel' data-lat='51.52443436' data-lon='5.48009582'>
+        <div class='straat' id='s_Gelderlandlaan' data-init='twijfel' data-lat='51.52443436' data-lon='5.48009582' data-koop='100'>
           <div class='kop'><span class='nr'>34</span>
             <span class='naam'>Gelderlandlaan</span>
             <span class='bj bj-top'>🎯 1970</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Garageboxen in beeld; hoekhuis verderop oogt origineel.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Garageboxen in beeld; hoekhuis verderop oogt origineel.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Gelderlandlaan_begin.jpg' loading='lazy'><figcaption>begin nr9</figcaption></figure><figure><img src='fotos/BU08480001_Gelderlandlaan_midden.jpg' loading='lazy'><figcaption>midden nr23</figcaption></figure><figure><img src='fotos/BU08480001_Gelderlandlaan_eind.jpg' loading='lazy'><figcaption>eind nr23</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Gelderlandlaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -559,11 +563,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Gelderlandlaan","Gelderlandlaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Azi_laan' data-init='twijfel' data-lat='51.52516776' data-lon='5.47901837'>
+        <div class='straat' id='s_Azi_laan' data-init='twijfel' data-lat='51.52516776' data-lon='5.47901837' data-koop='100'>
           <div class='kop'><span class='nr'>35</span>
             <span class='naam'>Aziëlaan</span>
             <span class='bj bj-top'>🎯 1971</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Dak vrijwel volledig vol zonnepanelen, pannen nauwelijks te beoordelen.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Dak vrijwel volledig vol zonnepanelen, pannen nauwelijks te beoordelen.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Azilaan_begin.jpg' loading='lazy'><figcaption>begin nr16</figcaption></figure><figure><img src='fotos/BU08480001_Azilaan_midden.jpg' loading='lazy'><figcaption>midden nr44</figcaption></figure><figure><img src='fotos/BU08480001_Azilaan_eind.jpg' loading='lazy'><figcaption>eind nr74</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Azilaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -578,11 +582,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Azi_laan","Aziëlaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Frieslandlaan' data-init='go' data-lat='51.5239859' data-lon='5.47812346'>
+        <div class='straat' id='s_Frieslandlaan' data-init='go' data-lat='51.5239859' data-lon='5.47812346' data-koop='90'>
           <div class='kop'><span class='nr'>36</span>
             <span class='naam'>Frieslandlaan</span>
             <span class='bj bj-top'>🎯 1975</span><span class='ai ai-go'>AI: GO</span></div>
-          <div class='reden'>2-kap, donkere originele pannen, dakkapel + schoorsteen.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 90% koop</span></div><div class='reden'>2-kap, donkere originele pannen, dakkapel + schoorsteen.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Frieslandlaan_begin.jpg' loading='lazy'><figcaption>begin nr4</figcaption></figure><figure><img src='fotos/BU08480001_Frieslandlaan_midden.jpg' loading='lazy'><figcaption>midden nr10</figcaption></figure><figure><img src='fotos/BU08480001_Frieslandlaan_eind.jpg' loading='lazy'><figcaption>eind nr17</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Frieslandlaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -597,11 +601,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Frieslandlaan","Frieslandlaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Kempenlaan' data-init='go' data-lat='51.52518269' data-lon='5.47643993'>
+        <div class='straat' id='s_Kempenlaan' data-init='go' data-lat='51.52518269' data-lon='5.47643993' data-koop='100'>
           <div class='kop'><span class='nr'>37</span>
             <span class='naam'>Kempenlaan</span>
             <span class='bj bj-top'>🎯 1972</span><span class='ai ai-go'>AI: GO</span></div>
-          <div class='reden'>Hoekhuis, donkere originele pannen + dakkapel, jaren 70.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Hoekhuis, donkere originele pannen + dakkapel, jaren 70.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Kempenlaan_begin.jpg' loading='lazy'><figcaption>begin nr5</figcaption></figure><figure><img src='fotos/BU08480001_Kempenlaan_midden.jpg' loading='lazy'><figcaption>midden nr13</figcaption></figure><figure><img src='fotos/BU08480001_Kempenlaan_eind.jpg' loading='lazy'><figcaption>eind nr21</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Kempenlaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -616,11 +620,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Kempenlaan","Kempenlaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Groningenlaan' data-init='go' data-lat='51.52388901' data-lon='5.47554401'>
+        <div class='straat' id='s_Groningenlaan' data-init='go' data-lat='51.52388901' data-lon='5.47554401' data-koop='100'>
           <div class='kop'><span class='nr'>39</span>
             <span class='naam'>Groningenlaan</span>
             <span class='bj bj-top'>🎯 1975</span><span class='ai ai-go'>AI: GO</span></div>
-          <div class='reden'>2-kap, donkere originele pannen, dakkapel, jaren 60-70.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span> <span class='eig eig-goed'>👴 40% 65+</span></div><div class='reden'>2-kap, donkere originele pannen, dakkapel, jaren 60-70.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Groningenlaan_begin.jpg' loading='lazy'><figcaption>begin nr4</figcaption></figure><figure><img src='fotos/BU08480001_Groningenlaan_midden.jpg' loading='lazy'><figcaption>midden nr11</figcaption></figure><figure><img src='fotos/BU08480001_Groningenlaan_eind.jpg' loading='lazy'><figcaption>eind nr22</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Groningenlaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -635,11 +639,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Groningenlaan","Groningenlaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Apennijnenlaan' data-init='twijfel' data-lat='51.5229292' data-lon='5.47290532'>
+        <div class='straat' id='s_Apennijnenlaan' data-init='twijfel' data-lat='51.5229292' data-lon='5.47290532' data-koop='100'>
           <div class='kop'><span class='nr'>40</span>
             <span class='naam'>Apennijnenlaan</span>
             <span class='bj bj-top'>🎯 1970</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Witte villa, pannen alleen aan rand zichtbaar.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Witte villa, pannen alleen aan rand zichtbaar.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Apennijnenlaan_begin.jpg' loading='lazy'><figcaption>begin nr4</figcaption></figure><figure><img src='fotos/BU08480001_Apennijnenlaan_midden.jpg' loading='lazy'><figcaption>midden nr9</figcaption></figure><figure><img src='fotos/BU08480001_Apennijnenlaan_eind.jpg' loading='lazy'><figcaption>eind nr14</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Apennijnenlaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -654,7 +658,7 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Apennijnenlaan","Apennijnenlaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Alpenlaan' data-init='twijfel' data-lat='51.52190587' data-lon='5.47101586'>
+        <div class='straat' id='s_Alpenlaan' data-init='twijfel' data-lat='51.52190587' data-lon='5.47101586' data-koop=''>
           <div class='kop'><span class='nr'>41</span>
             <span class='naam'>Alpenlaan</span>
             <span class='bj bj-top'>🎯 1970</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
@@ -673,11 +677,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Alpenlaan","Alpenlaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Ardennenlaan' data-init='twijfel' data-lat='51.52118548' data-lon='5.47280116'>
+        <div class='straat' id='s_Ardennenlaan' data-init='twijfel' data-lat='51.52118548' data-lon='5.47280116' data-koop='100'>
           <div class='kop'><span class='nr'>42</span>
             <span class='naam'>Ardennenlaan</span>
             <span class='bj bj-top'>🎯 1967</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Grote villa, originele pannen + schoorsteen — luxe segment.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Grote villa, originele pannen + schoorsteen — luxe segment.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Ardennenlaan_begin.jpg' loading='lazy'><figcaption>begin nr3</figcaption></figure><figure><img src='fotos/BU08480001_Ardennenlaan_midden.jpg' loading='lazy'><figcaption>midden nr9</figcaption></figure><figure><img src='fotos/BU08480001_Ardennenlaan_eind.jpg' loading='lazy'><figcaption>eind nr14</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Ardennenlaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -692,11 +696,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Ardennenlaan","Ardennenlaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Vogezenlaan' data-init='twijfel' data-lat='51.52026832' data-lon='5.47323168'>
+        <div class='straat' id='s_Vogezenlaan' data-init='twijfel' data-lat='51.52026832' data-lon='5.47323168' data-koop='90'>
           <div class='kop'><span class='nr'>43</span>
             <span class='naam'>Vogezenlaan</span>
             <span class='bj bj-top'>🎯 1970</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Groot wit landhuis met originele donkere pannen — luxe segment.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 90% koop</span></div><div class='reden'>Groot wit landhuis met originele donkere pannen — luxe segment.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Vogezenlaan_begin.jpg' loading='lazy'><figcaption>begin nr4</figcaption></figure><figure><img src='fotos/BU08480001_Vogezenlaan_midden.jpg' loading='lazy'><figcaption>midden nr12</figcaption></figure><figure><img src='fotos/BU08480001_Vogezenlaan_eind.jpg' loading='lazy'><figcaption>eind nr20</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Vogezenlaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -711,11 +715,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Vogezenlaan","Vogezenlaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Australi_laan' data-init='twijfel' data-lat='51.52132296' data-lon='5.47612937'>
+        <div class='straat' id='s_Australi_laan' data-init='twijfel' data-lat='51.52132296' data-lon='5.47612937' data-koop='100'>
           <div class='kop'><span class='nr'>44</span>
             <span class='naam'>Australiëlaan</span>
             <span class='bj bj-top'>🎯 1971</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Heg blokkeert vrijwel alles; schoorsteen-top met oude pannen zichtbaar.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Heg blokkeert vrijwel alles; schoorsteen-top met oude pannen zichtbaar.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Australilaan_begin.jpg' loading='lazy'><figcaption>begin nr8</figcaption></figure><figure><img src='fotos/BU08480001_Australilaan_midden.jpg' loading='lazy'><figcaption>midden nr24</figcaption></figure><figure><img src='fotos/BU08480001_Australilaan_eind.jpg' loading='lazy'><figcaption>eind nr40</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Australilaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -730,11 +734,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Australi_laan","Australiëlaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Scheldelaan' data-init='go' data-lat='51.5213265' data-lon='5.4765332'>
+        <div class='straat' id='s_Scheldelaan' data-init='go' data-lat='51.5213265' data-lon='5.4765332' data-koop='100'>
           <div class='kop'><span class='nr'>45</span>
             <span class='naam'>Scheldelaan</span>
             <span class='bj bj-top'>🎯 1969</span><span class='ai ai-go'>AI: GO</span></div>
-          <div class='reden'>Hoekhuis, donkere originele pannen + schoorsteen, jaren 70.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Hoekhuis, donkere originele pannen + schoorsteen, jaren 70.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Scheldelaan_begin.jpg' loading='lazy'><figcaption>begin nr5</figcaption></figure><figure><img src='fotos/BU08480001_Scheldelaan_midden.jpg' loading='lazy'><figcaption>midden nr15</figcaption></figure><figure><img src='fotos/BU08480001_Scheldelaan_eind.jpg' loading='lazy'><figcaption>eind nr24</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Scheldelaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -749,11 +753,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Scheldelaan","Scheldelaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Merwedelaan' data-init='go' data-lat='51.52199215' data-lon='5.47588613'>
+        <div class='straat' id='s_Merwedelaan' data-init='go' data-lat='51.52199215' data-lon='5.47588613' data-koop='100'>
           <div class='kop'><span class='nr'>46</span>
             <span class='naam'>Merwedelaan</span>
             <span class='bj bj-top'>🎯 1971</span><span class='ai ai-go'>AI: GO</span></div>
-          <div class='reden'>Donkere originele pannen, schoorsteen + dakkapel, jaren 70.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Donkere originele pannen, schoorsteen + dakkapel, jaren 70.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Merwedelaan_begin.jpg' loading='lazy'><figcaption>begin nr4</figcaption></figure><figure><img src='fotos/BU08480001_Merwedelaan_midden.jpg' loading='lazy'><figcaption>midden nr11</figcaption></figure><figure><img src='fotos/BU08480001_Merwedelaan_eind.jpg' loading='lazy'><figcaption>eind nr18</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Merwedelaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -768,11 +772,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Merwedelaan","Merwedelaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Maaslaan' data-init='twijfel' data-lat='51.52162201' data-lon='5.47797463'>
+        <div class='straat' id='s_Maaslaan' data-init='twijfel' data-lat='51.52162201' data-lon='5.47797463' data-koop='100'>
           <div class='kop'><span class='nr'>47</span>
             <span class='naam'>Maaslaan</span>
             <span class='bj bj-top'>🎯 1971</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Donkere pannen ogen origineel, maar boom blokkeert het zicht.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span> <span class='eig eig-goed'>👴 52% 65+</span></div><div class='reden'>Donkere pannen ogen origineel, maar boom blokkeert het zicht.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Maaslaan_begin.jpg' loading='lazy'><figcaption>begin nr5</figcaption></figure><figure><img src='fotos/BU08480001_Maaslaan_midden.jpg' loading='lazy'><figcaption>midden nr13</figcaption></figure><figure><img src='fotos/BU08480001_Maaslaan_eind.jpg' loading='lazy'><figcaption>eind nr21</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Maaslaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -787,11 +791,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Maaslaan","Maaslaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Vechtlaan' data-init='twijfel' data-lat='51.52203378' data-lon='5.48013675'>
+        <div class='straat' id='s_Vechtlaan' data-init='twijfel' data-lat='51.52203378' data-lon='5.48013675' data-koop='100'>
           <div class='kop'><span class='nr'>48</span>
             <span class='naam'>Vechtlaan</span>
             <span class='bj bj-top'>🎯 1971</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Steiger — verbouwing bezig; dak wordt mogelijk net aangepakt.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Steiger — verbouwing bezig; dak wordt mogelijk net aangepakt.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Vechtlaan_begin.jpg' loading='lazy'><figcaption>begin nr8</figcaption></figure><figure><img src='fotos/BU08480001_Vechtlaan_midden.jpg' loading='lazy'><figcaption>midden nr20</figcaption></figure><figure><img src='fotos/BU08480001_Vechtlaan_eind.jpg' loading='lazy'><figcaption>eind nr32</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Vechtlaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -806,11 +810,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Vechtlaan","Vechtlaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Roerlaan' data-init='twijfel' data-lat='51.5225007' data-lon='5.48075728'>
+        <div class='straat' id='s_Roerlaan' data-init='twijfel' data-lat='51.5225007' data-lon='5.48075728' data-koop='100'>
           <div class='kop'><span class='nr'>49</span>
             <span class='naam'>Roerlaan</span>
             <span class='bj bj-top'>🎯 1971</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Flauw schuin dak, kopgevel — pannen alleen aan rand zichtbaar.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Flauw schuin dak, kopgevel — pannen alleen aan rand zichtbaar.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Roerlaan_begin.jpg' loading='lazy'><figcaption>begin nr7</figcaption></figure><figure><img src='fotos/BU08480001_Roerlaan_midden.jpg' loading='lazy'><figcaption>midden nr21</figcaption></figure><figure><img src='fotos/BU08480001_Roerlaan_eind.jpg' loading='lazy'><figcaption>eind nr35</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Roerlaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -825,11 +829,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Roerlaan","Roerlaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Amerikalaan' data-init='twijfel' data-lat='51.52313908' data-lon='5.48051365'>
+        <div class='straat' id='s_Amerikalaan' data-init='twijfel' data-lat='51.52313908' data-lon='5.48051365' data-koop='98'>
           <div class='kop'><span class='nr'>50</span>
             <span class='naam'>Amerikalaan</span>
             <span class='bj bj-top'>🎯 1970</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Vrijstaand jaren 80, donkere pannen, modern gevel-element — nok niet duidelijk zichtbaar.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 98% koop</span></div><div class='reden'>Vrijstaand jaren 80, donkere pannen, modern gevel-element — nok niet duidelijk zichtbaar.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Amerikalaan_begin.jpg' loading='lazy'><figcaption>begin nr17</figcaption></figure><figure><img src='fotos/BU08480001_Amerikalaan_midden.jpg' loading='lazy'><figcaption>midden nr43</figcaption></figure><figure><img src='fotos/BU08480001_Amerikalaan_eind.jpg' loading='lazy'><figcaption>eind nr68</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Amerikalaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -844,11 +848,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Amerikalaan","Amerikalaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Amstellaan' data-init='twijfel' data-lat='51.5225803' data-lon='5.48235682'>
+        <div class='straat' id='s_Amstellaan' data-init='twijfel' data-lat='51.5225803' data-lon='5.48235682' data-koop='95'>
           <div class='kop'><span class='nr'>51</span>
             <span class='naam'>Amstellaan</span>
             <span class='bj bj-top'>🎯 1970</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>2-kap donkere pannen + schoorsteen, origineel-achtig; balkon-opbouw.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 95% koop</span></div><div class='reden'>2-kap donkere pannen + schoorsteen, origineel-achtig; balkon-opbouw.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Amstellaan_begin.jpg' loading='lazy'><figcaption>begin nr7</figcaption></figure><figure><img src='fotos/BU08480001_Amstellaan_midden.jpg' loading='lazy'><figcaption>midden nr21</figcaption></figure><figure><img src='fotos/BU08480001_Amstellaan_eind.jpg' loading='lazy'><figcaption>eind nr35</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Amstellaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -863,11 +867,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Amstellaan","Amstellaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_IJssellaan' data-init='go' data-lat='51.52274087' data-lon='5.48384127'>
+        <div class='straat' id='s_IJssellaan' data-init='go' data-lat='51.52274087' data-lon='5.48384127' data-koop='100'>
           <div class='kop'><span class='nr'>52</span>
             <span class='naam'>IJssellaan</span>
             <span class='bj bj-top'>🎯 1969</span><span class='ai ai-go'>AI: GO</span></div>
-          <div class='reden'>Donkere originele pannen + schoorsteen (panelen ernaast — geen probleem).</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Donkere originele pannen + schoorsteen (panelen ernaast — geen probleem).</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_IJssellaan_begin.jpg' loading='lazy'><figcaption>begin nr6</figcaption></figure><figure><img src='fotos/BU08480001_IJssellaan_midden.jpg' loading='lazy'><figcaption>midden nr21</figcaption></figure><figure><img src='fotos/BU08480001_IJssellaan_eind.jpg' loading='lazy'><figcaption>eind nr37</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_IJssellaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -882,11 +886,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("IJssellaan","IJssellaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Texellaan' data-init='twijfel' data-lat='51.52178643' data-lon='5.48700527'>
+        <div class='straat' id='s_Texellaan' data-init='twijfel' data-lat='51.52178643' data-lon='5.48700527' data-koop='100'>
           <div class='kop'><span class='nr'>54</span>
             <span class='naam'>Texellaan</span>
             <span class='bj bj-top'>🎯 1970</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Alleen garageboxen + bos in beeld — ter plekke checken.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span> <span class='eig eig-goed'>👴 40% 65+</span></div><div class='reden'>Alleen garageboxen + bos in beeld — ter plekke checken.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Texellaan_begin.jpg' loading='lazy'><figcaption>begin nr4</figcaption></figure><figure><img src='fotos/BU08480001_Texellaan_midden.jpg' loading='lazy'><figcaption>midden nr18</figcaption></figure><figure><img src='fotos/BU08480001_Texellaan_eind.jpg' loading='lazy'><figcaption>eind nr35</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Texellaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -901,11 +905,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Texellaan","Texellaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Rijnlaan' data-init='twijfel' data-lat='51.52106299' data-lon='5.48016358'>
+        <div class='straat' id='s_Rijnlaan' data-init='twijfel' data-lat='51.52106299' data-lon='5.48016358' data-koop='96'>
           <div class='kop'><span class='nr'>55</span>
             <span class='naam'>Rijnlaan</span>
             <span class='bj bj-top'>🎯 1968</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Gemengd: platte bungalow én schuin pannendak in dezelfde straat.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 96% koop</span></div><div class='reden'>Gemengd: platte bungalow én schuin pannendak in dezelfde straat.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Rijnlaan_begin.jpg' loading='lazy'><figcaption>begin nr8</figcaption></figure><figure><img src='fotos/BU08480001_Rijnlaan_midden.jpg' loading='lazy'><figcaption>midden nr23</figcaption></figure><figure><img src='fotos/BU08480001_Rijnlaan_eind.jpg' loading='lazy'><figcaption>eind nr54</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Rijnlaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -920,11 +924,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Rijnlaan","Rijnlaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Eifellaan' data-init='twijfel' data-lat='51.52480839' data-lon='5.47213075'>
+        <div class='straat' id='s_Eifellaan' data-init='twijfel' data-lat='51.52480839' data-lon='5.47213075' data-koop=''>
           <div class='kop'><span class='nr'>56</span>
             <span class='naam'>Eifellaan</span>
             <span class='bj bj-top'>🎯 1972</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Gemengd: moderne witte villa + traditioneel pand met oude pannen.</div>
+          <div class='eigrij'><span class='eig eig-goed'>👴 67% 65+</span></div><div class='reden'>Gemengd: moderne witte villa + traditioneel pand met oude pannen.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Eifellaan_begin.jpg' loading='lazy'><figcaption>begin nr2</figcaption></figure><figure><img src='fotos/BU08480001_Eifellaan_midden.jpg' loading='lazy'><figcaption>midden nr5</figcaption></figure><figure><img src='fotos/BU08480001_Eifellaan_eind.jpg' loading='lazy'><figcaption>eind nr8</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Eifellaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -939,11 +943,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Eifellaan","Eifellaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Bijenlaan' data-init='twijfel' data-lat='51.52925001' data-lon='5.4791806'>
+        <div class='straat' id='s_Bijenlaan' data-init='twijfel' data-lat='51.52925001' data-lon='5.4791806' data-koop='100'>
           <div class='kop'><span class='nr'>57</span>
             <span class='naam'>Bijenlaan</span>
             <span class='bj bj-grijs'>bouwjaar ?</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Herenhuizen jaren 90-00 met dakkapellen — waarschijnlijk te nieuw.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Herenhuizen jaren 90-00 met dakkapellen — waarschijnlijk te nieuw.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Bijenlaan_begin.jpg' loading='lazy'><figcaption>begin nr1</figcaption></figure><figure><img src='fotos/BU08480001_Bijenlaan_midden.jpg' loading='lazy'><figcaption>midden nr13</figcaption></figure><figure><img src='fotos/BU08480001_Bijenlaan_eind.jpg' loading='lazy'><figcaption>eind nr29</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Bijenlaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -958,11 +962,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Bijenlaan","Bijenlaan")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_de_Wadden' data-init='twijfel' data-lat='51.52774512' data-lon='5.48671961'>
+        <div class='straat' id='s_de_Wadden' data-init='twijfel' data-lat='51.52774512' data-lon='5.48671961' data-koop='79'>
           <div class='kop'><span class='nr'>59</span>
             <span class='naam'>de Wadden</span>
             <span class='bj bj-meh'>🟡 1991</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Donkergrijze pannen, nette staat — mogelijk vlakke betonpannen jaren 80-90.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 79% koop</span> <span class='eig eig-fout'>🏢 38% corporatie</span></div><div class='reden'>Donkergrijze pannen, nette staat — mogelijk vlakke betonpannen jaren 80-90.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_deWadden_begin.jpg' loading='lazy'><figcaption>begin nr13</figcaption></figure><figure><img src='fotos/BU08480001_deWadden_midden.jpg' loading='lazy'><figcaption>midden nr37</figcaption></figure><figure><img src='fotos/BU08480001_deWadden_eind.jpg' loading='lazy'><figcaption>eind nr61</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_deWadden_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -977,11 +981,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("de_Wadden","de Wadden")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Vliehors' data-init='twijfel' data-lat='51.52633228' data-lon='5.48860421'>
+        <div class='straat' id='s_Vliehors' data-init='twijfel' data-lat='51.52633228' data-lon='5.48860421' data-koop='95'>
           <div class='kop'><span class='nr'>60</span>
             <span class='naam'>Vliehors</span>
             <span class='bj bj-top'>🎯 1975</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='reden'>Gemengd: platte opbouw (drive-in stijl) + schuine daken ernaast.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 95% koop</span> <span class='eig eig-goed'>👴 32% 65+</span></div><div class='reden'>Gemengd: platte opbouw (drive-in stijl) + schuine daken ernaast.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Vliehors_begin.jpg' loading='lazy'><figcaption>begin nr9</figcaption></figure><figure><img src='fotos/BU08480001_Vliehors_midden.jpg' loading='lazy'><figcaption>midden nr26</figcaption></figure><figure><img src='fotos/BU08480001_Vliehors_eind.jpg' loading='lazy'><figcaption>eind nr43</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Vliehors_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -996,11 +1000,11 @@ De aller-slechtste straten (11) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <
             <button class='done' onclick='markDone("Vliehors","Vliehors")'>✅ DONE</button>
           </div>
         </div>
-        <div class='straat' id='s_Walcherenlaan' data-init='go' data-lat='51.52611588' data-lon='5.48938187'>
+        <div class='straat' id='s_Walcherenlaan' data-init='go' data-lat='51.52611588' data-lon='5.48938187' data-koop='100'>
           <div class='kop'><span class='nr'>61</span>
             <span class='naam'>Walcherenlaan</span>
             <span class='bj bj-top'>🎯 1976</span><span class='ai ai-go'>AI: GO</span></div>
-          <div class='reden'>Grijze originele pannen, schoorsteen + dakkapel.</div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span> <span class='eig eig-goed'>👴 33% 65+</span></div><div class='reden'>Grijze originele pannen, schoorsteen + dakkapel.</div>
           <div class='fotos'><figure><img src='fotos/BU08480001_Walcherenlaan_begin.jpg' loading='lazy'><figcaption>begin nr5</figcaption></figure><figure><img src='fotos/BU08480001_Walcherenlaan_midden.jpg' loading='lazy'><figcaption>midden nr13</figcaption></figure><figure><img src='fotos/BU08480001_Walcherenlaan_eind.jpg' loading='lazy'><figcaption>eind nr21</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU08480001_Walcherenlaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -1101,6 +1105,21 @@ localStorage.setItem('laatste_plan','straatplan/'+location.pathname.split('/').p
 const tsx=document.getElementById('t-straten');if(tsx)tsx.href=location.pathname.split('/').pop();
 const code='BU08480001', naam='De Gentiaan';
 const SHEET_URL='https://script.google.com/macros/s/AKfycbzMkmZKeadRlwNxTzl9io-vftCurSiGP2lz2rDFLSkVVADnzjOkwzqoHlstRCFyj1ppjA/exec';
+// weer in déze buurt (open-meteo, gratis) — regen per uur
+fetch('https://api.open-meteo.com/v1/forecast?latitude=51.5252&longitude=5.4805&hourly=precipitation,precipitation_probability&timezone=Europe%2FAmsterdam&forecast_days=1')
+.then(r=>r.json()).then(w=>{
+  const H=w.hourly, nu=new Date().getHours();
+  let chips='', eerste=null;
+  for(let h=Math.max(7,nu); h<=21; h++){
+    const mm=H.precipitation[h]||0, p=H.precipitation_probability[h]||0;
+    const nat=mm>=0.1&&p>=30;
+    if(nat&&eerste===null)eerste=h;
+    chips+='<span style="display:inline-block;min-width:1.9rem;text-align:center;padding:.1rem 0;margin:.06rem;border-radius:5px;font-size:.68rem;background:'+(nat?'#cfe3ff':'#f0f0f2')+'">'+h+'u<br>'+(nat?'🌧':'·')+'</span>';
+  }
+  const ws=document.getElementById('weerstrip');
+  ws.innerHTML=(eerste===null?'☀️ <b>Droog tot 21:00 in deze buurt</b>':'🌧️ <b>Regen hier rond '+eerste+':00</b>'+(eerste-nu<2?' — nu niet starten?':' — nog '+(eerste-nu)+' uur droog'))+'<div style="margin-top:.2rem">'+chips+'</div>';
+  ws.style.display='';
+}).catch(()=>{});
 const v=JSON.parse(localStorage.getItem('plan_'+code)||'{}');
 const done=JSON.parse(localStorage.getItem('done_'+code)||'{}');
 const lijst=document.getElementById('lijst');
@@ -1185,7 +1204,7 @@ document.querySelectorAll('.notitie').forEach(inp=>inp.addEventListener('change'
   log('notitie: '+inp.value, el?el.querySelector('.naam').textContent:k);
 }));
 let sortMode=localStorage.getItem('sort_'+code)||'route';
-function prio(el){const vd=cur(el.id.slice(2));if(vd==='skip')return 3;if(vd==='go')return 0;if(vd==='meh'||vd==='twijfel')return 1;return 2;}
+function prio(el){const vd=cur(el.id.slice(2));const koop=el.dataset.koop===''?null:+el.dataset.koop;const huur=(koop!==null&&koop<45);if(vd==='skip')return 3;if(vd==='go')return huur?1:0;if(vd==='meh'||vd==='twijfel')return 1;return 2;}
 function dist2(a,b){const dx=(+a.dataset.lat)-(+b.dataset.lat);const dy=((+a.dataset.lon)-(+b.dataset.lon))*0.62;return dx*dx+dy*dy;}
 function nnSort(els, vanaf){
   if(els.length<2) return els;

@@ -32,7 +32,7 @@ details summary{cursor:pointer;font-weight:600;color:#1a73e8;}
 .dagkeuze button{border:1px solid #ccc;background:#fff;border-radius:7px;padding:.35rem .7rem;font-size:.8rem;cursor:pointer;}
 .dagkeuze button.act{background:#333;color:#333;background:#333;color:#fff;border-color:#333;}
 </style></head><body>
-<div class="tabs"><a href="index.html">🏠</a><a href="vandaag.html">📅 Planning</a><a href="begin_lijst.html">📋 Buurten</a><a href="#" id="t-straten">🚶 Straten</a><a href="kaart.html">🗺️ Kaart</a><a href="feedback.html">💬 Feedback</a></div>
+<div class="tabs"><a href="index.html">🏠</a><a href="vandaag.html">📅 Planning</a><a href="begin_lijst.html">📋 Buurten</a><a href="#" id="t-straten">🚶 Straten</a><a href="kaart.html">🗺️ Kaart</a><a href="dashboard.html">📊 Cijfers</a><a href="feedback.html">💬 Feedback</a></div>
 <h1>📅 Vandaag</h1>
 <div class="groet" id="groet"></div>
 <div class="modes">
@@ -40,6 +40,10 @@ details summary{cursor:pointer;font-weight:600;color:#1a73e8;}
   <button id="m-klus" onclick="zetMode('klus',true)">🔧 Klusdag</button>
 </div>
 <div class="auto" id="autotekst"></div>
+<div class="blok" id="weerblok" style="display:none"><h2>🌦️ Weer vandaag</h2><div id="weer"></div></div>
+<div class="blok" id="betaalblok" style="display:none"><h2>💶 Openstaande facturen <span id="betN"></span></h2>
+<div class="hint">Facturen die 14+ dagen open staan (of over de vervaldatum zijn). Eén tik = vriendelijke herinnering via WhatsApp, met de betaallink erbij als die in de sheet staat.</div>
+<div id="betaallijst"></div></div>
 <div class="blok" id="opvolgblok" style="display:none"><h2>📌 Open opvolgingen <span id="opvN"></span></h2>
 <div class="hint">Deze mensen wachten op jouw appje (offerte zonder uitkomst of twijfelaar). Eén tik = WhatsApp met je buurt-frame bericht. Daarna uitkomst in de sheet zetten.</div>
 <div id="opvolglijst"></div></div>
@@ -89,6 +93,24 @@ const SHEETS = ['1PF_2fViLo7MasoTIw5vuba4MzxvOvAl_OKl7tMBBZgY','1K7Pns_wrwX0X5li
 const vandaag = new Date(); const dagISO = vandaag.toISOString().slice(0,10);
 const dagen=['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'];
 document.getElementById('groet').textContent = 'Goedemorgen! Het is '+dagen[vandaag.getDay()]+' '+vandaag.getDate()+'-'+(vandaag.getMonth()+1)+'.';
+
+// ---- weer (open-meteo, gratis, geen key) — regen per uur is koning ----
+fetch('https://api.open-meteo.com/v1/forecast?latitude=51.68&longitude=5.31&hourly=precipitation,precipitation_probability&daily=temperature_2m_max,precipitation_sum&timezone=Europe%2FAmsterdam&forecast_days=2')
+.then(r=>r.json()).then(w=>{
+  const H=w.hourly, D=w.daily, nu=vandaag.getHours();
+  let chips='', eerste=null;
+  for(let h=Math.max(7,nu); h<=21; h++){
+    const mm=H.precipitation[h]||0, p=H.precipitation_probability[h]||0;
+    const nat=mm>=0.1&&p>=30;
+    if(nat&&eerste===null)eerste=h;
+    chips+='<span style="display:inline-block;min-width:2rem;text-align:center;padding:.12rem .05rem;margin:.08rem;border-radius:6px;font-size:.7rem;background:'+(nat?'#cfe3ff':'#f0f0f2')+'">'+h+'u<br>'+(nat?'🌧':'·')+'</span>';
+  }
+  let kop = '☀️ Droog tot 21:00 ('+Math.round(D.temperature_2m_max[0])+'°) — prima om te lopen';
+  if(eerste!==null) kop = '🌧️ Regen rond '+eerste+':00 · '+D.precipitation_sum[0]+'mm vandaag ('+Math.round(D.temperature_2m_max[0])+'°)'+(eerste>=15?' — tot die tijd kan je lopen':' — geen canvasdag, plan klussen/scan');
+  const m=D.precipitation_sum[1]||0;
+  document.getElementById('weer').innerHTML = '<b>'+kop+'</b><div style="margin:.25rem 0">'+chips+'</div><div class="hint">Morgen: '+Math.round(D.temperature_2m_max[1])+'° · '+(m>=1?'🌧 '+m+'mm regen verwacht':'☀ droog')+' · per-buurt regen zie je op de straatplan-pagina.</div>';
+  document.getElementById('weerblok').style.display='';
+}).catch(()=>{});
 
 const LIJSTEN = {
  'check-ochtend': ['Telefoon + powerbank + kabeltje','Flyers gestempeld met de wijkdatum (thuis doen!)','Flyer-bundel(s) van 100 geteld','Drinken met elektrolyten','Pillenbakje + olijfolie','Trui / regenjas gecheckt (weer!)','Goede schoenen aan'],
@@ -144,7 +166,7 @@ function render(){
   P.innerHTML = items.length? out : '<div class="hint">Geen klussen voor deze dag 🎉</div>';
 }
 
-let sheetIdx = 0; let opvolg=[];
+let sheetIdx = 0; let opvolg=[]; let betalen=[];
 window.__plan=function(r){
   try{
     const cols=r.table.cols.map(c=>(c.label||'').toLowerCase());
@@ -170,6 +192,30 @@ window.__plan=function(r){
         const msg=encodeURIComponent('Hoi '+vn+', donderdag zijn we weer bij u in de buurt. We zouden de klus dan meteen kunnen meenemen — scheelt u de voorrijkosten. Zal ik \'m inplannen, of liever niet? Allebei prima 👍');
         opvolg.push({naam:naam,dgn:dgn,badge:isTw?'🤔 twijfel':'📄 offerte open',
           wa:'https://wa.me/'+(tel.startsWith('0')?'31'+tel.slice(1):tel)+'?text='+msg});
+      }
+    }
+    if(sheetIdx===1){
+      // facturen: 14+ dagen open of over vervaldatum → betaal-herinnering
+      const iNtb=ix('nog te betalen'), iVerv=ix('vervaldatum'), iFdat=ix('factuur datum'),
+            iIdl=ix('ideal'), iFnr=ix('factuurnr');
+      for(const row of r.table.rows){
+        const c=row.c; if(!c)continue;
+        const ntbRaw=iNtb>=0&&c[iNtb]&&c[iNtb].v;
+        const ntb=parseFloat(String(ntbRaw==null?'':ntbRaw).replace(/[^0-9.,-]/g,'').replace(',','.'))||0;
+        if(ntb<=0)continue;
+        const naam=String(c[iNaam]&&c[iNaam].v||'?').trim();
+        const tel=String(c[iTel]&&c[iTel].v||'').replace(/\D/g,'');
+        const pd=(i)=>{const m=i>=0&&c[i]&&String(c[i].v||'').match(/Date\((\d+),(\d+),(\d+)/);return m?new Date(+m[1],+m[2],+m[3]):null;};
+        const fd=pd(iFdat)||pd(iTs), vv=pd(iVerv);
+        const dgn=fd?Math.floor((vandaag-fd)/864e5):null;
+        const over=!!(vv&&vandaag>vv);
+        if(!over&&(dgn===null||dgn<14))continue;
+        const fnr=iFnr>=0&&c[iFnr]&&c[iFnr].v||'';
+        const link=iIdl>=0&&c[iIdl]&&String(c[iIdl].v||'').trim()||'';
+        const vn=naam.split(' ')[0];
+        const msg=encodeURIComponent('Goedendag '+vn+', een vriendelijke herinnering: factuur'+(fnr?' '+fnr:'')+' van €'+ntb.toFixed(2).replace('.',',')+' staat nog open. '+(link?'Betalen kan direct via deze link: '+link:'Het rekeningnummer staat op de factuur.')+' Alvast bedankt! 🙏 Rens — Spoed Dak Service');
+        betalen.push({naam:naam,bedrag:ntb,dgn:dgn,over:over,
+          wa:tel.length>=10?'https://wa.me/'+(tel.startsWith('0')?'31'+tel.slice(1):tel)+'?text='+msg:null});
       }
     }
     for(const row of r.table.rows){
@@ -198,6 +244,14 @@ window.__plan=function(r){
   const man = localStorage.getItem('dagmode_man_'+dagISO);
   const auto = nVandaag>0?'klus':'loop';
   if(!man) zetMode(auto,false);
+  if(betalen.length){
+    document.getElementById('betaalblok').style.display='';
+    document.getElementById('betN').textContent='('+betalen.length+')';
+    document.getElementById('betaallijst').innerHTML=betalen.slice(0,20).map(o=>
+      `<div class='klus'><b>${o.naam}</b> · €${o.bedrag.toFixed(2).replace('.',',')}${o.over?' · ⚠️ over vervaldatum':(o.dgn!==null?' · '+o.dgn+' dgn open':'')} `
+      +(o.wa?`<a class='knop' data-n='${o.naam.replace(/'/g,'')}' style='background:#e08c00' href='${o.wa}' target='_blank'>💶 Herinnering</a>`:`<span class='hint'>geen 06 in de sheet</span>`)+`</div>`).join('');
+    document.getElementById('betaallijst').querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>log('betaalherinnering: '+a.dataset.n,'-')));
+  }
   if(opvolg.length){
     document.getElementById('opvolgblok').style.display='';
     document.getElementById('opvN').textContent='('+opvolg.length+')';
