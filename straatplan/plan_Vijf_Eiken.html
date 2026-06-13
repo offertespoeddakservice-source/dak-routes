@@ -6,7 +6,7 @@ h1{font-size:1.2rem;margin:.3rem 0;}
 a.terug{font-size:.85rem;color:#1a73e8;text-decoration:none;}
 .intro{background:#fff;border-radius:10px;padding:.5rem .7rem;font-size:.8rem;color:#555;margin:.4rem 0;line-height:1.4;}
 .tabs{display:flex;gap:.3rem;flex-wrap:wrap;font-size:.8rem;margin-bottom:.6rem;}.tabs a{background:#fff;border-radius:8px;padding:.35rem .55rem;text-decoration:none;color:#1a73e8;font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.06);}
-.bar{position:sticky;top:0;background:rgba(245,245,247,.96);backdrop-filter:blur(8px);padding:.4rem 0;z-index:10;border-bottom:1px solid #ddd;}
+.bar{background:rgba(245,245,247,.96);padding:.4rem 0;border-bottom:1px solid #ddd;}
 .teller{font-size:.8rem;color:#555;padding:.2rem 0;}
 .klok{display:flex;gap:.3rem;align-items:center;margin:.25rem 0;}
 .klok button{border:none;border-radius:7px;padding:.4rem .6rem;color:#fff;font-weight:600;font-size:.78rem;cursor:pointer;}
@@ -53,20 +53,21 @@ a.terug{font-size:.85rem;color:#1a73e8;text-decoration:none;}
 .knoppen{display:flex;gap:.3rem;}
 .knoppen button{flex:1;border:none;border-radius:7px;padding:.5rem .2rem;color:#fff;font-weight:600;font-size:.76rem;cursor:pointer;}
 .go{background:#1a9850;}.meh{background:#fdae61;}.skip{background:#d73027;}.done{background:#333;}
+.wzet{background:#9aa0a6;flex:0 0 2.4rem !important;}.wzet.aan{background:#e08c00;}
 .export{background:#1a9850;color:#fff;border:none;border-radius:9px;padding:.7rem;width:100%;font-weight:600;font-size:.9rem;margin-top:.6rem;cursor:pointer;}
 .afgekeurd-kop{font-size:1rem;margin:1.2rem 0 .5rem;color:#a3231a;}
 .straat.afgekeurd{background:#fdf0ef;border:1px dashed #d73027;opacity:1;}
 .ai-skip{background:#d73027;}
 .svlink{display:inline-block;color:#1a73e8;font-size:.8rem;margin-top:.35rem;text-decoration:none;}
 </style></head><body>
-<div class="tabs"><a href="../index.html">🏠</a><a href="../vandaag.html">📅 Planning</a><a href="../opvolgen.html">✅ Opvolgen</a><a href="../begin_lijst.html">📋 Buurten</a><a href="#" id="t-straten">🚶 Straten</a><a href="../kaart.html">🗺️ Kaart</a><a href="../dashboard.html">📊 Cijfers</a><a href="../pitch.html">📣 Pitch</a><a href="../feedback.html">💬 Feedback</a></div>
+<div class="tabs"><a href="../index.html">🏠</a><a href="../vandaag.html">📅 Planning</a><a href="../opvolgen.html">✅ Opvolgen</a><a href="../begin_lijst.html">📋 Buurten</a><a href="#" id="t-straten">🚶 Straten</a><a href="../kaart.html">🗺️ Kaart</a><a href="../dashboard.html">📊 Cijfers</a><a href="../financieel.html">💶 Financieel</a><a href="../pitch.html">📣 Pitch</a><a href="../feedback.html">💬 Feedback</a></div>
 <h1>🗺️ Vijf Eiken — straatplan</h1>
 <div class='intro'>🎯 = bouwjaar 1955-1980. Bekijk de 3 foto's (begin/midden/eind): is de <b>nok halfrond</b>?
 De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b>DONE</b> als je 'm gelopen hebt.</div>
 <div class='blok-review'><input id='buurtrev' placeholder='⭐ Review over de hele buurt (sfeer, type mensen, concurrent gezien...)'><button onclick='bewaarBuurtrev()'>Opslaan</button></div>
 <div class='bar'><div id='routes'></div><div class='klok'><button class='k-start' onclick='klok("start")'>▶ Start</button><button class='k-pauze' id='pauzebtn' onclick='klokPauze()'>⏸ Pauze</button><button class='k-fin' onclick='klok("finish")'>🏁 Klaar</button><span id='tijdtxt'></span></div><button class='sorteer' id='sortbtn' onclick='toggleSort()'>⭐ GO eerst</button><div class='teller' id='teller'>—</div></div>
 <div class='intro' id='weerstrip' style='display:none'></div>
-<div class='testblok'><b>🧪 START-TEST — pak deze eerst (≈187 huizen)</b><div class='trij'><a href='#s_Heistraat'>Heistraat</a> · 125 huizen · ?</div><div class='trij'><a href='#s_Looiersveld'>Looiersveld</a> · 62 huizen · ?</div><div class='tuitleg'>Dichtste straten naast elkaar. Loopt het hier niet binnen de test → wijk is niks, pak een alternatief (onderaan).</div><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.59207526,4.91510807&travelmode=driving' target='_blank'>🚗 Naar de test-straten</a></div>
+<div class='testblok'><b>🧪 START-TEST — pak deze eerst (≈113 huizen)</b><div class='trij'><a href='#s_Rector_Buijselstraat'>Rector Buijselstraat</a> · 51 huizen · <b>83 deuren/100m</b> · ?</div><div class='trij'><a href='#s_Looiersveld'>Looiersveld</a> · 62 huizen · <b>37 deuren/100m</b> · ?</div><div class='tuitleg'>Gekozen op: 1) bewezen nokken (GO), 2) oude pannen, 3) deur-dichtheid (rijtjes = snelste test). Alléén koop-straten (≥60%), flats en corporatie eruit.</div><div class='tuitleg'><b>✅ Test werkt?</b> Loop dan verder: <a href='#s_Fagelhof'>Fagelhof</a> → <a href='#s_Heinsiushof'>Heinsiushof</a> → <a href='#s_Mackayhof'>Mackayhof</a> → <a href='#s_Schoutstraat'>Schoutstraat</a> → <a href='#s_Goselingstraat'>Goselingstraat</a>.<br><b>❌ Geen sales (2-uur-regel)?</b> Wijk afschrijven → alternatieven onderaan.</div><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.59224538,4.91383212&travelmode=driving' target='_blank'>🚗 Naar de test-straten</a></div>
 <div id='lijst'>
 
         <div class='straat' id='s_Dongenseweg' data-init='' data-lat='51.59869171' data-lon='4.91574356' data-koop='90'>
@@ -86,6 +87,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Dongenseweg","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Dongenseweg","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Dongenseweg","Dongenseweg")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Dongenseweg","Dongenseweg",51.59869171,4.91574356)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_van_Hogendorpstraat' data-init='' data-lat='51.59654102' data-lon='4.91544026' data-koop='35'>
@@ -105,6 +107,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("van_Hogendorpstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("van_Hogendorpstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("van_Hogendorpstraat","van Hogendorpstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("van_Hogendorpstraat","van Hogendorpstraat",51.59654102,4.91544026)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_van_de_Spiegelhof' data-init='' data-lat='51.5965738' data-lon='4.91354872' data-koop=''>
@@ -124,6 +127,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("van_de_Spiegelhof","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("van_de_Spiegelhof","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("van_de_Spiegelhof","van de Spiegelhof")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("van_de_Spiegelhof","van de Spiegelhof",51.5965738,4.91354872)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_van_Bleiswijkhof' data-init='' data-lat='51.59621404' data-lon='4.91253402' data-koop='40'>
@@ -143,6 +147,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("van_Bleiswijkhof","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("van_Bleiswijkhof","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("van_Bleiswijkhof","van Bleiswijkhof")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("van_Bleiswijkhof","van Bleiswijkhof",51.59621404,4.91253402)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Steynhof' data-init='' data-lat='51.59587307' data-lon='4.91241497' data-koop=''>
@@ -162,6 +167,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Steynhof","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Steynhof","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Steynhof","Steynhof")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Steynhof","Steynhof",51.59587307,4.91241497)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Schimmelpenninckstraat' data-init='' data-lat='51.5943896' data-lon='4.91164826' data-koop='30'>
@@ -181,6 +187,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Schimmelpenninckstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Schimmelpenninckstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Schimmelpenninckstraat","Schimmelpenninckstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Schimmelpenninckstraat","Schimmelpenninckstraat",51.5943896,4.91164826)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_de_Wittstraat' data-init='' data-lat='51.59401311' data-lon='4.91067644' data-koop='24'>
@@ -200,6 +207,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("de_Wittstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("de_Wittstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("de_Wittstraat","de Wittstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("de_Wittstraat","de Wittstraat",51.59401311,4.91067644)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Cort_van_der_Lindenstraat' data-init='' data-lat='51.59401138' data-lon='4.90982995' data-koop=''>
@@ -219,6 +227,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Cort_van_der_Lindenstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Cort_van_der_Lindenstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Cort_van_der_Lindenstraat","Cort van der Lindenstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Cort_van_der_Lindenstraat","Cort van der Lindenstraat",51.59401138,4.90982995)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Heikantsestraat' data-init='' data-lat='51.59382849' data-lon='4.90926115' data-koop='50'>
@@ -238,6 +247,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Heikantsestraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Heikantsestraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Heikantsestraat","Heikantsestraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Heikantsestraat","Heikantsestraat",51.59382849,4.90926115)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Stormstraat' data-init='' data-lat='51.59336808' data-lon='4.90833456' data-koop=''>
@@ -257,6 +267,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Stormstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Stormstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Stormstraat","Stormstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Stormstraat","Stormstraat",51.59336808,4.90833456)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_van_Oldenbarneveldtlaan' data-init='' data-lat='51.59359915' data-lon='4.90802128' data-koop='30'>
@@ -276,6 +287,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("van_Oldenbarneveldtlaan","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("van_Oldenbarneveldtlaan","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("van_Oldenbarneveldtlaan","van Oldenbarneveldtlaan")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("van_Oldenbarneveldtlaan","van Oldenbarneveldtlaan",51.59359915,4.90802128)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Talmastraat' data-init='' data-lat='51.59301751' data-lon='4.90784885' data-koop='60'>
@@ -295,6 +307,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Talmastraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Talmastraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Talmastraat","Talmastraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Talmastraat","Talmastraat",51.59301751,4.90784885)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Monseigneur_Schaepmanstraat' data-init='' data-lat='51.59262833' data-lon='4.90633279' data-koop='43'>
@@ -314,6 +327,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Monseigneur_Schaepmanstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Monseigneur_Schaepmanstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Monseigneur_Schaepmanstraat","Monseigneur Schaepmanstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Monseigneur_Schaepmanstraat","Monseigneur Schaepmanstraat",51.59262833,4.90633279)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Aalbersestraat' data-init='' data-lat='51.59184293' data-lon='4.90708341' data-koop=''>
@@ -333,6 +347,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Aalbersestraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Aalbersestraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Aalbersestraat","Aalbersestraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Aalbersestraat","Aalbersestraat",51.59184293,4.90708341)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Goselingstraat' data-init='' data-lat='51.59145663' data-lon='4.90635829' data-koop=''>
@@ -352,6 +367,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Goselingstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Goselingstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Goselingstraat","Goselingstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Goselingstraat","Goselingstraat",51.59145663,4.90635829)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Leuvenstraat' data-init='' data-lat='51.59094387' data-lon='4.90654552' data-koop='60'>
@@ -371,6 +387,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Leuvenstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Leuvenstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Leuvenstraat","Leuvenstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Leuvenstraat","Leuvenstraat",51.59094387,4.90654552)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Monseigneur_Nolensstraat' data-init='' data-lat='51.59082372' data-lon='4.90562915' data-koop='100'>
@@ -390,6 +407,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Monseigneur_Nolensstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Monseigneur_Nolensstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Monseigneur_Nolensstraat","Monseigneur Nolensstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Monseigneur_Nolensstraat","Monseigneur Nolensstraat",51.59082372,4.90562915)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Beelstraat' data-init='' data-lat='51.59052836' data-lon='4.90474395' data-koop='90'>
@@ -409,6 +427,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Beelstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Beelstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Beelstraat","Beelstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Beelstraat","Beelstraat",51.59052836,4.90474395)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_de_Quaystraat' data-init='' data-lat='51.59018849' data-lon='4.90394887' data-koop='100'>
@@ -428,6 +447,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("de_Quaystraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("de_Quaystraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("de_Quaystraat","de Quaystraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("de_Quaystraat","de Quaystraat",51.59018849,4.90394887)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Gerbrandystraat' data-init='' data-lat='51.59113511' data-lon='4.90417919' data-koop=''>
@@ -447,6 +467,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Gerbrandystraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Gerbrandystraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Gerbrandystraat","Gerbrandystraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Gerbrandystraat","Gerbrandystraat",51.59113511,4.90417919)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_van_Houtenstraat' data-init='' data-lat='51.59148445' data-lon='4.90412808' data-koop='100'>
@@ -466,6 +487,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("van_Houtenstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("van_Houtenstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("van_Houtenstraat","van Houtenstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("van_Houtenstraat","van Houtenstraat",51.59148445,4.90412808)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Dreesstraat' data-init='' data-lat='51.59142883' data-lon='4.90352856' data-koop='90'>
@@ -485,6 +507,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Dreesstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Dreesstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Dreesstraat","Dreesstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Dreesstraat","Dreesstraat",51.59142883,4.90352856)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_van_Hallstraat' data-init='' data-lat='51.59199689' data-lon='4.90357009' data-koop='90'>
@@ -504,6 +527,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("van_Hallstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("van_Hallstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("van_Hallstraat","van Hallstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("van_Hallstraat","van Hallstraat",51.59199689,4.90357009)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Mackayhof' data-init='' data-lat='51.59275526' data-lon='4.90373423' data-koop='100'>
@@ -523,6 +547,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Mackayhof","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Mackayhof","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Mackayhof","Mackayhof")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Mackayhof","Mackayhof",51.59275526,4.90373423)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Heemskerkstraat' data-init='' data-lat='51.5928401' data-lon='4.90433276' data-koop='100'>
@@ -542,6 +567,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Heemskerkstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Heemskerkstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Heemskerkstraat","Heemskerkstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Heemskerkstraat","Heemskerkstraat",51.5928401,4.90433276)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Wethouder_Noijhof' data-init='' data-lat='51.59285938' data-lon='4.90474121' data-koop='90'>
@@ -561,6 +587,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Wethouder_Noijhof","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Wethouder_Noijhof","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Wethouder_Noijhof","Wethouder Noijhof")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Wethouder_Noijhof","Wethouder Noijhof",51.59285938,4.90474121)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_van_Slingelandthof' data-init='' data-lat='51.59354154' data-lon='4.90622261' data-koop=''>
@@ -580,6 +607,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("van_Slingelandthof","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("van_Slingelandthof","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("van_Slingelandthof","van Slingelandthof")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("van_Slingelandthof","van Slingelandthof",51.59354154,4.90622261)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Heinsiushof' data-init='' data-lat='51.59397478' data-lon='4.9071016' data-koop=''>
@@ -599,6 +627,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Heinsiushof","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Heinsiushof","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Heinsiushof","Heinsiushof")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Heinsiushof","Heinsiushof",51.59397478,4.9071016)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Fagelhof' data-init='' data-lat='51.59420499' data-lon='4.90759317' data-koop=''>
@@ -618,6 +647,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Fagelhof","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Fagelhof","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Fagelhof","Fagelhof")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Fagelhof","Fagelhof",51.59420499,4.90759317)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Statenlaan' data-init='' data-lat='51.59481847' data-lon='4.90797261' data-koop='97'>
@@ -637,6 +667,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Statenlaan","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Statenlaan","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Statenlaan","Statenlaan")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Statenlaan","Statenlaan",51.59481847,4.90797261)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Vreedestraat' data-init='' data-lat='51.59303481' data-lon='4.91055438' data-koop=''>
@@ -656,6 +687,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Vreedestraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Vreedestraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Vreedestraat","Vreedestraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Vreedestraat","Vreedestraat",51.59303481,4.91055438)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Grotiusplantsoen' data-init='' data-lat='51.59242182' data-lon='4.91007366' data-koop='50'>
@@ -675,6 +707,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Grotiusplantsoen","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Grotiusplantsoen","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Grotiusplantsoen","Grotiusplantsoen")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Grotiusplantsoen","Grotiusplantsoen",51.59242182,4.91007366)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Kuyperstraat' data-init='' data-lat='51.59214433' data-lon='4.90956686' data-koop=''>
@@ -694,6 +727,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Kuyperstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Kuyperstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Kuyperstraat","Kuyperstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Kuyperstraat","Kuyperstraat",51.59214433,4.90956686)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Verschuurstraat' data-init='' data-lat='51.59188817' data-lon='4.90864616' data-koop='30'>
@@ -713,6 +747,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Verschuurstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Verschuurstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Verschuurstraat","Verschuurstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Verschuurstraat","Verschuurstraat",51.59188817,4.90864616)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Brabantpark' data-init='' data-lat='51.59135299' data-lon='4.90847111' data-koop='65'>
@@ -732,6 +767,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Brabantpark","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Brabantpark","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Brabantpark","Brabantpark")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Brabantpark","Brabantpark",51.59135299,4.90847111)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Strijenstraat' data-init='' data-lat='51.59040136' data-lon='4.90893281' data-koop='50'>
@@ -751,6 +787,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Strijenstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Strijenstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Strijenstraat","Strijenstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Strijenstraat","Strijenstraat",51.59040136,4.90893281)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Gravenstraat' data-init='' data-lat='51.59020425' data-lon='4.90962116' data-koop='50'>
@@ -770,6 +807,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Gravenstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Gravenstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Gravenstraat","Gravenstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Gravenstraat","Gravenstraat",51.59020425,4.90962116)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Baroniestraat' data-init='' data-lat='51.59061253' data-lon='4.9096829' data-koop='89'>
@@ -789,6 +827,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Baroniestraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Baroniestraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Baroniestraat","Baroniestraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Baroniestraat","Baroniestraat",51.59061253,4.9096829)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Prinsenstraat' data-init='' data-lat='51.59049611' data-lon='4.91035151' data-koop='100'>
@@ -808,6 +847,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Prinsenstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Prinsenstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Prinsenstraat","Prinsenstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Prinsenstraat","Prinsenstraat",51.59049611,4.91035151)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Drossaardstraat' data-init='' data-lat='51.59095847' data-lon='4.91075101' data-koop='90'>
@@ -827,6 +867,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Drossaardstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Drossaardstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Drossaardstraat","Drossaardstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Drossaardstraat","Drossaardstraat",51.59095847,4.91075101)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Schoutstraat' data-init='' data-lat='51.59141331' data-lon='4.91220059' data-koop='95'>
@@ -846,6 +887,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Schoutstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Schoutstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Schoutstraat","Schoutstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Schoutstraat","Schoutstraat",51.59141331,4.91220059)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Monseigneur_van_Hooydonkstraat' data-init='' data-lat='51.59123902' data-lon='4.91296386' data-koop='90'>
@@ -865,6 +907,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Monseigneur_van_Hooydonkstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Monseigneur_van_Hooydonkstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Monseigneur_van_Hooydonkstraat","Monseigneur van Hooydonkstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Monseigneur_van_Hooydonkstraat","Monseigneur van Hooydonkstraat",51.59123902,4.91296386)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Kardinaal_de_Jongstraat' data-init='' data-lat='51.59179365' data-lon='4.91301166' data-koop='60'>
@@ -884,6 +927,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Kardinaal_de_Jongstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Kardinaal_de_Jongstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Kardinaal_de_Jongstraat","Kardinaal de Jongstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Kardinaal_de_Jongstraat","Kardinaal de Jongstraat",51.59179365,4.91301166)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Rector_Buijselstraat' data-init='' data-lat='51.59224538' data-lon='4.91383212' data-koop='60'>
@@ -903,6 +947,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Rector_Buijselstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Rector_Buijselstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Rector_Buijselstraat","Rector Buijselstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Rector_Buijselstraat","Rector Buijselstraat",51.59224538,4.91383212)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Heistraat' data-init='' data-lat='51.59207526' data-lon='4.91510807' data-koop='76'>
@@ -922,6 +967,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Heistraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Heistraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Heistraat","Heistraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Heistraat","Heistraat",51.59207526,4.91510807)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Looiersveld' data-init='' data-lat='51.59123228' data-lon='4.91596156' data-koop='90'>
@@ -941,6 +987,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Looiersveld","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Looiersveld","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Looiersveld","Looiersveld")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Looiersveld","Looiersveld",51.59123228,4.91596156)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Mariastraat' data-init='' data-lat='51.59074351' data-lon='4.91422971' data-koop='50'>
@@ -960,6 +1007,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Mariastraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Mariastraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Mariastraat","Mariastraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Mariastraat","Mariastraat",51.59074351,4.91422971)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Raadhuisplein' data-init='' data-lat='51.5905176' data-lon='4.91272485' data-koop='74'>
@@ -979,6 +1027,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Raadhuisplein","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Raadhuisplein","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Raadhuisplein","Raadhuisplein")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Raadhuisplein","Raadhuisplein",51.5905176,4.91272485)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Nassaulaan' data-init='' data-lat='51.589542' data-lon='4.90927555' data-koop='50'>
@@ -998,6 +1047,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Nassaulaan","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Nassaulaan","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Nassaulaan","Nassaulaan")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Nassaulaan","Nassaulaan",51.589542,4.90927555)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_van_Duivenvoordestraat' data-init='' data-lat='51.59009678' data-lon='4.90782958' data-koop=''>
@@ -1017,6 +1067,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("van_Duivenvoordestraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("van_Duivenvoordestraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("van_Duivenvoordestraat","van Duivenvoordestraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("van_Duivenvoordestraat","van Duivenvoordestraat",51.59009678,4.90782958)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Hertogenstraat' data-init='' data-lat='51.5903521' data-lon='4.90804229' data-koop=''>
@@ -1036,6 +1087,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Hertogenstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Hertogenstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Hertogenstraat","Hertogenstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Hertogenstraat","Hertogenstraat",51.5903521,4.90804229)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Churchillstraat' data-init='' data-lat='51.58934244' data-lon='4.90518909' data-koop=''>
@@ -1055,6 +1107,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Churchillstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Churchillstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Churchillstraat","Churchillstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Churchillstraat","Churchillstraat",51.58934244,4.90518909)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Kennedylaan' data-init='' data-lat='51.59170159' data-lon='4.90147031' data-koop='97'>
@@ -1074,6 +1127,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Kennedylaan","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Kennedylaan","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Kennedylaan","Kennedylaan")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Kennedylaan","Kennedylaan",51.59170159,4.90147031)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_van_Bossehof' data-init='' data-lat='51.59236406' data-lon='4.90231198' data-koop='100'>
@@ -1093,6 +1147,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("van_Bossehof","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("van_Bossehof","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("van_Bossehof","van Bossehof")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("van_Bossehof","van Bossehof",51.59236406,4.90231198)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Thorbeckeplein' data-init='' data-lat='51.59301769' data-lon='4.91268343' data-koop=''>
@@ -1112,6 +1167,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Thorbeckeplein","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Thorbeckeplein","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Thorbeckeplein","Thorbeckeplein")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Thorbeckeplein","Thorbeckeplein",51.59301769,4.91268343)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_van_Ghertstraat' data-init='' data-lat='51.594333' data-lon='4.91465997' data-koop=''>
@@ -1131,6 +1187,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("van_Ghertstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("van_Ghertstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("van_Ghertstraat","van Ghertstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("van_Ghertstraat","van Ghertstraat",51.594333,4.91465997)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Hoofdstraat' data-init='' data-lat='51.594978' data-lon='4.91646076' data-koop='80'>
@@ -1150,6 +1207,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Hoofdstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Hoofdstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Hoofdstraat","Hoofdstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Hoofdstraat","Hoofdstraat",51.594978,4.91646076)'>👷</button>
           </div>
         </div>
 </div>
@@ -1160,7 +1218,7 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
 localStorage.setItem('laatste_plan','straatplan/'+location.pathname.split('/').pop());
 const tsx=document.getElementById('t-straten');if(tsx)tsx.href=location.pathname.split('/').pop();
 const code='BU07840102', naam='Vijf Eiken';
-const SHEET_URL='https://script.google.com/macros/s/AKfycbzMkmZKeadRlwNxTzl9io-vftCurSiGP2lz2rDFLSkVVADnzjOkwzqoHlstRCFyj1ppjA/exec';
+const SHEET_URL='https://script.google.com/macros/s/AKfycbzQEt7CUybrqFtYqBTsJ3IxTkTLTw1yz5J9KezJsmMdqGUWNKVZIWyO6An-VFPAahP6FA/exec';
 // weer in déze buurt (open-meteo, gratis) — regen per uur
 fetch('https://api.open-meteo.com/v1/forecast?latitude=51.5925&longitude=4.9091&hourly=precipitation,precipitation_probability&timezone=Europe%2FAmsterdam&forecast_days=1')
 .then(r=>r.json()).then(w=>{
@@ -1182,6 +1240,17 @@ const lijst=document.getElementById('lijst');
 function cur(k){const el=document.getElementById('s_'+k);return v[k]!==undefined?v[k]:(el?el.dataset.init:'');}
 function paint(k){const el=document.getElementById('s_'+k);if(!el)return;el.classList.remove('go','meh','skip');const val=cur(k);if(val)el.classList.add(val);el.classList.toggle('gedaan',!!done[k]);}
 function log(actie,straat){if(!SHEET_URL)return;try{fetch(SHEET_URL+'?'+new URLSearchParams({buurt:naam,straat:straat,actie:actie}),{mode:'no-cors'});}catch(e){}}
+// 👷 straat klaarzetten voor personeel (werk.html leest dit uit de log)
+const wz=JSON.parse(localStorage.getItem('wz_'+code)||'{}');
+function werkZet(k,s,la,lo){
+  const aan=!wz[k];
+  if(aan)wz[k]=1; else delete wz[k];
+  localStorage.setItem('wz_'+code,JSON.stringify(wz));
+  try{fetch(SHEET_URL+'?'+new URLSearchParams({buurt:'KLAARZET',straat:s,
+    actie:aan?('klaarzet @'+la+','+lo+' · '+naam):('klaarzet_weg · '+naam)}),{mode:'no-cors'});}catch(e){}
+  const el=document.getElementById('s_'+k);
+  if(el){const b=el.querySelector('.wzet');if(b)b.classList.toggle('aan',aan);}
+}
 function reorder(){for(const el of [...lijst.querySelectorAll('.straat')]) if(cur(el.id.slice(2))==='skip') lijst.appendChild(el);}
 function rebuild(){
   let i=1,g=0,d=0,t=0; const pts=[];
@@ -1290,6 +1359,6 @@ function applySort(){
 }
 function toggleSort(){sortMode=(sortMode==='go')?'route':'go';localStorage.setItem('sort_'+code,sortMode);applySort();}
 setInterval(renderKlok,30000);
-[...lijst.querySelectorAll('.straat')].forEach((el,i)=>{el.dataset.idx=i;paint(el.id.slice(2));});
+[...lijst.querySelectorAll('.straat')].forEach((el,i)=>{el.dataset.idx=i;paint(el.id.slice(2));const wb=el.querySelector('.wzet');if(wb&&wz[el.id.slice(2)])wb.classList.add('aan');});
 applySort(); renderKlok();
 </script></body></html>

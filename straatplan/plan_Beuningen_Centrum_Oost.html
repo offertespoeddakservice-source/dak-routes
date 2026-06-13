@@ -1,11 +1,12 @@
 <!doctype html><html lang='nl'><head><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<title>Straatplan — Beuningen-Centrum Oost</title><style>
+<title>Straatplan — Beuningen-Centrum Oost</title><script>(function(){var P='3032';if(localStorage.getItem('sitepin')===P)return;for(var i=0;i<3;i++){var p=prompt('🔒 PIN?');if(p===P){localStorage.setItem('sitepin',P);return;}if(p===null)break;}document.documentElement.innerHTML='<body style="font-family:sans-serif;padding:2rem">🔒 Verkeerde PIN — ververs de pagina (⬇️ trekken of ⟳) en probeer opnieuw.</body>';window.stop();})();</script><style>
 body{font-family:-apple-system,sans-serif;background:#f5f5f7;margin:0;padding:0.6rem;max-width:640px;margin:0 auto;color:#1c1c1e;}
 h1{font-size:1.2rem;margin:.3rem 0;}
 a.terug{font-size:.85rem;color:#1a73e8;text-decoration:none;}
 .intro{background:#fff;border-radius:10px;padding:.5rem .7rem;font-size:.8rem;color:#555;margin:.4rem 0;line-height:1.4;}
-.bar{position:sticky;top:0;background:rgba(245,245,247,.96);backdrop-filter:blur(8px);padding:.4rem 0;z-index:10;border-bottom:1px solid #ddd;}
+.tabs{display:flex;gap:.3rem;flex-wrap:wrap;font-size:.8rem;margin-bottom:.6rem;}.tabs a{background:#fff;border-radius:8px;padding:.35rem .55rem;text-decoration:none;color:#1a73e8;font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.06);}
+.bar{background:rgba(245,245,247,.96);padding:.4rem 0;border-bottom:1px solid #ddd;}
 .teller{font-size:.8rem;color:#555;padding:.2rem 0;}
 .klok{display:flex;gap:.3rem;align-items:center;margin:.25rem 0;}
 .klok button{border:none;border-radius:7px;padding:.4rem .6rem;color:#fff;font-weight:600;font-size:.78rem;cursor:pointer;}
@@ -24,6 +25,9 @@ a.terug{font-size:.85rem;color:#1a73e8;text-decoration:none;}
 .ai{font-size:.72rem;font-weight:700;padding:.1rem .45rem;border-radius:5px;color:#fff;}
 .ai-go{background:#1a9850;}.ai-meh{background:#fdae61;}
 .nokb{font-size:.68rem;font-weight:700;padding:.1rem .4rem;border-radius:5px;color:#fff;}
+.eigrij{display:flex;gap:.3rem;flex-wrap:wrap;margin:.25rem 0;}
+.eig{font-size:.7rem;font-weight:700;padding:.12rem .45rem;border-radius:5px;color:#fff;background:#999;}
+.eig-goed{background:#1a9850;}.eig-meh{background:#e08c00;}.eig-fout{background:#d73027;}
 .nok-goed{background:#1a9850;}.nok-fout{background:#d73027;}.nok-onb{background:#999;}
 .nokzoom{margin-top:3px;}.nokzoom img{width:100%;border-radius:6px;display:block;}
 .nokcap{font-size:.66rem;color:#888;text-align:center;}
@@ -49,26 +53,28 @@ a.terug{font-size:.85rem;color:#1a73e8;text-decoration:none;}
 .knoppen{display:flex;gap:.3rem;}
 .knoppen button{flex:1;border:none;border-radius:7px;padding:.5rem .2rem;color:#fff;font-weight:600;font-size:.76rem;cursor:pointer;}
 .go{background:#1a9850;}.meh{background:#fdae61;}.skip{background:#d73027;}.done{background:#333;}
+.wzet{background:#9aa0a6;flex:0 0 2.4rem !important;}.wzet.aan{background:#e08c00;}
 .export{background:#1a9850;color:#fff;border:none;border-radius:9px;padding:.7rem;width:100%;font-weight:600;font-size:.9rem;margin-top:.6rem;cursor:pointer;}
 .afgekeurd-kop{font-size:1rem;margin:1.2rem 0 .5rem;color:#a3231a;}
 .straat.afgekeurd{background:#fdf0ef;border:1px dashed #d73027;opacity:1;}
 .ai-skip{background:#d73027;}
 .svlink{display:inline-block;color:#1a73e8;font-size:.8rem;margin-top:.35rem;text-decoration:none;}
 </style></head><body>
-<a class='terug' href='../begin_lijst.html'>← terug naar buurtenlijst</a>
+<div class="tabs"><a href="../index.html">🏠</a><a href="../vandaag.html">📅 Planning</a><a href="../opvolgen.html">✅ Opvolgen</a><a href="../begin_lijst.html">📋 Buurten</a><a href="#" id="t-straten">🚶 Straten</a><a href="../kaart.html">🗺️ Kaart</a><a href="../dashboard.html">📊 Cijfers</a><a href="../financieel.html">💶 Financieel</a><a href="../pitch.html">📣 Pitch</a><a href="../feedback.html">💬 Feedback</a></div>
 <h1>🗺️ Beuningen-Centrum Oost — straatplan</h1>
 <div class='intro'>🎯 = bouwjaar 1955-1980. Bekijk de 3 foto's (begin/midden/eind): is de <b>nok halfrond</b>?
 De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b>DONE</b> als je 'm gelopen hebt.</div>
 <div class='blok-review'><input id='buurtrev' placeholder='⭐ Review over de hele buurt (sfeer, type mensen, concurrent gezien...)'><button onclick='bewaarBuurtrev()'>Opslaan</button></div>
 <div class='bar'><div id='routes'></div><div class='klok'><button class='k-start' onclick='klok("start")'>▶ Start</button><button class='k-pauze' id='pauzebtn' onclick='klokPauze()'>⏸ Pauze</button><button class='k-fin' onclick='klok("finish")'>🏁 Klaar</button><span id='tijdtxt'></span></div><button class='sorteer' id='sortbtn' onclick='toggleSort()'>⭐ GO eerst</button><div class='teller' id='teller'>—</div></div>
-<div class='testblok'><b>🧪 START-TEST — pak deze eerst (≈174 huizen)</b><div class='trij'><a href='#s_Burgemeester_Geradtslaan'>Burgemeester Geradtslaan</a> · 55 huizen · ?</div><div class='trij'><a href='#s_Wingerdstraat'>Wingerdstraat</a> · 119 huizen · ?</div><div class='tuitleg'>Dichtste straten naast elkaar. Loopt het hier niet binnen de test → wijk is niks, pak een alternatief (onderaan).</div><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.85863777,5.77626754&travelmode=driving' target='_blank'>🚗 Naar de test-straten</a></div>
+<div class='intro' id='weerstrip' style='display:none'></div>
+<div class='testblok'><b>🧪 START-TEST — pak deze eerst (≈119 huizen)</b><div class='trij'><a href='#s_Wingerdstraat'>Wingerdstraat</a> · 119 huizen · <b>44 deuren/100m</b> · ?</div><div class='tuitleg'>Gekozen op: 1) bewezen nokken (GO), 2) oude pannen, 3) deur-dichtheid (rijtjes = snelste test). Alléén koop-straten (≥60%), flats en corporatie eruit.</div><div class='tuitleg'><b>✅ Test werkt?</b> Loop dan verder: <a href='#s_Violierstraat'>Violierstraat</a> → <a href='#s_Beatrixplein'>Beatrixplein</a> → <a href='#s_Lavendelstraat'>Lavendelstraat</a> → <a href='#s_Klaproosstraat'>Klaproosstraat</a> → <a href='#s_Anjelierstraat'>Anjelierstraat</a>.<br><b>❌ Geen sales (2-uur-regel)?</b> Wijk afschrijven → alternatieven onderaan.</div><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.85915419,5.78043825&travelmode=driving' target='_blank'>🚗 Naar de test-straten</a></div>
 <div id='lijst'>
 
-        <div class='straat' id='s_van_Heemstraweg' data-init='' data-lat='51.86346882' data-lon='5.77768852'>
+        <div class='straat' id='s_van_Heemstraweg' data-init='' data-lat='51.86346882' data-lon='5.77768852' data-koop='81'>
           <div class='kop'><span class='nr'>1</span>
             <span class='naam'>van Heemstraweg</span>
             <span class='bj bj-top'>🎯 1966</span></div>
-          
+          <div class='eigrij'><span class='eig eig-goed'>🔑 81% koop</span> <span class='eig eig-goed'>👴 33% 65+</span></div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU02090112_vanHeemstraweg_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -81,13 +87,14 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("van_Heemstraweg","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("van_Heemstraweg","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("van_Heemstraweg","van Heemstraweg")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("van_Heemstraweg","van Heemstraweg",51.86346882,5.77768852)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Klaproosstraat' data-init='' data-lat='51.86263495' data-lon='5.77707154'>
+        <div class='straat' id='s_Klaproosstraat' data-init='' data-lat='51.86263495' data-lon='5.77707154' data-koop='90'>
           <div class='kop'><span class='nr'>2</span>
             <span class='naam'>Klaproosstraat</span>
             <span class='bj bj-top'>🎯 1964</span></div>
-          
+          <div class='eigrij'><span class='eig eig-goed'>🔑 90% koop</span></div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU02090112_Klaproosstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -100,13 +107,14 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Klaproosstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Klaproosstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Klaproosstraat","Klaproosstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Klaproosstraat","Klaproosstraat",51.86263495,5.77707154)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Lupinestraat' data-init='' data-lat='51.86175169' data-lon='5.77778976'>
+        <div class='straat' id='s_Lupinestraat' data-init='' data-lat='51.86175169' data-lon='5.77778976' data-koop='100'>
           <div class='kop'><span class='nr'>3</span>
             <span class='naam'>Lupinestraat</span>
             <span class='bj bj-top'>🎯 1971</span></div>
-          
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span> <span class='eig eig-goed'>👴 46% 65+</span></div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU02090112_Lupinestraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -119,13 +127,14 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Lupinestraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Lupinestraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Lupinestraat","Lupinestraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Lupinestraat","Lupinestraat",51.86175169,5.77778976)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Akeleistraat' data-init='' data-lat='51.86152525' data-lon='5.77831042'>
+        <div class='straat' id='s_Akeleistraat' data-init='' data-lat='51.86152525' data-lon='5.77831042' data-koop='100'>
           <div class='kop'><span class='nr'>4</span>
             <span class='naam'>Akeleistraat</span>
             <span class='bj bj-top'>🎯 1971</span></div>
-          
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU02090112_Akeleistraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -138,9 +147,10 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Akeleistraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Akeleistraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Akeleistraat","Akeleistraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Akeleistraat","Akeleistraat",51.86152525,5.77831042)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Anjelierstraat' data-init='' data-lat='51.86148572' data-lon='5.77668414'>
+        <div class='straat' id='s_Anjelierstraat' data-init='' data-lat='51.86148572' data-lon='5.77668414' data-koop=''>
           <div class='kop'><span class='nr'>5</span>
             <span class='naam'>Anjelierstraat</span>
             <span class='bj bj-top'>🎯 1962</span></div>
@@ -157,13 +167,14 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Anjelierstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Anjelierstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Anjelierstraat","Anjelierstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Anjelierstraat","Anjelierstraat",51.86148572,5.77668414)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Violierstraat' data-init='' data-lat='51.86189345' data-lon='5.77570048'>
+        <div class='straat' id='s_Violierstraat' data-init='' data-lat='51.86189345' data-lon='5.77570048' data-koop='95'>
           <div class='kop'><span class='nr'>6</span>
             <span class='naam'>Violierstraat</span>
             <span class='bj bj-top'>🎯 1963</span></div>
-          
+          <div class='eigrij'><span class='eig eig-goed'>🔑 95% koop</span></div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU02090112_Violierstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -176,9 +187,10 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Violierstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Violierstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Violierstraat","Violierstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Violierstraat","Violierstraat",51.86189345,5.77570048)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Korenbloemstraat' data-init='' data-lat='51.86205707' data-lon='5.77515023'>
+        <div class='straat' id='s_Korenbloemstraat' data-init='' data-lat='51.86205707' data-lon='5.77515023' data-koop=''>
           <div class='kop'><span class='nr'>7</span>
             <span class='naam'>Korenbloemstraat</span>
             <span class='bj bj-top'>🎯 1960</span></div>
@@ -195,13 +207,14 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Korenbloemstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Korenbloemstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Korenbloemstraat","Korenbloemstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Korenbloemstraat","Korenbloemstraat",51.86205707,5.77515023)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Molenstraat' data-init='' data-lat='51.86122198' data-lon='5.77489624'>
+        <div class='straat' id='s_Molenstraat' data-init='' data-lat='51.86122198' data-lon='5.77489624' data-koop='87'>
           <div class='kop'><span class='nr'>8</span>
             <span class='naam'>Molenstraat</span>
             <span class='bj bj-top'>🎯 1963</span></div>
-          
+          <div class='eigrij'><span class='eig eig-goed'>🔑 87% koop</span> <span class='eig eig-fout'>🏢 11% corporatie</span> <span class='eig eig-fout'>🏬 50% flats</span> <span class='eig eig-goed'>👴 47% 65+</span></div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU02090112_Molenstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -214,13 +227,14 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Molenstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Molenstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Molenstraat","Molenstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Molenstraat","Molenstraat",51.86122198,5.77489624)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Beatrixplein' data-init='' data-lat='51.86036199' data-lon='5.77401781'>
+        <div class='straat' id='s_Beatrixplein' data-init='' data-lat='51.86036199' data-lon='5.77401781' data-koop='85'>
           <div class='kop'><span class='nr'>9</span>
             <span class='naam'>Beatrixplein</span>
             <span class='bj bj-top'>🎯 1960</span></div>
-          
+          <div class='eigrij'><span class='eig eig-goed'>🔑 85% koop</span> <span class='eig eig-goed'>👴 33% 65+</span></div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU02090112_Beatrixplein_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -233,13 +247,14 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Beatrixplein","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Beatrixplein","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Beatrixplein","Beatrixplein")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Beatrixplein","Beatrixplein",51.86036199,5.77401781)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Irenestraat' data-init='' data-lat='51.85984862' data-lon='5.77433277'>
+        <div class='straat' id='s_Irenestraat' data-init='' data-lat='51.85984862' data-lon='5.77433277' data-koop='50'>
           <div class='kop'><span class='nr'>10</span>
             <span class='naam'>Irenestraat</span>
             <span class='bj bj-top'>🎯 1958</span></div>
-          
+          <div class='eigrij'><span class='eig eig-meh'>🔑 50% koop</span> <span class='eig eig-fout'>🏢 33% corporatie</span> <span class='eig eig-fout'>🏬 33% flats</span></div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU02090112_Irenestraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -252,13 +267,14 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Irenestraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Irenestraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Irenestraat","Irenestraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Irenestraat","Irenestraat",51.85984862,5.77433277)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Christinastraat' data-init='' data-lat='51.85962147' data-lon='5.77507116'>
+        <div class='straat' id='s_Christinastraat' data-init='' data-lat='51.85962147' data-lon='5.77507116' data-koop='61'>
           <div class='kop'><span class='nr'>11</span>
             <span class='naam'>Christinastraat</span>
             <span class='bj bj-top'>🎯 1959</span></div>
-          
+          <div class='eigrij'><span class='eig eig-meh'>🔑 61% koop</span> <span class='eig eig-fout'>🏢 29% corporatie</span> <span class='eig eig-goed'>👴 33% 65+</span></div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU02090112_Christinastraa_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -271,13 +287,14 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Christinastraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Christinastraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Christinastraat","Christinastraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Christinastraat","Christinastraat",51.85962147,5.77507116)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Burgemeester_Verstraatenlaan' data-init='' data-lat='51.85914399' data-lon='5.77540093'>
+        <div class='straat' id='s_Burgemeester_Verstraatenlaan' data-init='' data-lat='51.85914399' data-lon='5.77540093' data-koop='62'>
           <div class='kop'><span class='nr'>12</span>
             <span class='naam'>Burgemeester Verstraatenlaan</span>
             <span class='bj bj-top'>🎯 1968</span></div>
-          
+          <div class='eigrij'><span class='eig eig-meh'>🔑 62% koop</span> <span class='eig eig-fout'>🏢 69% corporatie</span> <span class='eig eig-fout'>🏬 100% flats</span> <span class='eig eig-goed'>👴 34% 65+</span></div><div class='reden' style='color:#a3231a'>⚠️ Vooral huur/flats — niet jouw doelgroep, lage prioriteit</div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU02090112_BurgemeesterVe_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -290,13 +307,14 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Burgemeester_Verstraatenlaan","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Burgemeester_Verstraatenlaan","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Burgemeester_Verstraatenlaan","Burgemeester Verstraatenlaan")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Burgemeester_Verstraatenlaan","Burgemeester Verstraatenlaan",51.85914399,5.77540093)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Burgemeester_Geradtslaan' data-init='' data-lat='51.85863777' data-lon='5.77626754'>
+        <div class='straat' id='s_Burgemeester_Geradtslaan' data-init='' data-lat='51.85863777' data-lon='5.77626754' data-koop='47'>
           <div class='kop'><span class='nr'>13</span>
             <span class='naam'>Burgemeester Geradtslaan</span>
             <span class='bj bj-top'>🎯 1968</span></div>
-          
+          <div class='eigrij'><span class='eig eig-meh'>🔑 47% koop</span> <span class='eig eig-fout'>🏢 67% corporatie</span></div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU02090112_BurgemeesterGe_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -309,13 +327,14 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Burgemeester_Geradtslaan","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Burgemeester_Geradtslaan","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Burgemeester_Geradtslaan","Burgemeester Geradtslaan")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Burgemeester_Geradtslaan","Burgemeester Geradtslaan",51.85863777,5.77626754)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Anemoonstraat' data-init='' data-lat='51.85952668' data-lon='5.77655105'>
+        <div class='straat' id='s_Anemoonstraat' data-init='' data-lat='51.85952668' data-lon='5.77655105' data-koop='56'>
           <div class='kop'><span class='nr'>14</span>
             <span class='naam'>Anemoonstraat</span>
             <span class='bj bj-top'>🎯 1967</span></div>
-          
+          <div class='eigrij'><span class='eig eig-meh'>🔑 56% koop</span> <span class='eig eig-fout'>🏬 50% flats</span></div><div class='reden' style='color:#a3231a'>⚠️ Vooral huur/flats — niet jouw doelgroep, lage prioriteit</div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU02090112_Anemoonstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -328,13 +347,14 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Anemoonstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Anemoonstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Anemoonstraat","Anemoonstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Anemoonstraat","Anemoonstraat",51.85952668,5.77655105)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Primulastraat' data-init='' data-lat='51.85942473' data-lon='5.77747923'>
+        <div class='straat' id='s_Primulastraat' data-init='' data-lat='51.85942473' data-lon='5.77747923' data-koop='70'>
           <div class='kop'><span class='nr'>15</span>
             <span class='naam'>Primulastraat</span>
             <span class='bj bj-top'>🎯 1967</span></div>
-          
+          <div class='eigrij'><span class='eig eig-goed'>🔑 70% koop</span> <span class='eig eig-fout'>🏢 67% corporatie</span></div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU02090112_Primulastraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -347,13 +367,14 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Primulastraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Primulastraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Primulastraat","Primulastraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Primulastraat","Primulastraat",51.85942473,5.77747923)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Lavendelstraat' data-init='' data-lat='51.8595292' data-lon='5.7784963'>
+        <div class='straat' id='s_Lavendelstraat' data-init='' data-lat='51.8595292' data-lon='5.7784963' data-koop='96'>
           <div class='kop'><span class='nr'>16</span>
             <span class='naam'>Lavendelstraat</span>
             <span class='bj bj-top'>🎯 1971</span></div>
-          
+          <div class='eigrij'><span class='eig eig-goed'>🔑 96% koop</span></div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU02090112_Lavendelstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -366,13 +387,14 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Lavendelstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Lavendelstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Lavendelstraat","Lavendelstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Lavendelstraat","Lavendelstraat",51.8595292,5.7784963)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Begoniastraat' data-init='' data-lat='51.86007289' data-lon='5.77718'>
+        <div class='straat' id='s_Begoniastraat' data-init='' data-lat='51.86007289' data-lon='5.77718' data-koop='80'>
           <div class='kop'><span class='nr'>17</span>
             <span class='naam'>Begoniastraat</span>
             <span class='bj bj-top'>🎯 1967</span></div>
-          
+          <div class='eigrij'><span class='eig eig-goed'>🔑 80% koop</span> <span class='eig eig-goed'>👴 33% 65+</span></div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU02090112_Begoniastraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -385,13 +407,14 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Begoniastraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Begoniastraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Begoniastraat","Begoniastraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Begoniastraat","Begoniastraat",51.86007289,5.77718)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Wingerdstraat' data-init='' data-lat='51.85915419' data-lon='5.78043825'>
+        <div class='straat' id='s_Wingerdstraat' data-init='' data-lat='51.85915419' data-lon='5.78043825' data-koop='98'>
           <div class='kop'><span class='nr'>18</span>
             <span class='naam'>Wingerdstraat</span>
             <span class='bj bj-top'>🎯 1970</span></div>
-          
+          <div class='eigrij'><span class='eig eig-goed'>🔑 98% koop</span> <span class='eig eig-goed'>👴 32% 65+</span></div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU02090112_Wingerdstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -404,13 +427,14 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Wingerdstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Wingerdstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Wingerdstraat","Wingerdstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Wingerdstraat","Wingerdstraat",51.85915419,5.78043825)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Haagstraat' data-init='' data-lat='51.8595296' data-lon='5.78106575'>
+        <div class='straat' id='s_Haagstraat' data-init='' data-lat='51.8595296' data-lon='5.78106575' data-koop='93'>
           <div class='kop'><span class='nr'>19</span>
             <span class='naam'>Haagstraat</span>
             <span class='bj bj-top'>🎯 1970</span></div>
-          
+          <div class='eigrij'><span class='eig eig-goed'>🔑 93% koop</span> <span class='eig eig-goed'>👴 45% 65+</span></div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU02090112_Haagstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -423,13 +447,14 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Haagstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Haagstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Haagstraat","Haagstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Haagstraat","Haagstraat",51.8595296,5.78106575)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Pinksterbloemstraat' data-init='' data-lat='51.86170779' data-lon='5.78017023'>
+        <div class='straat' id='s_Pinksterbloemstraat' data-init='' data-lat='51.86170779' data-lon='5.78017023' data-koop='96'>
           <div class='kop'><span class='nr'>20</span>
             <span class='naam'>Pinksterbloemstraat</span>
             <span class='bj bj-top'>🎯 1972</span></div>
-          
+          <div class='eigrij'><span class='eig eig-goed'>🔑 96% koop</span> <span class='eig eig-goed'>👴 37% 65+</span></div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU02090112_Pinksterbloems_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -442,9 +467,10 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Pinksterbloemstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Pinksterbloemstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Pinksterbloemstraat","Pinksterbloemstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Pinksterbloemstraat","Pinksterbloemstraat",51.86170779,5.78017023)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Schoolstraat' data-init='' data-lat='51.8630831' data-lon='5.77444605'>
+        <div class='straat' id='s_Schoolstraat' data-init='' data-lat='51.8630831' data-lon='5.77444605' data-koop=''>
           <div class='kop'><span class='nr'>21</span>
             <span class='naam'>Schoolstraat</span>
             <span class='bj bj-top'>🎯 1968</span></div>
@@ -461,13 +487,14 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Schoolstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Schoolstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Schoolstraat","Schoolstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Schoolstraat","Schoolstraat",51.8630831,5.77444605)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Amaliaplein' data-init='' data-lat='51.85946011' data-lon='5.77221'>
+        <div class='straat' id='s_Amaliaplein' data-init='' data-lat='51.85946011' data-lon='5.77221' data-koop=''>
           <div class='kop'><span class='nr'>22</span>
             <span class='naam'>Amaliaplein</span>
             <span class='bj bj-goed'>🟢 1950</span></div>
-          
+          <div class='eigrij'><span class='eig eig-fout'>🏬 100% flats</span> <span class='eig eig-goed'>👴 100% 65+</span></div><div class='reden' style='color:#a3231a'>⚠️ Vooral huur/flats — niet jouw doelgroep, lage prioriteit</div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU02090112_Amaliaplein_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -480,21 +507,50 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Amaliaplein","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Amaliaplein","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Amaliaplein","Amaliaplein")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Amaliaplein","Amaliaplein",51.85946011,5.77221)'>👷</button>
           </div>
         </div>
 </div>
-<h2 class='afgekeurd-kop'>🔄 Wijk valt tegen? Alternatieven dichtbij</h2><div class='alt'><b>Beuningen-Hoeve-2</b> (Beuningen) · score 73 · nog niet gescand · 0.9 km <span class='altknop uit'>📋 n.v.t.</span><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.854483280751,5.770036188660225&travelmode=driving' target='_blank'>🚗 Navigeer</a></div><div class='alt'><b>Aalsburg</b> (Wijchen) · score 80 · nog niet gescand · 7.4 km <a class='altknop' href='plan_Aalsburg.html'>📋 Straten</a><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.80696910594013,5.715806310209668&travelmode=driving' target='_blank'>🚗 Navigeer</a></div>
+
 
 <button class='export' onclick='exportDone()'>💬 Stuur gelopen straten via WhatsApp (naar jezelf)</button>
 <script>
+localStorage.setItem('laatste_plan','straatplan/'+location.pathname.split('/').pop());
+const tsx=document.getElementById('t-straten');if(tsx)tsx.href=location.pathname.split('/').pop();
 const code='BU02090112', naam='Beuningen-Centrum Oost';
-const SHEET_URL='https://script.google.com/macros/s/AKfycbzMkmZKeadRlwNxTzl9io-vftCurSiGP2lz2rDFLSkVVADnzjOkwzqoHlstRCFyj1ppjA/exec';
+const SHEET_URL='https://script.google.com/macros/s/AKfycbzQEt7CUybrqFtYqBTsJ3IxTkTLTw1yz5J9KezJsmMdqGUWNKVZIWyO6An-VFPAahP6FA/exec';
+// weer in déze buurt (open-meteo, gratis) — regen per uur
+fetch('https://api.open-meteo.com/v1/forecast?latitude=51.8607&longitude=5.7767&hourly=precipitation,precipitation_probability&timezone=Europe%2FAmsterdam&forecast_days=1')
+.then(r=>r.json()).then(w=>{
+  const H=w.hourly, nu=new Date().getHours();
+  let chips='', eerste=null;
+  for(let h=Math.max(7,nu); h<=21; h++){
+    const mm=H.precipitation[h]||0, p=H.precipitation_probability[h]||0;
+    const nat=mm>=0.1&&p>=30;
+    if(nat&&eerste===null)eerste=h;
+    chips+='<span style="display:inline-block;min-width:1.9rem;text-align:center;padding:.1rem 0;margin:.06rem;border-radius:5px;font-size:.68rem;background:'+(nat?'#cfe3ff':'#f0f0f2')+'">'+h+'u<br>'+(nat?'🌧':'·')+'</span>';
+  }
+  const ws=document.getElementById('weerstrip');
+  ws.innerHTML=(eerste===null?'☀️ <b>Droog tot 21:00 in deze buurt</b>':'🌧️ <b>Regen hier rond '+eerste+':00</b>'+(eerste-nu<2?' — nu niet starten?':' — nog '+(eerste-nu)+' uur droog'))+'<div style="margin-top:.2rem">'+chips+'</div>';
+  ws.style.display='';
+}).catch(()=>{});
 const v=JSON.parse(localStorage.getItem('plan_'+code)||'{}');
 const done=JSON.parse(localStorage.getItem('done_'+code)||'{}');
 const lijst=document.getElementById('lijst');
 function cur(k){const el=document.getElementById('s_'+k);return v[k]!==undefined?v[k]:(el?el.dataset.init:'');}
 function paint(k){const el=document.getElementById('s_'+k);if(!el)return;el.classList.remove('go','meh','skip');const val=cur(k);if(val)el.classList.add(val);el.classList.toggle('gedaan',!!done[k]);}
 function log(actie,straat){if(!SHEET_URL)return;try{fetch(SHEET_URL+'?'+new URLSearchParams({buurt:naam,straat:straat,actie:actie}),{mode:'no-cors'});}catch(e){}}
+// 👷 straat klaarzetten voor personeel (werk.html leest dit uit de log)
+const wz=JSON.parse(localStorage.getItem('wz_'+code)||'{}');
+function werkZet(k,s,la,lo){
+  const aan=!wz[k];
+  if(aan)wz[k]=1; else delete wz[k];
+  localStorage.setItem('wz_'+code,JSON.stringify(wz));
+  try{fetch(SHEET_URL+'?'+new URLSearchParams({buurt:'KLAARZET',straat:s,
+    actie:aan?('klaarzet @'+la+','+lo+' · '+naam):('klaarzet_weg · '+naam)}),{mode:'no-cors'});}catch(e){}
+  const el=document.getElementById('s_'+k);
+  if(el){const b=el.querySelector('.wzet');if(b)b.classList.toggle('aan',aan);}
+}
 function reorder(){for(const el of [...lijst.querySelectorAll('.straat')]) if(cur(el.id.slice(2))==='skip') lijst.appendChild(el);}
 function rebuild(){
   let i=1,g=0,d=0,t=0; const pts=[];
@@ -573,7 +629,7 @@ document.querySelectorAll('.notitie').forEach(inp=>inp.addEventListener('change'
   log('notitie: '+inp.value, el?el.querySelector('.naam').textContent:k);
 }));
 let sortMode=localStorage.getItem('sort_'+code)||'route';
-function prio(el){const vd=cur(el.id.slice(2));if(vd==='skip')return 3;if(vd==='go')return 0;if(vd==='meh'||vd==='twijfel')return 1;return 2;}
+function prio(el){const vd=cur(el.id.slice(2));const koop=el.dataset.koop===''?null:+el.dataset.koop;const huur=(koop!==null&&koop<45);if(vd==='skip')return 3;if(vd==='go')return huur?1:0;if(vd==='meh'||vd==='twijfel')return 1;return 2;}
 function dist2(a,b){const dx=(+a.dataset.lat)-(+b.dataset.lat);const dy=((+a.dataset.lon)-(+b.dataset.lon))*0.62;return dx*dx+dy*dy;}
 function nnSort(els, vanaf){
   if(els.length<2) return els;
@@ -603,6 +659,6 @@ function applySort(){
 }
 function toggleSort(){sortMode=(sortMode==='go')?'route':'go';localStorage.setItem('sort_'+code,sortMode);applySort();}
 setInterval(renderKlok,30000);
-[...lijst.querySelectorAll('.straat')].forEach((el,i)=>{el.dataset.idx=i;paint(el.id.slice(2));});
+[...lijst.querySelectorAll('.straat')].forEach((el,i)=>{el.dataset.idx=i;paint(el.id.slice(2));const wb=el.querySelector('.wzet');if(wb&&wz[el.id.slice(2)])wb.classList.add('aan');});
 applySort(); renderKlok();
 </script></body></html>
