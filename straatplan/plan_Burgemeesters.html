@@ -1,11 +1,12 @@
 <!doctype html><html lang='nl'><head><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<title>Straatplan — Burgemeesters</title><style>
+<title>Straatplan — Burgemeesters</title><script>(function(){var P='3032';if(localStorage.getItem('sitepin')===P)return;for(var i=0;i<3;i++){var p=prompt('🔒 PIN?');if(p===P){localStorage.setItem('sitepin',P);return;}if(p===null)break;}document.documentElement.innerHTML='<body style="font-family:sans-serif;padding:2rem">🔒 Verkeerde PIN — ververs de pagina (⬇️ trekken of ⟳) en probeer opnieuw.</body>';window.stop();})();</script><style>
 body{font-family:-apple-system,sans-serif;background:#f5f5f7;margin:0;padding:0.6rem;max-width:640px;margin:0 auto;color:#1c1c1e;}
 h1{font-size:1.2rem;margin:.3rem 0;}
 a.terug{font-size:.85rem;color:#1a73e8;text-decoration:none;}
 .intro{background:#fff;border-radius:10px;padding:.5rem .7rem;font-size:.8rem;color:#555;margin:.4rem 0;line-height:1.4;}
-.bar{position:sticky;top:0;background:rgba(245,245,247,.96);backdrop-filter:blur(8px);padding:.4rem 0;z-index:10;border-bottom:1px solid #ddd;}
+.tabs{display:flex;gap:.3rem;flex-wrap:wrap;font-size:.8rem;margin-bottom:.6rem;}.tabs a{background:#fff;border-radius:8px;padding:.35rem .55rem;text-decoration:none;color:#1a73e8;font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.06);}
+.bar{background:rgba(245,245,247,.96);padding:.4rem 0;border-bottom:1px solid #ddd;}
 .teller{font-size:.8rem;color:#555;padding:.2rem 0;}
 .klok{display:flex;gap:.3rem;align-items:center;margin:.25rem 0;}
 .klok button{border:none;border-radius:7px;padding:.4rem .6rem;color:#fff;font-weight:600;font-size:.78rem;cursor:pointer;}
@@ -24,6 +25,9 @@ a.terug{font-size:.85rem;color:#1a73e8;text-decoration:none;}
 .ai{font-size:.72rem;font-weight:700;padding:.1rem .45rem;border-radius:5px;color:#fff;}
 .ai-go{background:#1a9850;}.ai-meh{background:#fdae61;}
 .nokb{font-size:.68rem;font-weight:700;padding:.1rem .4rem;border-radius:5px;color:#fff;}
+.eigrij{display:flex;gap:.3rem;flex-wrap:wrap;margin:.25rem 0;}
+.eig{font-size:.7rem;font-weight:700;padding:.12rem .45rem;border-radius:5px;color:#fff;background:#999;}
+.eig-goed{background:#1a9850;}.eig-meh{background:#e08c00;}.eig-fout{background:#d73027;}
 .nok-goed{background:#1a9850;}.nok-fout{background:#d73027;}.nok-onb{background:#999;}
 .nokzoom{margin-top:3px;}.nokzoom img{width:100%;border-radius:6px;display:block;}
 .nokcap{font-size:.66rem;color:#888;text-align:center;}
@@ -49,26 +53,28 @@ a.terug{font-size:.85rem;color:#1a73e8;text-decoration:none;}
 .knoppen{display:flex;gap:.3rem;}
 .knoppen button{flex:1;border:none;border-radius:7px;padding:.5rem .2rem;color:#fff;font-weight:600;font-size:.76rem;cursor:pointer;}
 .go{background:#1a9850;}.meh{background:#fdae61;}.skip{background:#d73027;}.done{background:#333;}
+.wzet{background:#9aa0a6;flex:0 0 2.4rem !important;}.wzet.aan{background:#e08c00;}
 .export{background:#1a9850;color:#fff;border:none;border-radius:9px;padding:.7rem;width:100%;font-weight:600;font-size:.9rem;margin-top:.6rem;cursor:pointer;}
 .afgekeurd-kop{font-size:1rem;margin:1.2rem 0 .5rem;color:#a3231a;}
 .straat.afgekeurd{background:#fdf0ef;border:1px dashed #d73027;opacity:1;}
 .ai-skip{background:#d73027;}
 .svlink{display:inline-block;color:#1a73e8;font-size:.8rem;margin-top:.35rem;text-decoration:none;}
 </style></head><body>
-<a class='terug' href='../begin_lijst.html'>← terug naar buurtenlijst</a>
+<div class="tabs"><a href="../index.html">🏠</a><a href="../vandaag.html">📅 Planning</a><a href="../opvolgen.html">✅ Opvolgen</a><a href="../begin_lijst.html">📋 Buurten</a><a href="#" id="t-straten">🚶 Straten</a><a href="../kaart.html">🗺️ Kaart</a><a href="../dashboard.html">📊 Cijfers</a><a href="../financieel.html">💶 Financieel</a><a href="../pitch.html">📣 Pitch</a><a href="../feedback.html">💬 Feedback</a></div>
 <h1>🗺️ Burgemeesters — straatplan</h1>
 <div class='intro'>🎯 = bouwjaar 1955-1980. Bekijk de 3 foto's (begin/midden/eind): is de <b>nok halfrond</b>?
 De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b>DONE</b> als je 'm gelopen hebt.</div>
 <div class='blok-review'><input id='buurtrev' placeholder='⭐ Review over de hele buurt (sfeer, type mensen, concurrent gezien...)'><button onclick='bewaarBuurtrev()'>Opslaan</button></div>
 <div class='bar'><div id='routes'></div><div class='klok'><button class='k-start' onclick='klok("start")'>▶ Start</button><button class='k-pauze' id='pauzebtn' onclick='klokPauze()'>⏸ Pauze</button><button class='k-fin' onclick='klok("finish")'>🏁 Klaar</button><span id='tijdtxt'></span></div><button class='sorteer' id='sortbtn' onclick='toggleSort()'>⭐ GO eerst</button><div class='teller' id='teller'>—</div></div>
-<div class='testblok'><b>🧪 START-TEST — pak deze eerst (≈117 huizen)</b><div class='trij'><a href='#s_Burgemeester_Philipsenstraat'>Burgemeester Philipsenstraat</a> · 61 huizen · ?</div><div class='trij'><a href='#s_Burgemeester_Rensstraat'>Burgemeester Rensstraat</a> · 56 huizen · ?</div><div class='tuitleg'>Dichtste straten naast elkaar. Loopt het hier niet binnen de test → wijk is niks, pak een alternatief (onderaan).</div><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.52393075,5.05950616&travelmode=driving' target='_blank'>🚗 Naar de test-straten</a></div>
+<div class='intro' id='weerstrip' style='display:none'></div>
+<div class='testblok'><b>🧪 START-TEST — pak deze eerst (≈110 huizen)</b><div class='trij'><a href='#s_Burgemeester_Rensstraat'>Burgemeester Rensstraat</a> · 56 huizen · <b>25 deuren/100m</b> · GO</div><div class='trij'><a href='#s_Van_Hessen_Kasselstraat'>Van Hessen Kasselstraat</a> · 54 huizen · <b>25 deuren/100m</b> · TWIJFEL</div><div class='tuitleg'>Gekozen op: 1) bewezen nokken (GO), 2) oude pannen, 3) deur-dichtheid (rijtjes = snelste test). Alléén koop-straten (≥60%), flats en corporatie eruit.</div><div class='tuitleg'><b>✅ Test werkt?</b> Loop dan verder: <a href='#s_Van_Malsenstraat'>Van Malsenstraat</a> 🟢 → <a href='#s_Tilburgseweg'>Tilburgseweg</a> → <a href='#s_Dorpsstraat'>Dorpsstraat</a> → <a href='#s_Nieuwe_Rielseweg'>Nieuwe Rielseweg</a>.<br><b>❌ Geen sales (2-uur-regel)?</b> Wijk afschrijven → alternatieven onderaan.</div><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.52390232,5.06220091&travelmode=driving' target='_blank'>🚗 Naar de test-straten</a></div>
 <div id='lijst'>
 
-        <div class='straat' id='s_Van_Malsenstraat' data-init='' data-lat='51.5250363' data-lon='5.05948379'>
+        <div class='straat' id='s_Van_Malsenstraat' data-init='go' data-lat='51.5250363' data-lon='5.05948379' data-koop='84'>
           <div class='kop'><span class='nr'>1</span>
             <span class='naam'>Van Malsenstraat</span>
-            <span class='bj bj-top'>🎯 1958</span></div>
-          
+            <span class='bj bj-top'>🎯 1958</span><span class='ai ai-go'>AI: GO</span><span class='nokb nok-goed'>nok: HALFROND IN SPECIE</span><span class='nokb nok-goed'>pannen: OUD KERAMISCH</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 84% koop</span></div><div class='reden'>oude grijs/rood verweerde keramische pannen, halfronde vorsten, schoorsteen</div><div class='haakjes'>💰 gespot: verwering = goten+nok</div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU07850710_VanMalsenstraa_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -81,13 +87,14 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Van_Malsenstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Van_Malsenstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Van_Malsenstraat","Van Malsenstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Van_Malsenstraat","Van Malsenstraat",51.5250363,5.05948379)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Burgemeester_Voskensstraat' data-init='' data-lat='51.52428211' data-lon='5.05979182'>
+        <div class='straat' id='s_Burgemeester_Voskensstraat' data-init='twijfel' data-lat='51.52428211' data-lon='5.05979182' data-koop='60'>
           <div class='kop'><span class='nr'>2</span>
             <span class='naam'>Burgemeester Voskensstraat</span>
-            <span class='bj bj-top'>🎯 1959</span></div>
-          
+            <span class='bj bj-top'>🎯 1959</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONBEKEND</span><span class='nokb nok-onb'>pannen: ONBEKEND</span></div>
+          <div class='eigrij'><span class='eig eig-meh'>🔑 60% koop</span> <span class='eig eig-fout'>🏢 25% corporatie</span> <span class='eig eig-goed'>👴 43% 65+</span></div><div class='reden'>boom blokkeert</div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU07850710_BurgemeesterVo_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -100,13 +107,14 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Burgemeester_Voskensstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Burgemeester_Voskensstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Burgemeester_Voskensstraat","Burgemeester Voskensstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Burgemeester_Voskensstraat","Burgemeester Voskensstraat",51.52428211,5.05979182)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Burgemeester_Philipsenstraat' data-init='' data-lat='51.52393075' data-lon='5.05950616'>
+        <div class='straat' id='s_Burgemeester_Philipsenstraat' data-init='twijfel' data-lat='51.52393075' data-lon='5.05950616' data-koop='80'>
           <div class='kop'><span class='nr'>3</span>
             <span class='naam'>Burgemeester Philipsenstraat</span>
-            <span class='bj bj-top'>🎯 1959</span></div>
-          
+            <span class='bj bj-top'>🎯 1959</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONBEKEND</span><span class='nokb nok-onb'>pannen: ONBEKEND</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 80% koop</span> <span class='eig eig-fout'>🏢 75% corporatie</span></div><div class='reden'>kopgevel, nok niet zichtbaar</div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU07850710_BurgemeesterPh_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -119,13 +127,14 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Burgemeester_Philipsenstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Burgemeester_Philipsenstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Burgemeester_Philipsenstraat","Burgemeester Philipsenstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Burgemeester_Philipsenstraat","Burgemeester Philipsenstraat",51.52393075,5.05950616)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Burgemeester_van_Gorpstraat' data-init='' data-lat='51.52402611' data-lon='5.05825187'>
+        <div class='straat' id='s_Burgemeester_van_Gorpstraat' data-init='twijfel' data-lat='51.52402611' data-lon='5.05825187' data-koop='70'>
           <div class='kop'><span class='nr'>4</span>
             <span class='naam'>Burgemeester van Gorpstraat</span>
-            <span class='bj bj-top'>🎯 1958</span></div>
-          
+            <span class='bj bj-top'>🎯 1958</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: BETON</span><span class='nokb nok-onb'>pannen: BETON DONKER</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 70% koop</span> <span class='eig eig-fout'>🏢 25% corporatie</span></div><div class='reden'>donkere sleek betonpannen, geen halfronde-specie</div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU07850710_Burgemeesterva_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -138,13 +147,14 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Burgemeester_van_Gorpstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Burgemeester_van_Gorpstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Burgemeester_van_Gorpstraat","Burgemeester van Gorpstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Burgemeester_van_Gorpstraat","Burgemeester van Gorpstraat",51.52402611,5.05825187)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Nieuwe_Rielseweg' data-init='' data-lat='51.52335047' data-lon='5.05772361'>
+        <div class='straat' id='s_Nieuwe_Rielseweg' data-init='twijfel' data-lat='51.52335047' data-lon='5.05772361' data-koop='90'>
           <div class='kop'><span class='nr'>5</span>
             <span class='naam'>Nieuwe Rielseweg</span>
-            <span class='bj bj-top'>🎯 1963</span></div>
-          
+            <span class='bj bj-top'>🎯 1963</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONBEKEND</span><span class='nokb nok-onb'>pannen: ONBEKEND</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 90% koop</span></div><div class='reden'>niet beoordeeld</div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU07850710_NieuweRielsewe_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -157,13 +167,14 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Nieuwe_Rielseweg","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Nieuwe_Rielseweg","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Nieuwe_Rielseweg","Nieuwe Rielseweg")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Nieuwe_Rielseweg","Nieuwe Rielseweg",51.52335047,5.05772361)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Burgemeester_Rensstraat' data-init='' data-lat='51.52390232' data-lon='5.06220091'>
+        <div class='straat' id='s_Burgemeester_Rensstraat' data-init='go' data-lat='51.52390232' data-lon='5.06220091' data-koop='86'>
           <div class='kop'><span class='nr'>6</span>
             <span class='naam'>Burgemeester Rensstraat</span>
-            <span class='bj bj-goed'>🟢 1952</span></div>
-          
+            <span class='bj bj-goed'>🟢 1952</span><span class='ai ai-go'>AI: GO</span><span class='nokb nok-goed'>nok: HALFROND IN SPECIE</span><span class='nokb nok-goed'>pannen: OUD KERAMISCH</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 86% koop</span></div><div class='reden'>verweerde rode keramische golfpannen, halfronde vorsten op nok, gemetselde schoorsteen met vogelnest</div><div class='haakjes'>💰 gespot: schoorsteen + nokspecie verweerd</div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU07850710_BurgemeesterRe_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -176,13 +187,14 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Burgemeester_Rensstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Burgemeester_Rensstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Burgemeester_Rensstraat","Burgemeester Rensstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Burgemeester_Rensstraat","Burgemeester Rensstraat",51.52390232,5.06220091)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Van_Hessen_Kasselstraat' data-init='' data-lat='51.5244104' data-lon='5.06389759'>
+        <div class='straat' id='s_Van_Hessen_Kasselstraat' data-init='twijfel' data-lat='51.5244104' data-lon='5.06389759' data-koop='100'>
           <div class='kop'><span class='nr'>7</span>
             <span class='naam'>Van Hessen Kasselstraat</span>
-            <span class='bj bj-goed'>🟢 1953</span></div>
-          
+            <span class='bj bj-goed'>🟢 1953</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONBEKEND</span><span class='nokb nok-onb'>pannen: ONBEKEND</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>foto wazig/geblokkeerd</div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU07850710_VanHessenKasse_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -195,13 +207,14 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Van_Hessen_Kasselstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Van_Hessen_Kasselstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Van_Hessen_Kasselstraat","Van Hessen Kasselstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Van_Hessen_Kasselstraat","Van Hessen Kasselstraat",51.5244104,5.06389759)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Tilburgseweg' data-init='' data-lat='51.52471708' data-lon='5.06428447'>
+        <div class='straat' id='s_Tilburgseweg' data-init='twijfel' data-lat='51.52471708' data-lon='5.06428447' data-koop='100'>
           <div class='kop'><span class='nr'>8</span>
             <span class='naam'>Tilburgseweg</span>
-            <span class='bj bj-skip'>🔴 1938</span></div>
-          
+            <span class='bj bj-skip'>🔴 1938</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONBEKEND</span><span class='nokb nok-onb'>pannen: ONBEKEND</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>niet beoordeeld</div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU07850710_Tilburgseweg_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -214,13 +227,14 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Tilburgseweg","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Tilburgseweg","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Tilburgseweg","Tilburgseweg")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Tilburgseweg","Tilburgseweg",51.52471708,5.06428447)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Dorpsstraat' data-init='' data-lat='51.52311761' data-lon='5.06446874'>
+        <div class='straat' id='s_Dorpsstraat' data-init='twijfel' data-lat='51.52311761' data-lon='5.06446874' data-koop='80'>
           <div class='kop'><span class='nr'>9</span>
             <span class='naam'>Dorpsstraat</span>
-            <span class='bj bj-skip'>🔴 1934</span></div>
-          
+            <span class='bj bj-skip'>🔴 1934</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONBEKEND</span><span class='nokb nok-onb'>pannen: ONBEKEND</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 80% koop</span></div><div class='reden'>niet beoordeeld</div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU07850710_Dorpsstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -233,21 +247,50 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='meh' onclick='mark("Dorpsstraat","meh")'>~ twijfel</button>
             <button class='skip' onclick='mark("Dorpsstraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Dorpsstraat","Dorpsstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Dorpsstraat","Dorpsstraat",51.52311761,5.06446874)'>👷</button>
           </div>
         </div>
 </div>
-<h2 class='afgekeurd-kop'>🔄 Wijk valt tegen? Alternatieven dichtbij</h2><div class='alt'><b>&#x27;t Ven</b> (Goirle) · score 75 · nog niet gescand · 0.3 km <a class='altknop' href='plan__t_Ven.html'>📋 Straten</a><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.52686669174605,5.0594299061344765&travelmode=driving' target='_blank'>🚗 Navigeer</a></div><div class='alt'><b>Grobbendonck</b> (Goirle) · score 85 · 🟢 11 GO-straten · 0.6 km <a class='altknop' href='plan_Grobbendonck.html'>📋 Straten</a><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.52689658857535,5.068989908695242&travelmode=driving' target='_blank'>🚗 Navigeer</a></div>
+<h2 class='afgekeurd-kop'>🔄 Wijk valt tegen? Alternatieven dichtbij</h2><div class='alt'><b>&#x27;t Ven</b> (Goirle) · score 76 · nog niet gescand · 0.3 km <a class='altknop' href='plan__t_Ven.html'>📋 Straten</a><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.52686669174605,5.0594299061344765&travelmode=driving' target='_blank'>🚗 Navigeer</a></div><div class='alt'><b>Grobbendonck</b> (Goirle) · score 87 · 🟢 0 GO-straten · 0.6 km <a class='altknop' href='plan_Grobbendonck.html'>📋 Straten</a><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.52689658857535,5.068989908695242&travelmode=driving' target='_blank'>🚗 Navigeer</a></div>
 
 <button class='export' onclick='exportDone()'>💬 Stuur gelopen straten via WhatsApp (naar jezelf)</button>
 <script>
+localStorage.setItem('laatste_plan','straatplan/'+location.pathname.split('/').pop());
+const tsx=document.getElementById('t-straten');if(tsx)tsx.href=location.pathname.split('/').pop();
 const code='BU07850710', naam='Burgemeesters';
-const SHEET_URL='https://script.google.com/macros/s/AKfycbzMkmZKeadRlwNxTzl9io-vftCurSiGP2lz2rDFLSkVVADnzjOkwzqoHlstRCFyj1ppjA/exec';
+const SHEET_URL='https://script.google.com/macros/s/AKfycbzQEt7CUybrqFtYqBTsJ3IxTkTLTw1yz5J9KezJsmMdqGUWNKVZIWyO6An-VFPAahP6FA/exec';
+// weer in déze buurt (open-meteo, gratis) — regen per uur
+fetch('https://api.open-meteo.com/v1/forecast?latitude=51.5241&longitude=5.0611&hourly=precipitation,precipitation_probability&timezone=Europe%2FAmsterdam&forecast_days=1')
+.then(r=>r.json()).then(w=>{
+  const H=w.hourly, nu=new Date().getHours();
+  let chips='', eerste=null;
+  for(let h=Math.max(7,nu); h<=21; h++){
+    const mm=H.precipitation[h]||0, p=H.precipitation_probability[h]||0;
+    const nat=mm>=0.1&&p>=30;
+    if(nat&&eerste===null)eerste=h;
+    chips+='<span style="display:inline-block;min-width:1.9rem;text-align:center;padding:.1rem 0;margin:.06rem;border-radius:5px;font-size:.68rem;background:'+(nat?'#cfe3ff':'#f0f0f2')+'">'+h+'u<br>'+(nat?'🌧':'·')+'</span>';
+  }
+  const ws=document.getElementById('weerstrip');
+  ws.innerHTML=(eerste===null?'☀️ <b>Droog tot 21:00 in deze buurt</b>':'🌧️ <b>Regen hier rond '+eerste+':00</b>'+(eerste-nu<2?' — nu niet starten?':' — nog '+(eerste-nu)+' uur droog'))+'<div style="margin-top:.2rem">'+chips+'</div>';
+  ws.style.display='';
+}).catch(()=>{});
 const v=JSON.parse(localStorage.getItem('plan_'+code)||'{}');
 const done=JSON.parse(localStorage.getItem('done_'+code)||'{}');
 const lijst=document.getElementById('lijst');
 function cur(k){const el=document.getElementById('s_'+k);return v[k]!==undefined?v[k]:(el?el.dataset.init:'');}
 function paint(k){const el=document.getElementById('s_'+k);if(!el)return;el.classList.remove('go','meh','skip');const val=cur(k);if(val)el.classList.add(val);el.classList.toggle('gedaan',!!done[k]);}
 function log(actie,straat){if(!SHEET_URL)return;try{fetch(SHEET_URL+'?'+new URLSearchParams({buurt:naam,straat:straat,actie:actie}),{mode:'no-cors'});}catch(e){}}
+// 👷 straat klaarzetten voor personeel (werk.html leest dit uit de log)
+const wz=JSON.parse(localStorage.getItem('wz_'+code)||'{}');
+function werkZet(k,s,la,lo){
+  const aan=!wz[k];
+  if(aan)wz[k]=1; else delete wz[k];
+  localStorage.setItem('wz_'+code,JSON.stringify(wz));
+  try{fetch(SHEET_URL+'?'+new URLSearchParams({buurt:'KLAARZET',straat:s,
+    actie:aan?('klaarzet @'+la+','+lo+' · '+naam):('klaarzet_weg · '+naam)}),{mode:'no-cors'});}catch(e){}
+  const el=document.getElementById('s_'+k);
+  if(el){const b=el.querySelector('.wzet');if(b)b.classList.toggle('aan',aan);}
+}
 function reorder(){for(const el of [...lijst.querySelectorAll('.straat')]) if(cur(el.id.slice(2))==='skip') lijst.appendChild(el);}
 function rebuild(){
   let i=1,g=0,d=0,t=0; const pts=[];
@@ -326,7 +369,7 @@ document.querySelectorAll('.notitie').forEach(inp=>inp.addEventListener('change'
   log('notitie: '+inp.value, el?el.querySelector('.naam').textContent:k);
 }));
 let sortMode=localStorage.getItem('sort_'+code)||'route';
-function prio(el){const vd=cur(el.id.slice(2));if(vd==='skip')return 3;if(vd==='go')return 0;if(vd==='meh'||vd==='twijfel')return 1;return 2;}
+function prio(el){const vd=cur(el.id.slice(2));const koop=el.dataset.koop===''?null:+el.dataset.koop;const huur=(koop!==null&&koop<45);if(vd==='skip')return 3;if(vd==='go')return huur?1:0;if(vd==='meh'||vd==='twijfel')return 1;return 2;}
 function dist2(a,b){const dx=(+a.dataset.lat)-(+b.dataset.lat);const dy=((+a.dataset.lon)-(+b.dataset.lon))*0.62;return dx*dx+dy*dy;}
 function nnSort(els, vanaf){
   if(els.length<2) return els;
@@ -356,6 +399,6 @@ function applySort(){
 }
 function toggleSort(){sortMode=(sortMode==='go')?'route':'go';localStorage.setItem('sort_'+code,sortMode);applySort();}
 setInterval(renderKlok,30000);
-[...lijst.querySelectorAll('.straat')].forEach((el,i)=>{el.dataset.idx=i;paint(el.id.slice(2));});
+[...lijst.querySelectorAll('.straat')].forEach((el,i)=>{el.dataset.idx=i;paint(el.id.slice(2));const wb=el.querySelector('.wzet');if(wb&&wz[el.id.slice(2)])wb.classList.add('aan');});
 applySort(); renderKlok();
 </script></body></html>
