@@ -5,6 +5,7 @@
 body{font-family:-apple-system,sans-serif;background:#f5f5f7;margin:0;padding:0.6rem;max-width:620px;margin:0 auto;color:#1c1c1e;}
 h1{font-size:1.2rem;}
 .uitleg{background:#fff;border-radius:10px;padding:0.6rem 0.8rem;font-size:0.82rem;color:#555;margin-bottom:0.7rem;line-height:1.4;}
+#zoek{width:100%;border:1px solid #ccc;border-radius:9px;padding:.6rem .7rem;font-size:.95rem;margin:.2rem 0 .6rem;box-sizing:border-box;}
 .buurt{background:#fff;border-radius:11px;padding:0.6rem 0.8rem;margin-bottom:0.55rem;box-shadow:0 1px 2px rgba(0,0,0,.06);}
 .sectie{font-size:0.95rem;margin:0.9rem 0 0.4rem;color:#333;}
 .besten{background:#e8f5e9;border-radius:8px;padding:.45rem .6rem;margin:.4rem 0;font-size:.82rem;line-height:1.5;}
@@ -41,6 +42,8 @@ h1{font-size:1.2rem;}
 </style></head><body>
 <div class="tabs"><a href="index.html">🏠</a><a href="vandaag.html">📅 Planning</a><a href="opvolgen.html">✅ Opvolgen</a><a href="begin_lijst.html">📋 Buurten</a><a href="#" id="t-straten">🚶 Straten</a><a href="kaart.html">🗺️ Kaart</a><a href="dashboard.html">📊 Cijfers</a><a href="nokken_test.html">🔍 Keuring</a><a href="financieel.html">💶 Financieel</a><a href="pitch.html">📣 Pitch</a><a href="feedback.html">💬 Feedback</a></div>
 <h1>📋 Begin-lijst — top 107 (≤50 min)</h1>
+<input id='zoek' placeholder='🔍 Zoek wijk of gemeente (bijv. Notel, Hoge Akker, Best)' oninput='zoekFilter()'>
+<div id='zoekleeg' class='uitleg' style='display:none'>Geen wijk gevonden — andere zoekterm?</div>
 <div class='uitleg'>
 <b>Eindscore = basisscore − corporatie-straf.</b> Hoe groener de corp-vlag, hoe minder
 sociale huur (= meer koopdeuren waar je kunt verkopen). 🔴 = veel corporatiehuur, overslaan.
@@ -1973,4 +1976,21 @@ Bouwjaar (bj) = mediaan; ~1955–1980 = sweet spot voor oude nokken.
           <details class='waarom'><summary>waarom score 95?</summary><div class='crit'><div class='cr'><span class='cl'>Bouwjaar (ouder = vaker specie-nok)</span><span class='cbar'><span style='width:100%;background:#1a9850'></span></span><span class='cv'>20/20</span></div><div class='cr'><span class='cl'>Beste-cluster dichtheid</span><span class='cbar'><span style='width:90%;background:#1a9850'></span></span><span class='cv'>18/20</span></div><div class='cr'><span class='cl'>Koopwoningen</span><span class='cbar'><span style='width:87%;background:#1a9850'></span></span><span class='cv'>13/15</span></div><div class='cr'><span class='cl'>Niet platgelopen</span><span class='cbar'><span style='width:60%;background:#66bd63'></span></span><span class='cv'>3/5</span></div><div class='cr'><span class='cl'>PC6 straat-check</span><span class='cv'>+1</span></div><div class='cr totaal'><span class='cl'>= kandidaat-score</span><span class='cv'>95</span></div><div class='noknoot'>🔮 Voorspelling uit harde data — de onbetrouwbare nok-gok én gemeente-grootte zijn eruit (dorpen verliezen niet meer van steden). Echte nok-check volgt zodra ik de Street View-foto's keur.</div></div></details>
           <div class='acties'><a class='plan' href='straatplan/plan_Laarbunders.html'>📋 Straten bekijken</a><a class='nav' href='https://www.google.com/maps/dir/?api=1&destination=51.619658041749375,5.557227020883978&travelmode=driving' target='_blank'>🚗 Navigeer</a></div>
         </div>
-<script>const ts=document.getElementById('t-straten');if(ts)ts.href=localStorage.getItem('laatste_plan')||'begin_lijst.html';</script></body></html>
+<script>
+const ts=document.getElementById('t-straten');if(ts)ts.href=localStorage.getItem('laatste_plan')||'begin_lijst.html';
+function zoekFilter(){
+  const q=document.getElementById('zoek').value.trim().toLowerCase();
+  let zicht=0;
+  document.querySelectorAll('.buurt').forEach(b=>{
+    const t=b.textContent.toLowerCase();
+    const ok=!q||t.includes(q); b.style.display=ok?'':'none'; if(ok)zicht++;
+  });
+  // sectie-koppen verbergen als er niks onder zichtbaar is
+  document.querySelectorAll('.sectie').forEach(h=>{
+    let n=h.nextElementSibling, any=false;
+    while(n&&!n.classList.contains('sectie')){ if(n.classList.contains('buurt')&&n.style.display!=='none')any=true; n=n.nextElementSibling; }
+    h.style.display=(q&&!any)?'none':'';
+  });
+  document.getElementById('zoekleeg').style.display=(q&&zicht===0)?'':'none';
+}
+</script></body></html>
