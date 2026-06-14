@@ -1,6 +1,9 @@
 <!doctype html><html lang='nl'><head><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<title>Straatplan — West 1</title><script>(function(){var P='3032';if(localStorage.getItem('sitepin')===P)return;for(var i=0;i<3;i++){var p=prompt('🔒 PIN?');if(p===P){localStorage.setItem('sitepin',P);return;}if(p===null)break;}document.documentElement.innerHTML='<body style="font-family:sans-serif;padding:2rem">🔒 Verkeerde PIN — ververs de pagina (⬇️ trekken of ⟳) en probeer opnieuw.</body>';window.stop();})();</script><style>
+<title>Straatplan — West 1</title><script>(function(){var P='3032';if(localStorage.getItem('sitepin')===P)return;for(var i=0;i<3;i++){var p=prompt('🔒 PIN?');if(p===P){localStorage.setItem('sitepin',P);return;}if(p===null)break;}document.documentElement.innerHTML='<body style="font-family:sans-serif;padding:2rem">🔒 Verkeerde PIN — ververs de pagina (⬇️ trekken of ⟳) en probeer opnieuw.</body>';window.stop();})();</script>
+<link rel='stylesheet' href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'>
+<script src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'></script><style>
+#testmap{height:240px;border-radius:10px;margin:.5rem 0;}
 body{font-family:-apple-system,sans-serif;background:#f5f5f7;margin:0;padding:0.6rem;max-width:640px;margin:0 auto;color:#1c1c1e;}
 h1{font-size:1.2rem;margin:.3rem 0;}
 a.terug{font-size:.85rem;color:#1a73e8;text-decoration:none;}
@@ -67,7 +70,7 @@ De aller-slechtste straten (9) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
 <div class='blok-review'><input id='buurtrev' placeholder='⭐ Review over de hele buurt (sfeer, type mensen, concurrent gezien...)'><button onclick='bewaarBuurtrev()'>Opslaan</button></div>
 <div class='bar'><div id='routes'></div><div class='klok'><button class='k-start' onclick='klok("start")'>▶ Start</button><button class='k-pauze' id='pauzebtn' onclick='klokPauze()'>⏸ Pauze</button><button class='k-fin' onclick='klok("finish")'>🏁 Klaar</button><span id='tijdtxt'></span></div><button class='sorteer' id='sortbtn' onclick='toggleSort()'>⭐ GO eerst</button><div class='teller' id='teller'>—</div></div>
 <div class='intro' id='weerstrip' style='display:none'></div>
-<div class='testblok'><b>🧪 START-TEST — pak deze eerst (≈83 huizen)</b><div class='trij'><a href='#s_Schweitzerstraat'>Schweitzerstraat</a> · 39 huizen · <b>65 deuren/100m</b> · TWIJFEL</div><div class='trij'><a href='#s_Siriusstraat'>Siriusstraat</a> · 22 huizen · <b>27 deuren/100m</b> · TWIJFEL</div><div class='trij'><a href='#s_Uranusstraat'>Uranusstraat</a> · 22 huizen · <b>27 deuren/100m</b> · TWIJFEL</div><div class='tuitleg'>Gekozen op: 1) bewezen nokken (GO), 2) oude pannen, 3) deur-dichtheid (rijtjes = snelste test). Alléén koop-straten (≥60%), flats en corporatie eruit.</div><div class='tuitleg'><b>✅ Test werkt?</b> Loop dan verder: <a href='#s_Mercuriusstraat'>Mercuriusstraat</a> → <a href='#s_Orionstraat'>Orionstraat</a> → <a href='#s_Spuistraat'>Spuistraat</a> → <a href='#s_Dommelstraat'>Dommelstraat</a> → <a href='#s_Kempenhof'>Kempenhof</a>.<br><b>❌ Geen sales (2-uur-regel)?</b> Wijk afschrijven → alternatieven onderaan.</div><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.62456136,4.92239869&travelmode=driving' target='_blank'>🚗 Naar de test-straten</a></div>
+<div class='testblok'><b>🧪 START-TEST — pak deze eerst (≈83 huizen)</b><div class='trij'><a href='#s_Schweitzerstraat'>Schweitzerstraat</a> · 39 huizen · <b>65 deuren/100m</b> · TWIJFEL</div><div class='trij'><a href='#s_Siriusstraat'>Siriusstraat</a> · 22 huizen · <b>27 deuren/100m</b> · TWIJFEL</div><div class='trij'><a href='#s_Uranusstraat'>Uranusstraat</a> · 22 huizen · <b>27 deuren/100m</b> · TWIJFEL</div><div class='tuitleg'>Gekozen op: 1) bewezen nokken (GO), 2) oude pannen, 3) deur-dichtheid (rijtjes = snelste test). Alléén koop-straten (≥60%), flats en corporatie eruit.</div><div id='testmap' data-map='{&quot;route&quot;: [{&quot;lat&quot;: 51.62456136, &quot;lon&quot;: 4.92239869, &quot;naam&quot;: &quot;Schweitzerstraat&quot;}, {&quot;lat&quot;: 51.62578741, &quot;lon&quot;: 4.92057003, &quot;naam&quot;: &quot;Siriusstraat&quot;}, {&quot;lat&quot;: 51.62578299, &quot;lon&quot;: 4.91955668, &quot;naam&quot;: &quot;Uranusstraat&quot;}, {&quot;lat&quot;: 51.62462517, &quot;lon&quot;: 4.91852506, &quot;naam&quot;: &quot;Mercuriusstraat&quot;}, {&quot;lat&quot;: 51.6257881, &quot;lon&quot;: 4.9185492, &quot;naam&quot;: &quot;Orionstraat&quot;}, {&quot;lat&quot;: 51.62828938, &quot;lon&quot;: 4.92050452, &quot;naam&quot;: &quot;Spuistraat&quot;}, {&quot;lat&quot;: 51.62841221, &quot;lon&quot;: 4.92161872, &quot;naam&quot;: &quot;Dommelstraat&quot;}, {&quot;lat&quot;: 51.62770073, &quot;lon&quot;: 4.92847855, &quot;naam&quot;: &quot;Kempenhof&quot;}], &quot;go&quot;: [{&quot;lat&quot;: 51.62420735, &quot;lon&quot;: 4.92095182, &quot;naam&quot;: &quot;Marsstraat&quot;}]}'></div><div class='tuitleg'>🗺️ Blauwe lijn = looproute (1→2→3…). 🟢 = alle GO-straten. Zo zie je hoe dicht het bij elkaar zit.</div><div class='tuitleg'><b>✅ Test werkt?</b> Loop dan verder: <a href='#s_Mercuriusstraat'>Mercuriusstraat</a> → <a href='#s_Orionstraat'>Orionstraat</a> → <a href='#s_Spuistraat'>Spuistraat</a> → <a href='#s_Dommelstraat'>Dommelstraat</a> → <a href='#s_Kempenhof'>Kempenhof</a>.<br><b>❌ Geen sales (2-uur-regel)?</b> Wijk afschrijven → alternatieven onderaan.</div><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.62456136,4.92239869&travelmode=driving' target='_blank'>🚗 Naar de test-straten</a></div>
 <div id='lijst'>
 
         <div class='straat' id='s_Reggestraat' data-init='' data-lat='51.62879598' data-lon='4.92104798' data-koop='60'>
@@ -1284,4 +1287,23 @@ function toggleSort(){sortMode=(sortMode==='go')?'route':'go';localStorage.setIt
 setInterval(renderKlok,30000);
 [...lijst.querySelectorAll('.straat')].forEach((el,i)=>{el.dataset.idx=i;paint(el.id.slice(2));const wb=el.querySelector('.wzet');if(wb&&wz[el.id.slice(2)])wb.classList.add('aan');});
 applySort(); renderKlok();
+// mini-looproute-kaart
+(function(){
+  const el=document.getElementById('testmap'); if(!el||!window.L)return;
+  let d; try{d=JSON.parse(el.dataset.map);}catch(e){return;}
+  if(!d.route||!d.route.length)return;
+  const m=L.map('testmap',{scrollWheelZoom:false});
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM',maxZoom:19}).addTo(m);
+  // alle GO-straten als groene stip
+  (d.go||[]).forEach(g=>{L.circleMarker([g.lat,g.lon],{radius:5,color:'#fff',weight:1.5,fillColor:'#1a9850',fillOpacity:.9}).bindTooltip(g.naam).addTo(m);});
+  // looproute: blauwe lijn + genummerde markers
+  const pts=d.route.map(p=>[p.lat,p.lon]);
+  L.polyline(pts,{color:'#1a73e8',weight:4,opacity:.8,dashArray:'1,8',lineCap:'round'}).addTo(m);
+  d.route.forEach((p,i)=>{
+    L.marker([p.lat,p.lon],{icon:L.divIcon({className:'',html:'<div style=\'background:#1a73e8;color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:700 12px sans-serif;border:2px solid #fff\'>'+(i+1)+'</div>',iconSize:[22,22],iconAnchor:[11,11]})}).bindTooltip(p.naam).addTo(m);
+  });
+  const all=pts.concat((d.go||[]).map(g=>[g.lat,g.lon]));
+  m.fitBounds(L.latLngBounds(all).pad(0.2));
+  setTimeout(()=>m.invalidateSize(),200);
+})();
 </script></body></html>
