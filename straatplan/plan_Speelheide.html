@@ -274,7 +274,7 @@ De aller-slechtste straten (7) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
           </div>
         </div>
 </div>
-<h2 class='afgekeurd-kop'>🔄 Wijk valt tegen? Alternatieven dichtbij</h2><div class='alt'><b>De Gentiaan</b> (Son en Breugel) · score 86 · 🟢 17 GO-straten · 5.7 km <a class='altknop' href='plan_De_Gentiaan.html'>📋 Straten</a><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.525608065714,5.481392795012979&travelmode=driving' target='_blank'>🚗 Navigeer</a></div><div class='alt'><b>De Notel</b> (Oirschot) · score 86 · 🟢 10 GO-straten · 5.8 km <a class='altknop' href='plan_De_Notel.html'>📋 Straten</a><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.5070696651477,5.321681395979626&travelmode=driving' target='_blank'>🚗 Navigeer</a></div>
+<h2 class='afgekeurd-kop'>🔄 Wijk valt tegen? Alternatieven dichtbij</h2><div class='alt'><b>De Gentiaan</b> (Son en Breugel) · score 86 · 🟢 17 GO-straten · 5.7 km <a class='altknop' href='plan_De_Gentiaan.html'>📋 Straten</a><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.525608065714,5.481392795012979&travelmode=driving' target='_blank'>🚗 Navigeer</a></div><div class='alt'><b>De Notel</b> (Oirschot) · score 86 · 🟢 6 GO-straten · 5.8 km <a class='altknop' href='plan_De_Notel.html'>📋 Straten</a><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.5070696651477,5.321681395979626&travelmode=driving' target='_blank'>🚗 Navigeer</a></div>
 <h2 class='afgekeurd-kop'>🗑️ Afgekeurd door AI — klopt dit? Check mijn werk</h2>
         <div class='straat afgekeurd'>
           <div class='kop'><span class='naam'>Vliegeren</span>
@@ -430,6 +430,11 @@ function renderKlok(){
   const m=Math.round(netto()/60000);
   tt.textContent=tijd.length?('⏱ '+Math.floor(m/60)+'u'+String(m%60).padStart(2,'0')+(l==='pauze'?' (pauze)':l==='finish'?' (klaar)':'')):'';
 }
+// De tijd loopt op TIJDSTEMPELS (niet op een teller), dus 'ie telt gewoon door als je
+// de pagina verlaat — alleen het schermpje stond stil. Bij terugkomst meteen verversen:
+document.addEventListener('visibilitychange',function(){if(!document.hidden)renderKlok();});
+window.addEventListener('focus',renderKlok);
+window.addEventListener('pageshow',renderKlok);
 const br=document.getElementById('buurtrev');
 br.value=localStorage.getItem('buurtrev_'+code)||'';
 function bewaarBuurtrev(){localStorage.setItem('buurtrev_'+code,br.value);log('buurtreview: '+br.value,'⭐ BUURT');alert('Opgeslagen ✓');}
