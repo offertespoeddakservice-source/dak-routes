@@ -15,13 +15,33 @@ button{border:none;border-radius:9px;background:#1a73e8;color:#fff;font-weight:7
 <div class="blok">
 <div class="hint">Alles wat je hier typt komt in je straat_log-tabblad. Claude leest het de volgende sessie en verbetert het systeem ermee. Ideeën, irritaties, dingen die niet werken, veld-observaties — alles is welkom.</div>
 <textarea id="fb" placeholder="Bijv: de routes-knop werkte niet bij... / idee: ... / wijk X voelde als..."></textarea>
+<div class="hint">📸 Optioneel: een foto of screenshot meesturen (gaat naar je Drive)</div>
+<input type="file" accept="image/*" id="fbfoto" style="font-size:.85rem;margin:.2rem 0">
 <button onclick="stuur()">Versturen</button>
 <div class="hint" id="ok"></div>
 </div>
 <script>
 const LOGURL='https://script.google.com/macros/s/AKfycbzQEt7CUybrqFtYqBTsJ3IxTkTLTw1yz5J9KezJsmMdqGUWNKVZIWyO6An-VFPAahP6FA/exec';
-function stuur(){const t=document.getElementById('fb').value.trim();if(!t){alert('Typ eerst iets 🙂');return;}
-try{fetch(LOGURL+'?'+new URLSearchParams({buurt:'SYSTEEM',straat:'💬',actie:'feedback: '+t}),{mode:'no-cors'});}catch(e){}
-document.getElementById('fb').value='';document.getElementById('ok').textContent='✅ Verstuurd — bedankt! Claude leest dit de volgende sessie.';}
+function fotoUp(file,naam){
+  const img=new Image();const rd=new FileReader();
+  rd.onload=()=>{img.onload=()=>{
+    const c=document.createElement('canvas');const sch=Math.min(1,1400/Math.max(img.width,img.height));
+    c.width=Math.round(img.width*sch);c.height=Math.round(img.height*sch);
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+    const b64=c.toDataURL('image/jpeg',0.78);
+    try{fetch(LOGURL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({buurt:'SYSTEEM',straat:naam,actie:'feedback-foto',foto:b64})});}catch(e){}
+  };img.src=rd.result;};
+  rd.readAsDataURL(file);
+}
+function stuur(){
+  const t=document.getElementById('fb').value.trim();
+  const f=document.getElementById('fbfoto');
+  const heeftFoto=f&&f.files&&f.files[0];
+  if(!t&&!heeftFoto){alert('Typ iets of kies een foto 🙂');return;}
+  if(t){try{fetch(LOGURL+'?'+new URLSearchParams({buurt:'SYSTEEM',straat:'💬',actie:'feedback: '+t}),{mode:'no-cors'});}catch(e){}}
+  if(heeftFoto){fotoUp(f.files[0],'💬 '+(t.slice(0,40)||'feedback-foto'));}
+  document.getElementById('fb').value='';if(f)f.value='';
+  document.getElementById('ok').textContent='✅ Verstuurd — bedankt!'+(heeftFoto?' Je foto staat in je Drive (klusfotos).':' Claude leest dit de volgende sessie.');}
 const ts=document.getElementById('t-straten');if(ts)ts.href=localStorage.getItem('laatste_plan')||'begin_lijst.html';
 </script></body></html>
