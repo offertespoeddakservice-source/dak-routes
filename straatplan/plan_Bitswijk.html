@@ -19,7 +19,8 @@ a.terug{font-size:.85rem;color:#1a73e8;text-decoration:none;}
 .routebtn{display:block;background:#1a73e8;color:#fff;text-decoration:none;padding:.6rem;border-radius:9px;text-align:center;font-weight:600;margin:.3rem 0;}
 .straat{background:#fff;border-radius:12px;padding:.6rem;margin-bottom:.6rem;box-shadow:0 1px 2px rgba(0,0,0,.06);}
 .straat.go{background:#e6f4ea;}.straat.skip{background:#fde7e6;opacity:.55;}.straat.meh{background:#fff7e6;}
-.straat.gedaan{outline:3px solid #1a9850;}
+.straat.gedaan{outline:3px solid #1a9850;opacity:.72;position:relative;}
+.straat.gedaan::after{content:'✓ GELOPEN';position:absolute;top:.45rem;right:.45rem;background:#1a9850;color:#fff;font-size:.64rem;font-weight:800;letter-spacing:.02em;padding:.15rem .5rem;border-radius:6px;z-index:3;box-shadow:0 1px 2px rgba(0,0,0,.18);}
 .kop{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;margin-bottom:.3rem;}
 .nr{background:#333;color:#fff;border-radius:50%;width:1.5rem;height:1.5rem;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0;}
 .naam{font-weight:600;flex:1;min-width:40%;}
@@ -66,11 +67,11 @@ a.terug{font-size:.85rem;color:#1a73e8;text-decoration:none;}
 <div class="tabs"><a href="../index.html">🏠</a><a href="../vandaag.html">📅 Planning</a><a href="../opvolgen.html">✅ Opvolgen</a><a href="../begin_lijst.html">📋 Buurten</a><a href="#" id="t-straten">🚶 Straten</a><a href="../kaart.html">🗺️ Kaart</a><a href="../dashboard.html">📊 Cijfers</a><a href="../nokken_test.html">🔍 Keuring</a><a href="../prijzen.html">💶 Prijzen</a><a href="../financieel.html">💶 Financieel</a><a href="../pitch.html">📣 Pitch</a><a href="../feedback.html">💬 Feedback</a></div>
 <h1>🗺️ Bitswijk — straatplan</h1>
 <div class='intro'>🎯 = bouwjaar 1955-1980. Bekijk de 3 foto's (begin/midden/eind): is de <b>nok halfrond</b>?
-De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b>DONE</b> als je 'm gelopen hebt.</div>
+De aller-slechtste straten (3) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b>DONE</b> als je 'm gelopen hebt.</div>
 <div class='blok-review'><input id='buurtrev' placeholder='⭐ Review over de hele buurt (sfeer, type mensen, concurrent gezien...)'><button onclick='bewaarBuurtrev()'>Opslaan</button></div>
 <div class='bar'><div id='routes'></div><div class='klok'><button class='k-start' onclick='klok("start")'>▶ Start</button><button class='k-pauze' id='pauzebtn' onclick='klokPauze()'>⏸ Pauze</button><button class='k-fin' onclick='klok("finish")'>🏁 Klaar</button><span id='tijdtxt'></span></div><button class='sorteer' id='sortbtn' onclick='toggleSort()'>⭐ GO eerst</button><div class='teller' id='teller'>—</div></div>
 <div class='intro' id='weerstrip' style='display:none'></div>
-<div class='testblok'><b>🧪 START-TEST — pak deze eerst (≈116 huizen)</b><div class='trij'><a href='#s_Hoornstraat'>Hoornstraat</a> · 50 huizen · <b>35 deuren/100m</b> · GO</div><div class='trij'><a href='#s_Mandolinestraat'>Mandolinestraat</a> · 66 huizen · <b>62 deuren/100m</b> · TWIJFEL</div><div class='tuitleg'>Gekozen op: 1) bewezen nokken (GO), 2) oude pannen, 3) deur-dichtheid (rijtjes = snelste test). Alléén koop-straten (≥60%), flats en corporatie eruit.</div><div id='testmap' data-map='{&quot;route&quot;: [{&quot;lat&quot;: 51.66877911, &quot;lon&quot;: 5.61543097, &quot;naam&quot;: &quot;Hoornstraat&quot;}, {&quot;lat&quot;: 51.6706191, &quot;lon&quot;: 5.60985742, &quot;naam&quot;: &quot;Mandolinestraat&quot;}, {&quot;lat&quot;: 51.66938694, &quot;lon&quot;: 5.61493076, &quot;naam&quot;: &quot;Trompetstraat&quot;}, {&quot;lat&quot;: 51.67198311, &quot;lon&quot;: 5.61255682, &quot;naam&quot;: &quot;Gitaarstraat&quot;}, {&quot;lat&quot;: 51.6674504, &quot;lon&quot;: 5.61145985, &quot;naam&quot;: &quot;Vaaldriessenstraat&quot;}, {&quot;lat&quot;: 51.67254601, &quot;lon&quot;: 5.62020825, &quot;naam&quot;: &quot;Harmoniumlaan&quot;}, {&quot;lat&quot;: 51.67121074, &quot;lon&quot;: 5.62235612, &quot;naam&quot;: &quot;Klaroenlaan&quot;}], &quot;go&quot;: [{&quot;lat&quot;: 51.67131843, &quot;lon&quot;: 5.61665831, &quot;naam&quot;: &quot;Vioolstraat&quot;}, {&quot;lat&quot;: 51.67135745, &quot;lon&quot;: 5.61563609, &quot;naam&quot;: &quot;Spinetstraat&quot;}, {&quot;lat&quot;: 51.66938694, &quot;lon&quot;: 5.61493076, &quot;naam&quot;: &quot;Trompetstraat&quot;}, {&quot;lat&quot;: 51.66877911, &quot;lon&quot;: 5.61543097, &quot;naam&quot;: &quot;Hoornstraat&quot;}]}'></div><div class='tuitleg'>🗺️ Blauwe lijn = looproute (1→2→3…). 🟢 = alle GO-straten. Zo zie je hoe dicht het bij elkaar zit.</div><div class='tuitleg'><b>✅ Test werkt?</b> Loop dan verder: <a href='#s_Trompetstraat'>Trompetstraat</a> 🟢 → <a href='#s_Gitaarstraat'>Gitaarstraat</a> → <a href='#s_Vaaldriessenstraat'>Vaaldriessenstraat</a> → <a href='#s_Harmoniumlaan'>Harmoniumlaan</a> → <a href='#s_Klaroenlaan'>Klaroenlaan</a>.<br><b>❌ Geen sales (2-uur-regel)?</b> Wijk afschrijven → alternatieven onderaan.</div><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.66877911,5.61543097&travelmode=driving' target='_blank'>🚗 Naar de test-straten</a></div>
+<div class='testblok'><b>🧪 START-TEST — pak deze eerst (≈107 huizen)</b><div class='trij'><a href='#s_Gitaarstraat'>Gitaarstraat</a> · 57 huizen · <b>55 deuren/100m</b> · GO</div><div class='trij'><a href='#s_Hoornstraat'>Hoornstraat</a> · 50 huizen · <b>35 deuren/100m</b> · GO</div><div class='tuitleg'>Gekozen op: 1) bewezen nokken (GO), 2) oude pannen, 3) deur-dichtheid (rijtjes = snelste test). Alléén koop-straten (≥60%), flats en corporatie eruit.</div><div id='testmap' data-map='{&quot;route&quot;: [{&quot;lat&quot;: 51.67198311, &quot;lon&quot;: 5.61255682, &quot;naam&quot;: &quot;Gitaarstraat&quot;}, {&quot;lat&quot;: 51.66877911, &quot;lon&quot;: 5.61543097, &quot;naam&quot;: &quot;Hoornstraat&quot;}, {&quot;lat&quot;: 51.66938694, &quot;lon&quot;: 5.61493076, &quot;naam&quot;: &quot;Trompetstraat&quot;}, {&quot;lat&quot;: 51.6674504, &quot;lon&quot;: 5.61145985, &quot;naam&quot;: &quot;Vaaldriessenstraat&quot;}, {&quot;lat&quot;: 51.67254601, &quot;lon&quot;: 5.62020825, &quot;naam&quot;: &quot;Harmoniumlaan&quot;}, {&quot;lat&quot;: 51.67121074, &quot;lon&quot;: 5.62235612, &quot;naam&quot;: &quot;Klaroenlaan&quot;}, {&quot;lat&quot;: 51.67079705, &quot;lon&quot;: 5.60891997, &quot;naam&quot;: &quot;Pianostraat&quot;}], &quot;go&quot;: [{&quot;lat&quot;: 51.67295096, &quot;lon&quot;: 5.61831303, &quot;naam&quot;: &quot;Altstraat&quot;}, {&quot;lat&quot;: 51.67131843, &quot;lon&quot;: 5.61665831, &quot;naam&quot;: &quot;Vioolstraat&quot;}, {&quot;lat&quot;: 51.67135745, &quot;lon&quot;: 5.61563609, &quot;naam&quot;: &quot;Spinetstraat&quot;}, {&quot;lat&quot;: 51.67198311, &quot;lon&quot;: 5.61255682, &quot;naam&quot;: &quot;Gitaarstraat&quot;}, {&quot;lat&quot;: 51.66938694, &quot;lon&quot;: 5.61493076, &quot;naam&quot;: &quot;Trompetstraat&quot;}, {&quot;lat&quot;: 51.66877911, &quot;lon&quot;: 5.61543097, &quot;naam&quot;: &quot;Hoornstraat&quot;}, {&quot;lat&quot;: 51.66959542, &quot;lon&quot;: 5.62082624, &quot;naam&quot;: &quot;Triangelstraat&quot;}]}'></div><div class='tuitleg'>🗺️ Blauwe lijn = looproute (1→2→3…). 🟢 = alle GO-straten. Zo zie je hoe dicht het bij elkaar zit.</div><div class='tuitleg'><b>✅ Test werkt?</b> Loop dan verder: <a href='#s_Trompetstraat'>Trompetstraat</a> 🟢 → <a href='#s_Vaaldriessenstraat'>Vaaldriessenstraat</a> → <a href='#s_Harmoniumlaan'>Harmoniumlaan</a> → <a href='#s_Klaroenlaan'>Klaroenlaan</a> → <a href='#s_Pianostraat'>Pianostraat</a>.<br><b>❌ Geen sales (2-uur-regel)?</b> Wijk afschrijven → alternatieven onderaan.</div><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.67198311,5.61255682&travelmode=driving' target='_blank'>🚗 Naar de test-straten</a></div>
 <div id='lijst'>
 
         <div class='straat' id='s_Orgellaan' data-init='' data-lat='51.67322406' data-lon='5.62158456' data-koop='90'>
@@ -173,11 +174,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Basstraat","Basstraat",51.6727091,5.61907272)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Altstraat' data-init='twijfel' data-lat='51.67295096' data-lon='5.61831303' data-koop='60'>
+        <div class='straat' id='s_Altstraat' data-init='go' data-lat='51.67295096' data-lon='5.61831303' data-koop='60'>
           <div class='kop'><span class='nr'>6</span>
             <span class='naam'>Altstraat</span>
-            <span class='bj bj-top'>🎯 1966</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONBEKEND</span></div>
-          <div class='eigrij'><span class='eig eig-meh'>🔑 60% koop</span> <span class='eig eig-fout'>🏢 38% corporatie</span></div><div class='reden'>Rens-label: geen dak</div>
+            <span class='bj bj-top'>🎯 1966</span><span class='ai ai-go'>AI: GO</span><span class='nokb nok-goed'>nok: HALFROND IN SPECIE</span></div>
+          <div class='eigrij'><span class='eig eig-meh'>🔑 60% koop</span> <span class='eig eig-fout'>🏢 38% corporatie</span></div><div class='reden'>Rens-label: halve nok</div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU19910105_Altstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -233,11 +234,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Spinetstraat","Spinetstraat",51.67135745,5.61563609)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Gitaarstraat' data-init='twijfel' data-lat='51.67198311' data-lon='5.61255682' data-koop='80'>
+        <div class='straat' id='s_Gitaarstraat' data-init='go' data-lat='51.67198311' data-lon='5.61255682' data-koop='80'>
           <div class='kop'><span class='nr'>12</span>
             <span class='naam'>Gitaarstraat</span>
-            <span class='bj bj-top'>🎯 1968</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONDUIDELIJK</span></div>
-          <div class='eigrij'><span class='eig eig-goed'>🔑 80% koop</span></div><div class='reden'>Rens-label: onduidelijk</div>
+            <span class='bj bj-top'>🎯 1968</span><span class='ai ai-go'>AI: GO</span><span class='nokb nok-goed'>nok: HALFROND IN SPECIE</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 80% koop</span></div><div class='reden'>Rens-label: halve nok</div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU19910105_Gitaarstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -293,26 +294,6 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Banjostraat","Banjostraat",51.67155414,5.61123765)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Mandolinestraat' data-init='twijfel' data-lat='51.6706191' data-lon='5.60985742' data-koop='80'>
-          <div class='kop'><span class='nr'>15</span>
-            <span class='naam'>Mandolinestraat</span>
-            <span class='bj bj-top'>🎯 1969</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONBEKEND</span></div>
-          <div class='eigrij'><span class='eig eig-goed'>🔑 80% koop</span></div><div class='reden'>Rens-label: geen dak</div>
-          <div class='fotos'><div class=nofoto>geen foto's</div></div>
-          <div class='nokzoom'><img src='fotos/BU19910105_Mandolinestraa_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
-          <div class='links'>
-            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.6706191,5.60985742&travelmode=walking' target='_blank'>🚶 Hierheen</a>
-            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.6706191,5.60985742' target='_blank'>🗺️ Maps</a>
-          </div>
-          <input class='notitie' id='n_Mandolinestraat' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
-          <div class='knoppen'>
-            <button class='go' onclick='mark("Mandolinestraat","go")'>✓ GO</button>
-            <button class='meh' onclick='mark("Mandolinestraat","meh")'>~ twijfel</button>
-            <button class='skip' onclick='mark("Mandolinestraat","skip")'>✗ skip</button>
-            <button class='done' onclick='markDone("Mandolinestraat","Mandolinestraat")'>✅ DONE</button>
-            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Mandolinestraat","Mandolinestraat",51.6706191,5.60985742)'>👷</button>
-          </div>
-        </div>
         <div class='straat' id='s_Hobostraat' data-init='' data-lat='51.67025767' data-lon='5.61022247' data-koop=''>
           <div class='kop'><span class='nr'>16</span>
             <span class='naam'>Hobostraat</span>
@@ -351,26 +332,6 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='skip' onclick='mark("Pianostraat","skip")'>✗ skip</button>
             <button class='done' onclick='markDone("Pianostraat","Pianostraat")'>✅ DONE</button>
             <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Pianostraat","Pianostraat",51.67079705,5.60891997)'>👷</button>
-          </div>
-        </div>
-        <div class='straat' id='s_Saxofoonstraat' data-init='twijfel' data-lat='51.6691238' data-lon='5.61122652' data-koop='64'>
-          <div class='kop'><span class='nr'>18</span>
-            <span class='naam'>Saxofoonstraat</span>
-            <span class='bj bj-top'>🎯 1970</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONDUIDELIJK</span></div>
-          <div class='eigrij'><span class='eig eig-meh'>🔑 64% koop</span> <span class='eig eig-fout'>🏢 55% corporatie</span></div><div class='reden'>Rens-label: onduidelijk</div>
-          <div class='fotos'><div class=nofoto>geen foto's</div></div>
-          <div class='nokzoom'><img src='fotos/BU19910105_Saxofoonstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
-          <div class='links'>
-            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.6691238,5.61122652&travelmode=walking' target='_blank'>🚶 Hierheen</a>
-            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.6691238,5.61122652' target='_blank'>🗺️ Maps</a>
-          </div>
-          <input class='notitie' id='n_Saxofoonstraat' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
-          <div class='knoppen'>
-            <button class='go' onclick='mark("Saxofoonstraat","go")'>✓ GO</button>
-            <button class='meh' onclick='mark("Saxofoonstraat","meh")'>~ twijfel</button>
-            <button class='skip' onclick='mark("Saxofoonstraat","skip")'>✗ skip</button>
-            <button class='done' onclick='markDone("Saxofoonstraat","Saxofoonstraat")'>✅ DONE</button>
-            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Saxofoonstraat","Saxofoonstraat",51.6691238,5.61122652)'>👷</button>
           </div>
         </div>
         <div class='straat' id='s_Vaaldriessenstraat' data-init='' data-lat='51.6674504' data-lon='5.61145985' data-koop=''>
@@ -613,11 +574,11 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Cimbaallaan","Cimbaallaan",51.67054785,5.62070181)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_Triangelstraat' data-init='twijfel' data-lat='51.66959542' data-lon='5.62082624' data-koop='60'>
+        <div class='straat' id='s_Triangelstraat' data-init='go' data-lat='51.66959542' data-lon='5.62082624' data-koop='60'>
           <div class='kop'><span class='nr'>41</span>
             <span class='naam'>Triangelstraat</span>
-            <span class='bj bj-top'>🎯 1967</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONBEKEND</span></div>
-          <div class='eigrij'><span class='eig eig-meh'>🔑 60% koop</span> <span class='eig eig-fout'>🏢 60% corporatie</span></div><div class='reden'>Rens-label: geen dak</div>
+            <span class='bj bj-top'>🎯 1967</span><span class='ai ai-go'>AI: GO</span><span class='nokb nok-goed'>nok: HALFROND IN SPECIE</span></div>
+          <div class='eigrij'><span class='eig eig-meh'>🔑 60% koop</span> <span class='eig eig-fout'>🏢 60% corporatie</span></div><div class='reden'>Rens-label: halve nok</div>
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <div class='nokzoom'><img src='fotos/BU19910105_Triangelstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -723,6 +684,20 @@ De aller-slechtste straten (1) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
           <div class='fotos'><div class=nofoto>geen foto's</div></div>
           <a class='svlink' href='https://www.google.com/maps?q=&layer=c&cbll=51.67150157,5.61432749' target='_blank'>🔍 zelf checken in Street View</a>
         </div>
+        <div class='straat afgekeurd'>
+          <div class='kop'><span class='naam'>Mandolinestraat</span>
+            <span class='ai ai-skip'>AFGEKEURD</span></div>
+          <div class='reden'>Rens-label: schub nok</div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <a class='svlink' href='https://www.google.com/maps?q=&layer=c&cbll=51.6706191,5.60985742' target='_blank'>🔍 zelf checken in Street View</a>
+        </div>
+        <div class='straat afgekeurd'>
+          <div class='kop'><span class='naam'>Saxofoonstraat</span>
+            <span class='ai ai-skip'>AFGEKEURD</span></div>
+          <div class='reden'>Rens-label: schub nok</div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <a class='svlink' href='https://www.google.com/maps?q=&layer=c&cbll=51.6691238,5.61122652' target='_blank'>🔍 zelf checken in Street View</a>
+        </div>
 <button class='export' onclick='exportDone()'>💬 Stuur gelopen straten via WhatsApp (naar jezelf)</button>
 <script>
 localStorage.setItem('laatste_plan','straatplan/'+location.pathname.split('/').pop());
@@ -761,7 +736,9 @@ function werkZet(k,s,la,lo){
   const el=document.getElementById('s_'+k);
   if(el){const b=el.querySelector('.wzet');if(b)b.classList.toggle('aan',aan);}
 }
-function reorder(){for(const el of [...lijst.querySelectorAll('.straat')]) if(cur(el.id.slice(2))==='skip') lijst.appendChild(el);}
+function reorder(){const els=[...lijst.querySelectorAll('.straat')];
+  for(const el of els){const k=el.id.slice(2);if(cur(k)==='skip'&&!done[k])lijst.appendChild(el);}
+  for(const el of els){if(done[el.id.slice(2)])lijst.appendChild(el);}}
 function rebuild(){
   let i=1,g=0,d=0,t=0; const pts=[];
   for(const el of lijst.querySelectorAll('.straat')){
@@ -802,7 +779,7 @@ function mark(k,val){
 function markDone(k,s){
   if(done[k]){delete done[k]; log('done_ongedaan',s);} else {done[k]=s; log('done',s);}
   localStorage.setItem('done_'+code,JSON.stringify(done));
-  paint(k); rebuild();
+  paint(k); reorder(); rebuild();
 }
 function exportDone(){const dt=new Date().toISOString().slice(0,10);const L=Object.values(done);if(!L.length){alert('Nog niks op DONE gezet.');return;}const txt='GELOPEN '+dt+' — '+naam+'\n'+L.map(s=>'✅ '+s).join('\n');window.location.href='https://wa.me/?text='+encodeURIComponent(txt);}
 const tijd=JSON.parse(localStorage.getItem('tijd_'+code)||'[]');
@@ -876,6 +853,17 @@ function toggleSort(){sortMode=(sortMode==='go')?'route':'go';localStorage.setIt
 setInterval(renderKlok,30000);
 [...lijst.querySelectorAll('.straat')].forEach((el,i)=>{el.dataset.idx=i;paint(el.id.slice(2));const wb=el.querySelector('.wzet');if(wb&&wz[el.id.slice(2)])wb.classList.add('aan');});
 applySort(); renderKlok();
+// GPS-afvink: straten die Claude uit je looproute haalde (gelopen.json) ophalen + samenvoegen
+fetch('../gelopen.json',{cache:'no-store'}).then(r=>r.json()).then(G=>{
+  const mine=G[code]; if(!mine)return;
+  let veranderd=false;
+  for(const el of lijst.querySelectorAll('.straat')){
+    const nm=el.querySelector('.naam').textContent.trim(), k=el.id.slice(2);
+    if(mine[nm]&&!done[k]){done[k]=nm;veranderd=true;}
+  }
+  if(veranderd){localStorage.setItem('done_'+code,JSON.stringify(done));
+    [...lijst.querySelectorAll('.straat')].forEach(el=>paint(el.id.slice(2)));applySort();}
+}).catch(()=>{});
 // mini-looproute-kaart
 (function(){
   const el=document.getElementById('testmap'); if(!el||!window.L)return;
