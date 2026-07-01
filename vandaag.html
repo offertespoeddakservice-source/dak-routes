@@ -107,6 +107,8 @@ const afData={}, afNamen={};
 function afBtn(ki,g,v){return `<button class="afk" onclick="afKies(${ki},'${g}','${v}',this)">${v}</button>`;}
 function afForm(ki){
   return `<div class="afform" id="af_${ki}" style="display:none">
+  <div class="afv"><b>Gedaan:</b> ${afBtn(ki,'gedaan','goten')}${afBtn(ki,'gedaan','goten+vogelwering')}${afBtn(ki,'gedaan','vogelwering')}${afBtn(ki,'gedaan','nok')}${afBtn(ki,'gedaan','lood')}${afBtn(ki,'gedaan','inspectie')}${afBtn(ki,'gedaan','overige')}</div>
+  <div class="afv"><b>Bedrag:</b> ${afBtn(ki,'bedrag','€40')}${afBtn(ki,'bedrag','€50')}${afBtn(ki,'bedrag','€80')}${afBtn(ki,'bedrag','€150')}${afBtn(ki,'bedrag','€250')}${afBtn(ki,'bedrag','€450')} <input class="afnot" id="afb_${ki}" placeholder="ander € bedrag" inputmode="numeric" style="max-width:110px"></div>
   <div class="afv"><b>Nok besproken?</b> ${afBtn(ki,'nok','ja')}${afBtn(ki,'nok','nee')}</div>
   <div class="afv"><b>Reactie klant:</b> ${afBtn(ki,'reactie','positief')}${afBtn(ki,'reactie','later')}${afBtn(ki,'reactie','nee')}</div>
   <div class="afv"><b>Upsell gespot:</b> ${afBtn(ki,'upsell','nok')}${afBtn(ki,'upsell','goot')}${afBtn(ki,'upsell','vogelwering')}${afBtn(ki,'upsell','lood')}${afBtn(ki,'upsell','niks')}</div>
@@ -140,7 +142,11 @@ function fotoUp(file,naam){
 }
 function afOpslaan(ki){
   const d=afData[ki]||{};const ni=document.getElementById('afn_'+ki);const not=ni?ni.value.trim():'';
+  const bi=document.getElementById('afb_'+ki);const beigen=bi?bi.value.trim():'';
   const delen=[];
+  if(d.gedaan)delen.push('gedaan='+d.gedaan);
+  if(beigen)delen.push('bedrag=€'+beigen.replace(/[^0-9,\.]/g,''));
+  else if(d.bedrag)delen.push('bedrag='+d.bedrag);
   if(d.nok)delen.push('nok besproken='+d.nok);
   if(d.reactie)delen.push('reactie='+d.reactie);
   if(d.upsell&&d.upsell.length)delen.push('upsell='+d.upsell.join('+'));
