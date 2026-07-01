@@ -1,0 +1,1225 @@
+<!doctype html><html lang='nl'><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>Straatplan — Hank</title><script>(function(){var P='3032';if(localStorage.getItem('sitepin')===P)return;for(var i=0;i<3;i++){var p=prompt('🔒 PIN?');if(p===P){localStorage.setItem('sitepin',P);return;}if(p===null)break;}document.documentElement.innerHTML='<body style="font-family:sans-serif;padding:2rem">🔒 Verkeerde PIN — ververs de pagina (⬇️ trekken of ⟳) en probeer opnieuw.</body>';window.stop();})();</script>
+<link rel='stylesheet' href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'>
+<script src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'></script><style>
+#testmap{height:240px;border-radius:10px;margin:.5rem 0;}
+body{font-family:-apple-system,sans-serif;background:#f5f5f7;margin:0;padding:0.6rem;max-width:640px;margin:0 auto;color:#1c1c1e;}
+h1{font-size:1.2rem;margin:.3rem 0;}
+a.terug{font-size:.85rem;color:#1a73e8;text-decoration:none;}
+.intro{background:#fff;border-radius:10px;padding:.5rem .7rem;font-size:.8rem;color:#555;margin:.4rem 0;line-height:1.4;}
+.tabs{display:flex;gap:.3rem;flex-wrap:wrap;font-size:.8rem;margin-bottom:.6rem;}.tabs a{background:#fff;border-radius:8px;padding:.35rem .55rem;text-decoration:none;color:#1a73e8;font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.06);}
+.bar{background:rgba(245,245,247,.96);padding:.4rem 0;border-bottom:1px solid #ddd;}
+.teller{font-size:.8rem;color:#555;padding:.2rem 0;}
+.klok{display:flex;gap:.3rem;align-items:center;margin:.25rem 0;}
+.klok button{border:none;border-radius:7px;padding:.4rem .6rem;color:#fff;font-weight:600;font-size:.78rem;cursor:pointer;}
+.k-start{background:#1a9850;}.k-pauze{background:#fdae61;}.k-fin{background:#333;}
+#tijdtxt{font-size:.8rem;color:#1a9850;font-weight:700;margin-left:.2rem;}
+.sorteer{border:none;border-radius:7px;padding:.4rem .7rem;background:#7b1fa2;color:#fff;font-weight:600;font-size:.78rem;cursor:pointer;margin:.15rem 0;}
+.routebtn{display:block;background:#1a73e8;color:#fff;text-decoration:none;padding:.6rem;border-radius:9px;text-align:center;font-weight:600;margin:.3rem 0;}
+.straat{background:#fff;border-radius:12px;padding:.6rem;margin-bottom:.6rem;box-shadow:0 1px 2px rgba(0,0,0,.06);}
+.straat.go{background:#e6f4ea;}.straat.skip{background:#fde7e6;opacity:.55;}.straat.meh{background:#fff7e6;}
+.straat.gedaan{outline:3px solid #1a9850;opacity:.72;position:relative;}
+.straat.gedaan::after{content:'✓ GELOPEN';position:absolute;top:.45rem;right:.45rem;background:#1a9850;color:#fff;font-size:.64rem;font-weight:800;letter-spacing:.02em;padding:.15rem .5rem;border-radius:6px;z-index:3;box-shadow:0 1px 2px rgba(0,0,0,.18);}
+.kop{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;margin-bottom:.3rem;}
+.nr{background:#333;color:#fff;border-radius:50%;width:1.5rem;height:1.5rem;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0;}
+.naam{font-weight:600;flex:1;min-width:40%;}
+.bj{font-size:.74rem;font-weight:600;padding:.1rem .45rem;border-radius:5px;color:#fff;}
+.bj-top{background:#1a9850;}.bj-goed{background:#66bd63;}.bj-meh{background:#fdae61;}.bj-skip{background:#d73027;}.bj-grijs{background:#999;}
+.ai{font-size:.72rem;font-weight:700;padding:.1rem .45rem;border-radius:5px;color:#fff;}
+.ai-go{background:#1a9850;}.ai-meh{background:#fdae61;}
+.nokb{font-size:.68rem;font-weight:700;padding:.1rem .4rem;border-radius:5px;color:#fff;}
+.eigrij{display:flex;gap:.3rem;flex-wrap:wrap;margin:.25rem 0;}
+.eig{font-size:.7rem;font-weight:700;padding:.12rem .45rem;border-radius:5px;color:#fff;background:#999;}
+.eig-goed{background:#1a9850;}.eig-meh{background:#e08c00;}.eig-fout{background:#d73027;}
+.nok-goed{background:#1a9850;}.nok-fout{background:#d73027;}.nok-onb{background:#999;}
+.nokzoom{margin-top:3px;}.nokzoom img{width:100%;border-radius:6px;display:block;}
+.nokcap{font-size:.66rem;color:#888;text-align:center;}
+.reden{font-size:.78rem;color:#555;font-style:italic;margin-bottom:.3rem;}
+.haakjes{font-size:.8rem;color:#7a5a00;background:#fff3cd;border-radius:6px;padding:.25rem .5rem;margin-bottom:.3rem;font-weight:600;}
+.blok-review{display:flex;gap:.3rem;margin:.4rem 0;}
+.blok-review input{flex:1;border:1px solid #ddd;border-radius:8px;padding:.5rem;font-size:.85rem;}
+.blok-review button{border:none;border-radius:8px;background:#7b1fa2;color:#fff;font-weight:600;padding:.4rem .7rem;cursor:pointer;}
+.testblok{background:#e8f0fe;border:2px solid #1a73e8;border-radius:11px;padding:.6rem .8rem;margin:.5rem 0;font-size:.85rem;}
+.testblok .trij{margin:.25rem 0;}.testblok a{color:#1a73e8;font-weight:600;}
+.tuitleg{font-size:.75rem;color:#555;margin:.3rem 0;}
+.alt{background:#fff;border-radius:10px;padding:.6rem;margin-bottom:.4rem;font-size:.85rem;box-shadow:0 1px 2px rgba(0,0,0,.06);}
+.altknop{display:inline-block;background:#1a9850;color:#fff;text-decoration:none;padding:.3rem .6rem;border-radius:6px;font-size:.78rem;margin-left:.4rem;}
+.altknop.nav2{background:#1a73e8;}.altknop.uit{background:#ccc;}
+.notitie{width:100%;border:1px solid #ddd;border-radius:7px;padding:.45rem;font-size:.85rem;margin:.3rem 0;box-sizing:border-box;}
+.fotos{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;}
+.fotos figure{margin:0;}.fotos img{width:100%;border-radius:6px;display:block;}
+.fotos figcaption{font-size:.66rem;color:#888;text-align:center;}
+.nofoto{grid-column:1/4;background:#eee;color:#999;text-align:center;padding:1.5rem;border-radius:6px;font-size:.8rem;}
+.links{display:flex;gap:.3rem;margin:.4rem 0 .3rem;}
+.gm{flex:1;text-align:center;background:#34a853;color:#fff;text-decoration:none;padding:.45rem;border-radius:7px;font-size:.82rem;}
+.gm.sv{background:#7b1fa2;}
+.knoppen{display:flex;gap:.3rem;}
+.knoppen button{flex:1;border:none;border-radius:7px;padding:.5rem .2rem;color:#fff;font-weight:600;font-size:.76rem;cursor:pointer;}
+.go{background:#1a9850;}.meh{background:#fdae61;}.skip{background:#d73027;}.done{background:#333;}
+.wzet{background:#9aa0a6;flex:0 0 2.4rem !important;}.wzet.aan{background:#e08c00;}
+.export{background:#1a9850;color:#fff;border:none;border-radius:9px;padding:.7rem;width:100%;font-weight:600;font-size:.9rem;margin-top:.6rem;cursor:pointer;}
+.afgekeurd-kop{font-size:1rem;margin:1.2rem 0 .5rem;color:#a3231a;}
+.straat.afgekeurd{background:#fdf0ef;border:1px dashed #d73027;opacity:1;}
+.ai-skip{background:#d73027;}
+.svlink{display:inline-block;color:#1a73e8;font-size:.8rem;margin-top:.35rem;text-decoration:none;}
+</style></head><body>
+<div class="tabs"><a href="../index.html">🏠</a><a href="../vandaag.html">📅 Planning</a><a href="../opvolgen.html">✅ Opvolgen</a><a href="../begin_lijst.html">📋 Buurten</a><a href="../dorpen.html">🏘️ Dorpen</a><a href="#" id="t-straten">🚶 Straten</a><a href="../kaart.html">🗺️ Kaart</a><a href="../dashboard.html">📊 Cijfers</a><a href="../nokken_test.html">🔍 Keuring</a><a href="../prijzen.html">💶 Prijzen</a><a href="../financieel.html">💶 Financieel</a><a href="../pitch.html">📣 Pitch</a><a href="../feedback.html">💬 Feedback</a></div>
+<h1>🗺️ Hank — straatplan</h1>
+<div class='intro'>🎯 = bouwjaar 1955-1980. Bekijk de 3 foto's (begin/midden/eind): is de <b>nok halfrond</b>?
+De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b>DONE</b> als je 'm gelopen hebt.</div>
+<div class='blok-review'><input id='buurtrev' placeholder='⭐ Review over de hele buurt (sfeer, type mensen, concurrent gezien...)'><button onclick='bewaarBuurtrev()'>Opslaan</button></div>
+<div class='bar'><div id='routes'></div><div class='klok'><button class='k-start' onclick='klok("start")'>▶ Start</button><button class='k-pauze' id='pauzebtn' onclick='klokPauze()'>⏸ Pauze</button><button class='k-fin' onclick='klok("finish")'>🏁 Klaar</button><span id='tijdtxt'></span></div><button class='sorteer' id='sortbtn' onclick='toggleSort()'>⭐ GO eerst</button><div class='teller' id='teller'>—</div></div>
+<div class='intro' id='weerstrip' style='display:none'></div>
+<div class='testblok'><b>🧪 START-TEST — pak deze eerst (≈102 huizen)</b><div class='trij'><a href='#s_Raai'>Raai</a> · 59 huizen · <b>84 deuren/100m</b> · ?</div><div class='trij'><a href='#s_Frans_Hanegraafstraat'>Frans Hanegraafstraat</a> · 43 huizen · <b>49 deuren/100m</b> · ?</div><div class='tuitleg'>Gekozen op: 1) bewezen nokken (GO), 2) oude pannen, 3) deur-dichtheid (rijtjes = snelste test). Alléén koop-straten (≥60%), flats en corporatie eruit.</div><div id='testmap' data-map='{&quot;route&quot;: [{&quot;lat&quot;: 51.74073198, &quot;lon&quot;: 4.90112081, &quot;naam&quot;: &quot;Raai&quot;}, {&quot;lat&quot;: 51.73392602, &quot;lon&quot;: 4.89529602, &quot;naam&quot;: &quot;Frans Hanegraafstraat&quot;}, {&quot;lat&quot;: 51.7404648, &quot;lon&quot;: 4.89905184, &quot;naam&quot;: &quot;Bolbaken&quot;}, {&quot;lat&quot;: 51.73577701, &quot;lon&quot;: 4.90264634, &quot;naam&quot;: &quot;Langewerf&quot;}, {&quot;lat&quot;: 51.73694614, &quot;lon&quot;: 4.89927017, &quot;naam&quot;: &quot;Meerkoetpad&quot;}, {&quot;lat&quot;: 51.73732132, &quot;lon&quot;: 4.89413665, &quot;naam&quot;: &quot;Noorse Wal&quot;}, {&quot;lat&quot;: 51.7371649, &quot;lon&quot;: 4.90005748, &quot;naam&quot;: &quot;Rietzangerstraat&quot;}], &quot;go&quot;: []}'></div><div class='tuitleg'>🗺️ Blauwe lijn = looproute (1→2→3…). 🟢 = alle GO-straten. Zo zie je hoe dicht het bij elkaar zit.</div><div class='tuitleg'><b>✅ Test werkt?</b> Loop dan verder: <a href='#s_Bolbaken'>Bolbaken</a> → <a href='#s_Langewerf'>Langewerf</a> → <a href='#s_Meerkoetpad'>Meerkoetpad</a> → <a href='#s_Noorse_Wal'>Noorse Wal</a> → <a href='#s_Rietzangerstraat'>Rietzangerstraat</a>.<br><b>❌ Geen sales (2-uur-regel)?</b> Wijk afschrijven → alternatieven onderaan.</div><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.74073198,4.90112081&travelmode=driving' target='_blank'>🚗 Naar de test-straten</a></div>
+<div id='lijst'>
+
+        <div class='straat' id='s_Buitenkade' data-init='' data-lat='51.74920998' data-lon='4.91026521' data-koop='100'>
+          <div class='kop'><span class='nr'>1</span>
+            <span class='naam'>Buitenkade</span>
+            <span class='bj bj-top'>🎯 1957</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span> <span class='eig eig-goed'>👴 33% 65+</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Buitenkade_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.74920998,4.91026521&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.74920998,4.91026521' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Buitenkade' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Buitenkade","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Buitenkade","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Buitenkade","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Buitenkade","Buitenkade")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Buitenkade","Buitenkade",51.74920998,4.91026521)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Raai' data-init='' data-lat='51.74073198' data-lon='4.90112081' data-koop=''>
+          <div class='kop'><span class='nr'>2</span>
+            <span class='naam'>Raai</span>
+            <span class='bj bj-grijs'>bouwjaar ?</span></div>
+          
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Raai_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.74073198,4.90112081&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.74073198,4.90112081' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Raai' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Raai","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Raai","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Raai","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Raai","Raai")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Raai","Raai",51.74073198,4.90112081)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Bolbaken' data-init='' data-lat='51.7404648' data-lon='4.89905184' data-koop=''>
+          <div class='kop'><span class='nr'>3</span>
+            <span class='naam'>Bolbaken</span>
+            <span class='bj bj-grijs'>bouwjaar ?</span></div>
+          
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Bolbaken_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.7404648,4.89905184&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.7404648,4.89905184' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Bolbaken' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Bolbaken","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Bolbaken","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Bolbaken","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Bolbaken","Bolbaken")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Bolbaken","Bolbaken",51.7404648,4.89905184)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Lepelaarstraat' data-init='' data-lat='51.73938819' data-lon='4.8989377' data-koop='70'>
+          <div class='kop'><span class='nr'>4</span>
+            <span class='naam'>Lepelaarstraat</span>
+            <span class='bj bj-top'>🎯 1978</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 70% koop</span> <span class='eig eig-fout'>🏢 33% corporatie</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Lepelaarstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73938819,4.8989377&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73938819,4.8989377' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Lepelaarstraat' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Lepelaarstraat","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Lepelaarstraat","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Lepelaarstraat","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Lepelaarstraat","Lepelaarstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Lepelaarstraat","Lepelaarstraat",51.73938819,4.8989377)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Karekietplantsoen' data-init='' data-lat='51.73883517' data-lon='4.89841842' data-koop='70'>
+          <div class='kop'><span class='nr'>5</span>
+            <span class='naam'>Karekietplantsoen</span>
+            <span class='bj bj-top'>🎯 1972</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 70% koop</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Karekietplants_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73883517,4.89841842&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73883517,4.89841842' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Karekietplantsoen' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Karekietplantsoen","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Karekietplantsoen","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Karekietplantsoen","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Karekietplantsoen","Karekietplantsoen")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Karekietplantsoen","Karekietplantsoen",51.73883517,4.89841842)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Kievitstraat' data-init='' data-lat='51.73865417' data-lon='4.89900744' data-koop='57'>
+          <div class='kop'><span class='nr'>6</span>
+            <span class='naam'>Kievitstraat</span>
+            <span class='bj bj-top'>🎯 1973</span></div>
+          <div class='eigrij'><span class='eig eig-meh'>🔑 57% koop</span> <span class='eig eig-fout'>🏢 67% corporatie</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Kievitstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73865417,4.89900744&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73865417,4.89900744' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Kievitstraat' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Kievitstraat","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Kievitstraat","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Kievitstraat","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Kievitstraat","Kievitstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Kievitstraat","Kievitstraat",51.73865417,4.89900744)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Reigerstraat' data-init='' data-lat='51.73838076' data-lon='4.89952947' data-koop=''>
+          <div class='kop'><span class='nr'>7</span>
+            <span class='naam'>Reigerstraat</span>
+            <span class='bj bj-top'>🎯 1969</span></div>
+          <div class='eigrij'><span class='eig eig-fout'>🏢 80% corporatie</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Reigerstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73838076,4.89952947&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73838076,4.89952947' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Reigerstraat' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Reigerstraat","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Reigerstraat","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Reigerstraat","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Reigerstraat","Reigerstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Reigerstraat","Reigerstraat",51.73838076,4.89952947)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Reigerspad' data-init='' data-lat='51.73824354' data-lon='4.89859777' data-koop=''>
+          <div class='kop'><span class='nr'>8</span>
+            <span class='naam'>Reigerspad</span>
+            <span class='bj bj-top'>🎯 1973</span></div>
+          <div class='eigrij'><span class='eig eig-fout'>🏢 50% corporatie</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Reigerspad_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73824354,4.89859777&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73824354,4.89859777' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Reigerspad' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Reigerspad","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Reigerspad","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Reigerspad","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Reigerspad","Reigerspad")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Reigerspad","Reigerspad",51.73824354,4.89859777)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Reigersplantsoen' data-init='' data-lat='51.73767882' data-lon='4.89847136' data-koop='90'>
+          <div class='kop'><span class='nr'>9</span>
+            <span class='naam'>Reigersplantsoen</span>
+            <span class='bj bj-top'>🎯 1974</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 90% koop</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Reigersplantso_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73767882,4.89847136&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73767882,4.89847136' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Reigersplantsoen' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Reigersplantsoen","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Reigersplantsoen","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Reigersplantsoen","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Reigersplantsoen","Reigersplantsoen")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Reigersplantsoen","Reigersplantsoen",51.73767882,4.89847136)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Zwaanstraat' data-init='' data-lat='51.73727857' data-lon='4.89808082' data-koop='80'>
+          <div class='kop'><span class='nr'>11</span>
+            <span class='naam'>Zwaanstraat</span>
+            <span class='bj bj-top'>🎯 1974</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 80% koop</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Zwaanstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73727857,4.89808082&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73727857,4.89808082' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Zwaanstraat' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Zwaanstraat","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Zwaanstraat","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Zwaanstraat","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Zwaanstraat","Zwaanstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Zwaanstraat","Zwaanstraat",51.73727857,4.89808082)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_IJsvogelstraat' data-init='' data-lat='51.7376246' data-lon='4.89787311' data-koop='90'>
+          <div class='kop'><span class='nr'>12</span>
+            <span class='naam'>IJsvogelstraat</span>
+            <span class='bj bj-top'>🎯 1974</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 90% koop</span> <span class='eig eig-goed'>👴 30% 65+</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_IJsvogelstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.7376246,4.89787311&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.7376246,4.89787311' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_IJsvogelstraat' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("IJsvogelstraat","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("IJsvogelstraat","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("IJsvogelstraat","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("IJsvogelstraat","IJsvogelstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("IJsvogelstraat","IJsvogelstraat",51.7376246,4.89787311)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Julianastraat' data-init='' data-lat='51.73634182' data-lon='4.89632563' data-koop='60'>
+          <div class='kop'><span class='nr'>14</span>
+            <span class='naam'>Julianastraat</span>
+            <span class='bj bj-goed'>🟢 1948</span></div>
+          <div class='eigrij'><span class='eig eig-meh'>🔑 60% koop</span> <span class='eig eig-fout'>🏢 50% corporatie</span> <span class='eig eig-goed'>👴 46% 65+</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Julianastraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73634182,4.89632563&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73634182,4.89632563' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Julianastraat' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Julianastraat","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Julianastraat","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Julianastraat","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Julianastraat","Julianastraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Julianastraat","Julianastraat",51.73634182,4.89632563)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Kloosterpad' data-init='' data-lat='51.73582639' data-lon='4.8949235' data-koop='70'>
+          <div class='kop'><span class='nr'>15</span>
+            <span class='naam'>Kloosterpad</span>
+            <span class='bj bj-skip'>🔴 1996</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 70% koop</span> <span class='eig eig-fout'>🏢 25% corporatie</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Kloosterpad_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73582639,4.8949235&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73582639,4.8949235' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Kloosterpad' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Kloosterpad","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Kloosterpad","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Kloosterpad","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Kloosterpad","Kloosterpad")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Kloosterpad","Kloosterpad",51.73582639,4.8949235)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Kloosterhof' data-init='' data-lat='51.73514805' data-lon='4.89572125' data-koop='100'>
+          <div class='kop'><span class='nr'>16</span>
+            <span class='naam'>Kloosterhof</span>
+            <span class='bj bj-skip'>🔴 1997</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span> <span class='eig eig-fout'>🏬 40% flats</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Kloosterhof_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73514805,4.89572125&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73514805,4.89572125' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Kloosterhof' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Kloosterhof","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Kloosterhof","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Kloosterhof","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Kloosterhof","Kloosterhof")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Kloosterhof","Kloosterhof",51.73514805,4.89572125)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Kerkstraat' data-init='' data-lat='51.7346532' data-lon='4.8960707' data-koop='72'>
+          <div class='kop'><span class='nr'>17</span>
+            <span class='naam'>Kerkstraat</span>
+            <span class='bj bj-goed'>🟢 1948</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 72% koop</span> <span class='eig eig-goed'>👴 35% 65+</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Kerkstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.7346532,4.8960707&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.7346532,4.8960707' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Kerkstraat' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Kerkstraat","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Kerkstraat","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Kerkstraat","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Kerkstraat","Kerkstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Kerkstraat","Kerkstraat",51.7346532,4.8960707)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Frans_Hanegraafstraat' data-init='' data-lat='51.73392602' data-lon='4.89529602' data-koop='80'>
+          <div class='kop'><span class='nr'>18</span>
+            <span class='naam'>Frans Hanegraafstraat</span>
+            <span class='bj bj-top'>🎯 1977</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 80% koop</span> <span class='eig eig-fout'>🏢 11% corporatie</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_FransHanegraaf_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73392602,4.89529602&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73392602,4.89529602' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Frans_Hanegraafstraat' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Frans_Hanegraafstraat","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Frans_Hanegraafstraat","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Frans_Hanegraafstraat","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Frans_Hanegraafstraat","Frans Hanegraafstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Frans_Hanegraafstraat","Frans Hanegraafstraat",51.73392602,4.89529602)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_St_Elisabethstraat' data-init='' data-lat='51.73316288' data-lon='4.89476424' data-koop='90'>
+          <div class='kop'><span class='nr'>19</span>
+            <span class='naam'>St. Elisabethstraat</span>
+            <span class='bj bj-top'>🎯 1960</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 90% koop</span> <span class='eig eig-goed'>👴 30% 65+</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_StElisabethstr_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73316288,4.89476424&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73316288,4.89476424' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_St_Elisabethstraat' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("St_Elisabethstraat","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("St_Elisabethstraat","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("St_Elisabethstraat","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("St_Elisabethstraat","St. Elisabethstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("St_Elisabethstraat","St. Elisabethstraat",51.73316288,4.89476424)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_St_Ignatiusstraat' data-init='' data-lat='51.73292548' data-lon='4.89667869' data-koop='80'>
+          <div class='kop'><span class='nr'>20</span>
+            <span class='naam'>St. Ignatiusstraat</span>
+            <span class='bj bj-top'>🎯 1956</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 80% koop</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_StIgnatiusstra_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73292548,4.89667869&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73292548,4.89667869' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_St_Ignatiusstraat' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("St_Ignatiusstraat","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("St_Ignatiusstraat","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("St_Ignatiusstraat","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("St_Ignatiusstraat","St. Ignatiusstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("St_Ignatiusstraat","St. Ignatiusstraat",51.73292548,4.89667869)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Warmondplein' data-init='' data-lat='51.73366434' data-lon='4.89810054' data-koop='70'>
+          <div class='kop'><span class='nr'>21</span>
+            <span class='naam'>Warmondplein</span>
+            <span class='bj bj-top'>🎯 1964</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 70% koop</span> <span class='eig eig-goed'>👴 67% 65+</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Warmondplein_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73366434,4.89810054&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73366434,4.89810054' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Warmondplein' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Warmondplein","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Warmondplein","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Warmondplein","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Warmondplein","Warmondplein")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Warmondplein","Warmondplein",51.73366434,4.89810054)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Zalmstraat' data-init='' data-lat='51.73438582' data-lon='4.89863565' data-koop='79'>
+          <div class='kop'><span class='nr'>22</span>
+            <span class='naam'>Zalmstraat</span>
+            <span class='bj bj-top'>🎯 1964</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 79% koop</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Zalmstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73438582,4.89863565&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73438582,4.89863565' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Zalmstraat' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Zalmstraat","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Zalmstraat","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Zalmstraat","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Zalmstraat","Zalmstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Zalmstraat","Zalmstraat",51.73438582,4.89863565)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Beatrixstraat' data-init='' data-lat='51.73371281' data-lon='4.89981334' data-koop='50'>
+          <div class='kop'><span class='nr'>23</span>
+            <span class='naam'>Beatrixstraat</span>
+            <span class='bj bj-top'>🎯 1965</span></div>
+          <div class='eigrij'><span class='eig eig-meh'>🔑 50% koop</span> <span class='eig eig-fout'>🏢 40% corporatie</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Beatrixstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73371281,4.89981334&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73371281,4.89981334' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Beatrixstraat' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Beatrixstraat","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Beatrixstraat","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Beatrixstraat","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Beatrixstraat","Beatrixstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Beatrixstraat","Beatrixstraat",51.73371281,4.89981334)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Henri_Dunantstraat' data-init='' data-lat='51.73358516' data-lon='4.90033375' data-koop='100'>
+          <div class='kop'><span class='nr'>24</span>
+            <span class='naam'>Henri Dunantstraat</span>
+            <span class='bj bj-top'>🎯 1972</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_HenriDunantstr_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73358516,4.90033375&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73358516,4.90033375' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Henri_Dunantstraat' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Henri_Dunantstraat","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Henri_Dunantstraat","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Henri_Dunantstraat","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Henri_Dunantstraat","Henri Dunantstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Henri_Dunantstraat","Henri Dunantstraat",51.73358516,4.90033375)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Warmondstraat' data-init='' data-lat='51.73314553' data-lon='4.89982403' data-koop='80'>
+          <div class='kop'><span class='nr'>25</span>
+            <span class='naam'>Warmondstraat</span>
+            <span class='bj bj-top'>🎯 1971</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 80% koop</span> <span class='eig eig-fout'>🏢 25% corporatie</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Warmondstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73314553,4.89982403&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73314553,4.89982403' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Warmondstraat' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Warmondstraat","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Warmondstraat","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Warmondstraat","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Warmondstraat","Warmondstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Warmondstraat","Warmondstraat",51.73314553,4.89982403)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Beatrixplantsoen' data-init='' data-lat='51.73250017' data-lon='4.89944794' data-koop='50'>
+          <div class='kop'><span class='nr'>26</span>
+            <span class='naam'>Beatrixplantsoen</span>
+            <span class='bj bj-top'>🎯 1971</span></div>
+          <div class='eigrij'><span class='eig eig-meh'>🔑 50% koop</span> <span class='eig eig-fout'>🏢 33% corporatie</span> <span class='eig eig-goed'>👴 60% 65+</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Beatrixplantso_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73250017,4.89944794&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73250017,4.89944794' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Beatrixplantsoen' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Beatrixplantsoen","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Beatrixplantsoen","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Beatrixplantsoen","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Beatrixplantsoen","Beatrixplantsoen")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Beatrixplantsoen","Beatrixplantsoen",51.73250017,4.89944794)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Kurenpolderweg' data-init='' data-lat='51.73152324' data-lon='4.89877771' data-koop='70'>
+          <div class='kop'><span class='nr'>27</span>
+            <span class='naam'>Kurenpolderweg</span>
+            <span class='bj bj-top'>🎯 1974</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 70% koop</span> <span class='eig eig-goed'>👴 45% 65+</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Kurenpolderweg_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73152324,4.89877771&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73152324,4.89877771' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Kurenpolderweg' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Kurenpolderweg","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Kurenpolderweg","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Kurenpolderweg","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Kurenpolderweg","Kurenpolderweg")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Kurenpolderweg","Kurenpolderweg",51.73152324,4.89877771)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Halifaxstraat' data-init='' data-lat='51.7316065' data-lon='4.89686535' data-koop=''>
+          <div class='kop'><span class='nr'>28</span>
+            <span class='naam'>Halifaxstraat</span>
+            <span class='bj bj-skip'>🔴 2006</span></div>
+          
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Halifaxstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.7316065,4.89686535&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.7316065,4.89686535' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Halifaxstraat' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Halifaxstraat","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Halifaxstraat","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Halifaxstraat","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Halifaxstraat","Halifaxstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Halifaxstraat","Halifaxstraat",51.7316065,4.89686535)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Veteranenlaan' data-init='' data-lat='51.73105649' data-lon='4.89680812' data-koop=''>
+          <div class='kop'><span class='nr'>29</span>
+            <span class='naam'>Veteranenlaan</span>
+            <span class='bj bj-skip'>🔴 1996</span></div>
+          
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Veteranenlaan_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73105649,4.89680812&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73105649,4.89680812' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Veteranenlaan' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Veteranenlaan","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Veteranenlaan","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Veteranenlaan","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Veteranenlaan","Veteranenlaan")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Veteranenlaan","Veteranenlaan",51.73105649,4.89680812)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Riethaakstraat' data-init='' data-lat='51.73170685' data-lon='4.8943769' data-koop='100'>
+          <div class='kop'><span class='nr'>31</span>
+            <span class='naam'>Riethaakstraat</span>
+            <span class='bj bj-skip'>🔴 1997</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span> <span class='eig eig-goed'>👴 30% 65+</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Riethaakstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73170685,4.8943769&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73170685,4.8943769' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Riethaakstraat' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Riethaakstraat","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Riethaakstraat","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Riethaakstraat","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Riethaakstraat","Riethaakstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Riethaakstraat","Riethaakstraat",51.73170685,4.8943769)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Noorse_Wal' data-init='' data-lat='51.73732132' data-lon='4.89413665' data-koop=''>
+          <div class='kop'><span class='nr'>35</span>
+            <span class='naam'>Noorse Wal</span>
+            <span class='bj bj-skip'>🔴 2001</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>👴 83% 65+</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_NoorseWal_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73732132,4.89413665&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73732132,4.89413665' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Noorse_Wal' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Noorse_Wal","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Noorse_Wal","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Noorse_Wal","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Noorse_Wal","Noorse Wal")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Noorse_Wal","Noorse Wal",51.73732132,4.89413665)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Korte_Dijk' data-init='' data-lat='51.73789192' data-lon='4.89317487' data-koop='100'>
+          <div class='kop'><span class='nr'>36</span>
+            <span class='naam'>Korte Dijk</span>
+            <span class='bj bj-skip'>🔴 1930</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_KorteDijk_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73789192,4.89317487&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73789192,4.89317487' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Korte_Dijk' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Korte_Dijk","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Korte_Dijk","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Korte_Dijk","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Korte_Dijk","Korte Dijk")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Korte_Dijk","Korte Dijk",51.73789192,4.89317487)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Korenstraat' data-init='' data-lat='51.73886844' data-lon='4.89637025' data-koop='83'>
+          <div class='kop'><span class='nr'>37</span>
+            <span class='naam'>Korenstraat</span>
+            <span class='bj bj-top'>🎯 1977</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 83% koop</span> <span class='eig eig-fout'>🏢 60% corporatie</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Korenstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73886844,4.89637025&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73886844,4.89637025' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Korenstraat' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Korenstraat","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Korenstraat","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Korenstraat","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Korenstraat","Korenstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Korenstraat","Korenstraat",51.73886844,4.89637025)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Karekietstraat' data-init='' data-lat='51.73869703' data-lon='4.89726191' data-koop='80'>
+          <div class='kop'><span class='nr'>38</span>
+            <span class='naam'>Karekietstraat</span>
+            <span class='bj bj-top'>🎯 1975</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 80% koop</span> <span class='eig eig-goed'>👴 30% 65+</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Karekietstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73869703,4.89726191&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73869703,4.89726191' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Karekietstraat' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Karekietstraat","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Karekietstraat","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Karekietstraat","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Karekietstraat","Karekietstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Karekietstraat","Karekietstraat",51.73869703,4.89726191)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Meerkoetpad' data-init='' data-lat='51.73694614' data-lon='4.89927017' data-koop=''>
+          <div class='kop'><span class='nr'>39</span>
+            <span class='naam'>Meerkoetpad</span>
+            <span class='bj bj-goed'>🟢 1981</span></div>
+          
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Meerkoetpad_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73694614,4.89927017&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73694614,4.89927017' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Meerkoetpad' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Meerkoetpad","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Meerkoetpad","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Meerkoetpad","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Meerkoetpad","Meerkoetpad")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Meerkoetpad","Meerkoetpad",51.73694614,4.89927017)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Rietzangerstraat' data-init='' data-lat='51.7371649' data-lon='4.90005748' data-koop=''>
+          <div class='kop'><span class='nr'>40</span>
+            <span class='naam'>Rietzangerstraat</span>
+            <span class='bj bj-goed'>🟢 1983</span></div>
+          
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Rietzangerstra_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.7371649,4.90005748&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.7371649,4.90005748' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Rietzangerstraat' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Rietzangerstraat","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Rietzangerstraat","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Rietzangerstraat","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Rietzangerstraat","Rietzangerstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Rietzangerstraat","Rietzangerstraat",51.7371649,4.90005748)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Valkstraat' data-init='' data-lat='51.73751167' data-lon='4.90075817' data-koop=''>
+          <div class='kop'><span class='nr'>41</span>
+            <span class='naam'>Valkstraat</span>
+            <span class='bj bj-goed'>🟢 1983</span></div>
+          
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Valkstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73751167,4.90075817&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73751167,4.90075817' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Valkstraat' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Valkstraat","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Valkstraat","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Valkstraat","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Valkstraat","Valkstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Valkstraat","Valkstraat",51.73751167,4.90075817)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Aalscholverstraat' data-init='' data-lat='51.738191' data-lon='4.90105013' data-koop=''>
+          <div class='kop'><span class='nr'>42</span>
+            <span class='naam'>Aalscholverstraat</span>
+            <span class='bj bj-goed'>🟢 1983</span></div>
+          <div class='eigrij'><span class='eig eig-fout'>🏢 100% corporatie</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Aalscholverstr_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.738191,4.90105013&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.738191,4.90105013' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Aalscholverstraat' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Aalscholverstraat","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Aalscholverstraat","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Aalscholverstraat","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Aalscholverstraat","Aalscholverstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Aalscholverstraat","Aalscholverstraat",51.738191,4.90105013)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Sperwerpad' data-init='' data-lat='51.73784672' data-lon='4.9020756' data-koop='90'>
+          <div class='kop'><span class='nr'>43</span>
+            <span class='naam'>Sperwerpad</span>
+            <span class='bj bj-meh'>🟡 1987</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 90% koop</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Sperwerpad_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73784672,4.9020756&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73784672,4.9020756' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Sperwerpad' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Sperwerpad","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Sperwerpad","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Sperwerpad","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Sperwerpad","Sperwerpad")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Sperwerpad","Sperwerpad",51.73784672,4.9020756)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Jachtsloot' data-init='' data-lat='51.73678488' data-lon='4.90217339' data-koop='60'>
+          <div class='kop'><span class='nr'>44</span>
+            <span class='naam'>Jachtsloot</span>
+            <span class='bj bj-meh'>🟡 1986</span></div>
+          <div class='eigrij'><span class='eig eig-meh'>🔑 60% koop</span> <span class='eig eig-fout'>🏢 38% corporatie</span> <span class='eig eig-goed'>👴 32% 65+</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Jachtsloot_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73678488,4.90217339&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73678488,4.90217339' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Jachtsloot' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Jachtsloot","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Jachtsloot","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Jachtsloot","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Jachtsloot","Jachtsloot")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Jachtsloot","Jachtsloot",51.73678488,4.90217339)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Langewerf' data-init='' data-lat='51.73577701' data-lon='4.90264634' data-koop='95'>
+          <div class='kop'><span class='nr'>45</span>
+            <span class='naam'>Langewerf</span>
+            <span class='bj bj-meh'>🟡 1992</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 95% koop</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Langewerf_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73577701,4.90264634&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73577701,4.90264634' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Langewerf' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Langewerf","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Langewerf","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Langewerf","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Langewerf","Langewerf")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Langewerf","Langewerf",51.73577701,4.90264634)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s__t_Laantje' data-init='' data-lat='51.73571817' data-lon='4.90205139' data-koop='56'>
+          <div class='kop'><span class='nr'>46</span>
+            <span class='naam'>&#x27;t Laantje</span>
+            <span class='bj bj-meh'>🟡 1988</span></div>
+          <div class='eigrij'><span class='eig eig-meh'>🔑 56% koop</span> <span class='eig eig-fout'>🏢 67% corporatie</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_tLaantje_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73571817,4.90205139&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73571817,4.90205139' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n__t_Laantje' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("_t_Laantje","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("_t_Laantje","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("_t_Laantje","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("_t_Laantje","&#x27;t Laantje")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("_t_Laantje","&#x27;t Laantje",51.73571817,4.90205139)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Hoefken' data-init='' data-lat='51.73582392' data-lon='4.90101241' data-koop='90'>
+          <div class='kop'><span class='nr'>47</span>
+            <span class='naam'>Hoefken</span>
+            <span class='bj bj-meh'>🟡 1990</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 90% koop</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Hoefken_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73582392,4.90101241&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73582392,4.90101241' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Hoefken' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Hoefken","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Hoefken","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Hoefken","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Hoefken","Hoefken")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Hoefken","Hoefken",51.73582392,4.90101241)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Pastoor_Lipsplantsoen' data-init='' data-lat='51.73478641' data-lon='4.90160352' data-koop='80'>
+          <div class='kop'><span class='nr'>48</span>
+            <span class='naam'>Pastoor Lipsplantsoen</span>
+            <span class='bj bj-meh'>🟡 1993</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 80% koop</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_PastoorLipspla_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73478641,4.90160352&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73478641,4.90160352' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Pastoor_Lipsplantsoen' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Pastoor_Lipsplantsoen","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Pastoor_Lipsplantsoen","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Pastoor_Lipsplantsoen","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Pastoor_Lipsplantsoen","Pastoor Lipsplantsoen")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Pastoor_Lipsplantsoen","Pastoor Lipsplantsoen",51.73478641,4.90160352)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Steurstraat' data-init='' data-lat='51.73451965' data-lon='4.90030461' data-koop='60'>
+          <div class='kop'><span class='nr'>49</span>
+            <span class='naam'>Steurstraat</span>
+            <span class='bj bj-top'>🎯 1966</span></div>
+          <div class='eigrij'><span class='eig eig-meh'>🔑 60% koop</span> <span class='eig eig-fout'>🏢 33% corporatie</span> <span class='eig eig-goed'>👴 33% 65+</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Steurstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73451965,4.90030461&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73451965,4.90030461' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Steurstraat' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Steurstraat","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Steurstraat","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Steurstraat","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Steurstraat","Steurstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Steurstraat","Steurstraat",51.73451965,4.90030461)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Margrietstraat' data-init='' data-lat='51.73331705' data-lon='4.9016199' data-koop='100'>
+          <div class='kop'><span class='nr'>50</span>
+            <span class='naam'>Margrietstraat</span>
+            <span class='bj bj-top'>🎯 1972</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span> <span class='eig eig-goed'>👴 43% 65+</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Margrietstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73331705,4.9016199&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73331705,4.9016199' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Margrietstraat' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Margrietstraat","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Margrietstraat","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Margrietstraat","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Margrietstraat","Margrietstraat")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Margrietstraat","Margrietstraat",51.73331705,4.9016199)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Stadhoudershoef' data-init='' data-lat='51.7348115' data-lon='4.904001' data-koop='100'>
+          <div class='kop'><span class='nr'>51</span>
+            <span class='naam'>Stadhoudershoef</span>
+            <span class='bj bj-meh'>🟡 1992</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span> <span class='eig eig-goed'>👴 40% 65+</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Stadhoudershoe_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.7348115,4.904001&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.7348115,4.904001' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Stadhoudershoef' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Stadhoudershoef","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Stadhoudershoef","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Stadhoudershoef","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Stadhoudershoef","Stadhoudershoef")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Stadhoudershoef","Stadhoudershoef",51.7348115,4.904001)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Brasser' data-init='' data-lat='51.73519233' data-lon='4.90497361' data-koop=''>
+          <div class='kop'><span class='nr'>52</span>
+            <span class='naam'>Brasser</span>
+            <span class='bj bj-grijs'>bouwjaar ?</span></div>
+          
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Brasser_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73519233,4.90497361&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73519233,4.90497361' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Brasser' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Brasser","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Brasser","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Brasser","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Brasser","Brasser")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Brasser","Brasser",51.73519233,4.90497361)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s__t_Staakske' data-init='' data-lat='51.73615784' data-lon='4.90418865' data-koop='100'>
+          <div class='kop'><span class='nr'>53</span>
+            <span class='naam'>&#x27;t Staakske</span>
+            <span class='bj bj-meh'>🟡 1990</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_tStaakske_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.73615784,4.90418865&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.73615784,4.90418865' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n__t_Staakske' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("_t_Staakske","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("_t_Staakske","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("_t_Staakske","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("_t_Staakske","&#x27;t Staakske")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("_t_Staakske","&#x27;t Staakske",51.73615784,4.90418865)'>👷</button>
+          </div>
+        </div>
+        <div class='straat' id='s_Visserskade' data-init='' data-lat='51.74099819' data-lon='4.88995152' data-koop='90'>
+          <div class='kop'><span class='nr'>54</span>
+            <span class='naam'>Visserskade</span>
+            <span class='bj bj-top'>🎯 1977</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 90% koop</span> <span class='eig eig-goed'>👴 30% 65+</span></div>
+          <div class='fotos'><div class=nofoto>geen foto's</div></div>
+          <div class='nokzoom'><img src='fotos/BU19590401_Visserskade_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
+          <div class='links'>
+            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.74099819,4.88995152&travelmode=walking' target='_blank'>🚶 Hierheen</a>
+            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.74099819,4.88995152' target='_blank'>🗺️ Maps</a>
+          </div>
+          <input class='notitie' id='n_Visserskade' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
+          <div class='knoppen'>
+            <button class='go' onclick='mark("Visserskade","go")'>✓ GO</button>
+            <button class='meh' onclick='mark("Visserskade","meh")'>~ twijfel</button>
+            <button class='skip' onclick='mark("Visserskade","skip")'>✗ skip</button>
+            <button class='done' onclick='markDone("Visserskade","Visserskade")'>✅ DONE</button>
+            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Visserskade","Visserskade",51.74099819,4.88995152)'>👷</button>
+          </div>
+        </div>
+</div>
+
+
+<button class='export' onclick='exportDone()'>💬 Stuur gelopen straten via WhatsApp (naar jezelf)</button>
+<script>
+localStorage.setItem('laatste_plan','straatplan/'+location.pathname.split('/').pop());
+const tsx=document.getElementById('t-straten');if(tsx)tsx.href=location.pathname.split('/').pop();
+const code='BU19590401', naam='Hank';
+const SHEET_URL='https://script.google.com/macros/s/AKfycbzQEt7CUybrqFtYqBTsJ3IxTkTLTw1yz5J9KezJsmMdqGUWNKVZIWyO6An-VFPAahP6FA/exec';
+// weer in déze buurt (open-meteo, gratis) — regen per uur
+fetch('https://api.open-meteo.com/v1/forecast?latitude=51.7361&longitude=4.8985&hourly=precipitation,precipitation_probability&timezone=Europe%2FAmsterdam&forecast_days=1')
+.then(r=>r.json()).then(w=>{
+  const H=w.hourly, nu=new Date().getHours();
+  let chips='', eerste=null;
+  for(let h=Math.max(7,nu); h<=21; h++){
+    const mm=H.precipitation[h]||0, p=H.precipitation_probability[h]||0;
+    const nat=mm>=0.1&&p>=30;
+    if(nat&&eerste===null)eerste=h;
+    chips+='<span style="display:inline-block;min-width:1.9rem;text-align:center;padding:.1rem 0;margin:.06rem;border-radius:5px;font-size:.68rem;background:'+(nat?'#cfe3ff':'#f0f0f2')+'">'+h+'u<br>'+(nat?'🌧':'·')+'</span>';
+  }
+  const ws=document.getElementById('weerstrip');
+  ws.innerHTML=(eerste===null?'☀️ <b>Droog tot 21:00 in deze buurt</b>':'🌧️ <b>Regen hier rond '+eerste+':00</b>'+(eerste-nu<2?' — nu niet starten?':' — nog '+(eerste-nu)+' uur droog'))+'<div style="margin-top:.2rem">'+chips+'</div>';
+  ws.style.display='';
+}).catch(()=>{});
+const v=JSON.parse(localStorage.getItem('plan_'+code)||'{}');
+const done=JSON.parse(localStorage.getItem('done_'+code)||'{}');
+const lijst=document.getElementById('lijst');
+function cur(k){const el=document.getElementById('s_'+k);return v[k]!==undefined?v[k]:(el?el.dataset.init:'');}
+function paint(k){const el=document.getElementById('s_'+k);if(!el)return;el.classList.remove('go','meh','skip');const val=cur(k);if(val)el.classList.add(val);el.classList.toggle('gedaan',!!done[k]);}
+function log(actie,straat){if(!SHEET_URL)return;try{fetch(SHEET_URL+'?'+new URLSearchParams({buurt:naam,straat:straat,actie:actie}),{mode:'no-cors'});}catch(e){}}
+// 👷 straat klaarzetten voor personeel (werk.html leest dit uit de log)
+const wz=JSON.parse(localStorage.getItem('wz_'+code)||'{}');
+function werkZet(k,s,la,lo){
+  const aan=!wz[k];
+  if(aan)wz[k]=1; else delete wz[k];
+  localStorage.setItem('wz_'+code,JSON.stringify(wz));
+  try{fetch(SHEET_URL+'?'+new URLSearchParams({buurt:'KLAARZET',straat:s,
+    actie:aan?('klaarzet @'+la+','+lo+' · '+naam):('klaarzet_weg · '+naam)}),{mode:'no-cors'});}catch(e){}
+  const el=document.getElementById('s_'+k);
+  if(el){const b=el.querySelector('.wzet');if(b)b.classList.toggle('aan',aan);}
+}
+function reorder(){const els=[...lijst.querySelectorAll('.straat')];
+  for(const el of els){const k=el.id.slice(2);if(cur(k)==='skip'&&!done[k])lijst.appendChild(el);}
+  for(const el of els){if(done[el.id.slice(2)])lijst.appendChild(el);}}
+function rebuild(){
+  let i=1,g=0,d=0,t=0; const pts=[];
+  for(const el of lijst.querySelectorAll('.straat')){
+    const k=el.id.slice(2), vd=cur(k); t++;
+    if(vd==='go')g++; if(done[k])d++;
+    const nr=el.querySelector('.nr');
+    if(vd==='skip'){if(nr)nr.textContent='–';continue;}
+    if(nr)nr.textContent=i; i++;
+    if(!done[k]) pts.push({lat:el.dataset.lat,lon:el.dataset.lon,n:i-1});
+  }
+  document.getElementById('teller').textContent=t+' straten · '+g+' groen · '+d+' gedaan';
+  const R=document.getElementById('routes'); R.innerHTML='';
+  let s=0, deel=1;
+  while(s<pts.length-1||(s===0&&pts.length>=2)){
+    const seg=pts.slice(s, Math.min(s+10, pts.length));
+    if(seg.length<2) break;
+    const orig=seg[0], dest=seg[seg.length-1];
+    let url='https://www.google.com/maps/dir/?api=1&origin='+orig.lat+','+orig.lon+'&destination='+dest.lat+','+dest.lon+'&travelmode=walking';
+    const wps=seg.slice(1,-1).map(p=>p.lat+','+p.lon).join('|');
+    if(wps) url+='&waypoints='+wps;
+    const a=document.createElement('a'); a.className='routebtn'; a.target='_blank'; a.href=url;
+    a.textContent='🚶 Route deel '+deel+' — straat '+orig.n+' t/m '+dest.n;
+    R.appendChild(a); deel++;
+    if(s+10>=pts.length) break;
+    s+=9; // 1 straat overlap zodat de delen op elkaar aansluiten
+  }
+  if(pts.length<2 && R.innerHTML==='') R.innerHTML="<div class='teller'>geen route (alles gedaan of geskipt)</div>";
+}
+function save(){localStorage.setItem('plan_'+code,JSON.stringify(v));}
+function mark(k,val){
+  if(v[k]===val){delete v[k];} else {v[k]=val;}
+  save(); paint(k);
+  if(val==='skip') reorder();
+  rebuild();
+  const el=document.getElementById('s_'+k);
+  log((v[k]===undefined?'undo_':'')+val, el?el.querySelector('.naam').textContent:k);
+}
+function markDone(k,s){
+  if(done[k]){delete done[k]; log('done_ongedaan',s);} else {done[k]=s; log('done',s);}
+  localStorage.setItem('done_'+code,JSON.stringify(done));
+  paint(k); reorder(); rebuild();
+}
+function exportDone(){const dt=new Date().toISOString().slice(0,10);const L=Object.values(done);if(!L.length){alert('Nog niks op DONE gezet.');return;}const txt='GELOPEN '+dt+' — '+naam+'\n'+L.map(s=>'✅ '+s).join('\n');window.location.href='https://wa.me/?text='+encodeURIComponent(txt);}
+const tijd=JSON.parse(localStorage.getItem('tijd_'+code)||'[]');
+function laatste(){return tijd.length?tijd[tijd.length-1].a:'';}
+function klok(a){
+  if(a==='start'&&(laatste()==='start'||laatste()==='verder')){alert('Loopt al — gebruik Pauze of Klaar.');return;}
+  tijd.push({a:a,t:Date.now()});localStorage.setItem('tijd_'+code,JSON.stringify(tijd));
+  log('tijd_'+a,'⏱');renderKlok();
+}
+function klokPauze(){
+  const l=laatste();
+  if(l==='start'||l==='verder') klok('pauze');
+  else if(l==='pauze') klok('verder');
+  else alert('Eerst op Start drukken.');
+}
+function netto(){let tot=0,run=null;for(const e of tijd){
+  if(e.a==='start'||e.a==='verder'){run=e.t;}
+  else if((e.a==='pauze'||e.a==='finish')&&run){tot+=e.t-run;run=null;}}
+  if(run&&laatste()!=='finish')tot+=Date.now()-run;return tot;}
+function renderKlok(){
+  const l=laatste(),btn=document.getElementById('pauzebtn'),tt=document.getElementById('tijdtxt');
+  btn.textContent=(l==='pauze')?'▶ Verder':'⏸ Pauze';
+  const m=Math.round(netto()/60000);
+  tt.textContent=tijd.length?('⏱ '+Math.floor(m/60)+'u'+String(m%60).padStart(2,'0')+(l==='pauze'?' (pauze)':l==='finish'?' (klaar)':'')):'';
+}
+// De tijd loopt op TIJDSTEMPELS (niet op een teller), dus 'ie telt gewoon door als je
+// de pagina verlaat — alleen het schermpje stond stil. Bij terugkomst meteen verversen:
+document.addEventListener('visibilitychange',function(){if(!document.hidden)renderKlok();});
+window.addEventListener('focus',renderKlok);
+window.addEventListener('pageshow',renderKlok);
+const br=document.getElementById('buurtrev');
+br.value=localStorage.getItem('buurtrev_'+code)||'';
+function bewaarBuurtrev(){localStorage.setItem('buurtrev_'+code,br.value);log('buurtreview: '+br.value,'⭐ BUURT');alert('Opgeslagen ✓');}
+const notes=JSON.parse(localStorage.getItem('notes_'+code)||'{}');
+for(const k in notes){const inp=document.getElementById('n_'+k);if(inp)inp.value=notes[k];}
+document.querySelectorAll('.notitie').forEach(inp=>inp.addEventListener('change',()=>{
+  const k=inp.id.slice(2);notes[k]=inp.value;localStorage.setItem('notes_'+code,JSON.stringify(notes));
+  const el=document.getElementById('s_'+k);
+  log('notitie: '+inp.value, el?el.querySelector('.naam').textContent:k);
+}));
+let sortMode=localStorage.getItem('sort_'+code)||'route';
+function prio(el){const vd=cur(el.id.slice(2));const koop=el.dataset.koop===''?null:+el.dataset.koop;const huur=(koop!==null&&koop<45);if(vd==='skip')return 3;if(vd==='go')return huur?1:0;if(vd==='meh'||vd==='twijfel')return 1;return 2;}
+function dist2(a,b){const dx=(+a.dataset.lat)-(+b.dataset.lat);const dy=((+a.dataset.lon)-(+b.dataset.lon))*0.62;return dx*dx+dy*dy;}
+function nnSort(els, vanaf){
+  if(els.length<2) return els;
+  const rem=[...els]; let start;
+  if(vanaf){let bi=0,bd=1e9;for(let i=0;i<rem.length;i++){const d=dist2(vanaf,rem[i]);if(d<bd){bd=d;bi=i;}}start=rem.splice(bi,1)[0];}
+  else{rem.sort((a,b)=>(+b.dataset.lat)-(+a.dataset.lat));start=rem.shift();}
+  const out=[start];
+  while(rem.length){const c=out[out.length-1];let bi=0,bd=1e9;
+    for(let i=0;i<rem.length;i++){const d=dist2(c,rem[i]);if(d<bd){bd=d;bi=i;}}
+    out.push(rem.splice(bi,1)[0]);}
+  return out;
+}
+function applySort(){
+  const els=[...lijst.querySelectorAll('.straat')];
+  if(sortMode==='go'){
+    const groep={0:[],1:[],2:[],3:[]};
+    els.sort((a,b)=>(+a.dataset.idx)-(+b.dataset.idx)).forEach(el=>groep[prio(el)].push(el));
+    const goSorted=nnSort(groep[0]);
+    const vanaf=goSorted.length?goSorted[goSorted.length-1]:null;
+    const twSorted=nnSort(groep[1].concat(groep[2]), vanaf);
+    [...goSorted,...twSorted,...groep[3]].forEach(el=>lijst.appendChild(el));
+  } else {
+    els.sort((a,b)=>(+a.dataset.idx)-(+b.dataset.idx)).forEach(el=>lijst.appendChild(el));
+  }
+  reorder(); rebuild();
+  document.getElementById('sortbtn').textContent=(sortMode==='go')?'📍 Route-volgorde':'⭐ GO eerst';
+}
+function toggleSort(){sortMode=(sortMode==='go')?'route':'go';localStorage.setItem('sort_'+code,sortMode);applySort();}
+setInterval(renderKlok,30000);
+[...lijst.querySelectorAll('.straat')].forEach((el,i)=>{el.dataset.idx=i;paint(el.id.slice(2));const wb=el.querySelector('.wzet');if(wb&&wz[el.id.slice(2)])wb.classList.add('aan');});
+applySort(); renderKlok();
+// GPS-afvink: straten die Claude uit je looproute haalde (gelopen.json) ophalen + samenvoegen
+fetch('../gelopen.json',{cache:'no-store'}).then(r=>r.json()).then(G=>{
+  const mine=G[code]; if(!mine)return;
+  let veranderd=false;
+  for(const el of lijst.querySelectorAll('.straat')){
+    const nm=el.querySelector('.naam').textContent.trim(), k=el.id.slice(2);
+    if(mine[nm]&&!done[k]){done[k]=nm;veranderd=true;}
+  }
+  if(veranderd){localStorage.setItem('done_'+code,JSON.stringify(done));
+    [...lijst.querySelectorAll('.straat')].forEach(el=>paint(el.id.slice(2)));applySort();}
+}).catch(()=>{});
+// mini-looproute-kaart
+(function(){
+  const el=document.getElementById('testmap'); if(!el||!window.L)return;
+  let d; try{d=JSON.parse(el.dataset.map);}catch(e){return;}
+  if(!d.route||!d.route.length)return;
+  const m=L.map('testmap',{scrollWheelZoom:false});
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM',maxZoom:19}).addTo(m);
+  // alle GO-straten als groene stip
+  (d.go||[]).forEach(g=>{L.circleMarker([g.lat,g.lon],{radius:5,color:'#fff',weight:1.5,fillColor:'#1a9850',fillOpacity:.9}).bindTooltip(g.naam).addTo(m);});
+  // looproute: blauwe lijn + genummerde markers
+  const pts=d.route.map(p=>[p.lat,p.lon]);
+  L.polyline(pts,{color:'#1a73e8',weight:4,opacity:.8,dashArray:'1,8',lineCap:'round'}).addTo(m);
+  d.route.forEach((p,i)=>{
+    L.marker([p.lat,p.lon],{icon:L.divIcon({className:'',html:'<div style=\'background:#1a73e8;color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:700 12px sans-serif;border:2px solid #fff\'>'+(i+1)+'</div>',iconSize:[22,22],iconAnchor:[11,11]})}).bindTooltip(p.naam).addTo(m);
+  });
+  const all=pts.concat((d.go||[]).map(g=>[g.lat,g.lon]));
+  m.fitBounds(L.latLngBounds(all).pad(0.2));
+  setTimeout(()=>m.invalidateSize(),200);
+})();
+</script></body></html>

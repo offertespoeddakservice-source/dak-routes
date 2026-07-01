@@ -1,6 +1,9 @@
 <!doctype html><html lang='nl'><head><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<title>Straatplan — Van den Valgaetstraat e.o.</title><script>(function(){var P='3032';if(localStorage.getItem('sitepin')===P)return;for(var i=0;i<3;i++){var p=prompt('🔒 PIN?');if(p===P){localStorage.setItem('sitepin',P);return;}if(p===null)break;}document.documentElement.innerHTML='<body style="font-family:sans-serif;padding:2rem">🔒 Verkeerde PIN — ververs de pagina (⬇️ trekken of ⟳) en probeer opnieuw.</body>';window.stop();})();</script><style>
+<title>Straatplan — Van den Valgaetstraat e.o.</title><script>(function(){var P='3032';if(localStorage.getItem('sitepin')===P)return;for(var i=0;i<3;i++){var p=prompt('🔒 PIN?');if(p===P){localStorage.setItem('sitepin',P);return;}if(p===null)break;}document.documentElement.innerHTML='<body style="font-family:sans-serif;padding:2rem">🔒 Verkeerde PIN — ververs de pagina (⬇️ trekken of ⟳) en probeer opnieuw.</body>';window.stop();})();</script>
+<link rel='stylesheet' href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'>
+<script src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'></script><style>
+#testmap{height:240px;border-radius:10px;margin:.5rem 0;}
 body{font-family:-apple-system,sans-serif;background:#f5f5f7;margin:0;padding:0.6rem;max-width:640px;margin:0 auto;color:#1c1c1e;}
 h1{font-size:1.2rem;margin:.3rem 0;}
 a.terug{font-size:.85rem;color:#1a73e8;text-decoration:none;}
@@ -16,7 +19,8 @@ a.terug{font-size:.85rem;color:#1a73e8;text-decoration:none;}
 .routebtn{display:block;background:#1a73e8;color:#fff;text-decoration:none;padding:.6rem;border-radius:9px;text-align:center;font-weight:600;margin:.3rem 0;}
 .straat{background:#fff;border-radius:12px;padding:.6rem;margin-bottom:.6rem;box-shadow:0 1px 2px rgba(0,0,0,.06);}
 .straat.go{background:#e6f4ea;}.straat.skip{background:#fde7e6;opacity:.55;}.straat.meh{background:#fff7e6;}
-.straat.gedaan{outline:3px solid #1a9850;}
+.straat.gedaan{outline:3px solid #1a9850;opacity:.72;position:relative;}
+.straat.gedaan::after{content:'✓ GELOPEN';position:absolute;top:.45rem;right:.45rem;background:#1a9850;color:#fff;font-size:.64rem;font-weight:800;letter-spacing:.02em;padding:.15rem .5rem;border-radius:6px;z-index:3;box-shadow:0 1px 2px rgba(0,0,0,.18);}
 .kop{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;margin-bottom:.3rem;}
 .nr{background:#333;color:#fff;border-radius:50%;width:1.5rem;height:1.5rem;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0;}
 .naam{font-weight:600;flex:1;min-width:40%;}
@@ -60,21 +64,21 @@ a.terug{font-size:.85rem;color:#1a73e8;text-decoration:none;}
 .ai-skip{background:#d73027;}
 .svlink{display:inline-block;color:#1a73e8;font-size:.8rem;margin-top:.35rem;text-decoration:none;}
 </style></head><body>
-<div class="tabs"><a href="../index.html">🏠</a><a href="../vandaag.html">📅 Planning</a><a href="../opvolgen.html">✅ Opvolgen</a><a href="../begin_lijst.html">📋 Buurten</a><a href="#" id="t-straten">🚶 Straten</a><a href="../kaart.html">🗺️ Kaart</a><a href="../dashboard.html">📊 Cijfers</a><a href="../financieel.html">💶 Financieel</a><a href="../pitch.html">📣 Pitch</a><a href="../feedback.html">💬 Feedback</a></div>
+<div class="tabs"><a href="../index.html">🏠</a><a href="../vandaag.html">📅 Planning</a><a href="../opvolgen.html">✅ Opvolgen</a><a href="../begin_lijst.html">📋 Buurten</a><a href="../dorpen.html">🏘️ Dorpen</a><a href="#" id="t-straten">🚶 Straten</a><a href="../kaart.html">🗺️ Kaart</a><a href="../dashboard.html">📊 Cijfers</a><a href="../nokken_test.html">🔍 Keuring</a><a href="../prijzen.html">💶 Prijzen</a><a href="../financieel.html">💶 Financieel</a><a href="../pitch.html">📣 Pitch</a><a href="../feedback.html">💬 Feedback</a></div>
 <h1>🗺️ Van den Valgaetstraat e.o. — straatplan</h1>
 <div class='intro'>🎯 = bouwjaar 1955-1980. Bekijk de 3 foto's (begin/midden/eind): is de <b>nok halfrond</b>?
-De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b>DONE</b> als je 'm gelopen hebt.</div>
+De aller-slechtste straten (2) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b>DONE</b> als je 'm gelopen hebt.</div>
 <div class='blok-review'><input id='buurtrev' placeholder='⭐ Review over de hele buurt (sfeer, type mensen, concurrent gezien...)'><button onclick='bewaarBuurtrev()'>Opslaan</button></div>
 <div class='bar'><div id='routes'></div><div class='klok'><button class='k-start' onclick='klok("start")'>▶ Start</button><button class='k-pauze' id='pauzebtn' onclick='klokPauze()'>⏸ Pauze</button><button class='k-fin' onclick='klok("finish")'>🏁 Klaar</button><span id='tijdtxt'></span></div><button class='sorteer' id='sortbtn' onclick='toggleSort()'>⭐ GO eerst</button><div class='teller' id='teller'>—</div></div>
 <div class='intro' id='weerstrip' style='display:none'></div>
-<div class='testblok'><b>🧪 START-TEST — pak deze eerst (≈109 huizen)</b><div class='trij'><a href='#s_Mollenstraat'>Mollenstraat</a> · 55 huizen · <b>92 deuren/100m</b> · GO</div><div class='trij'><a href='#s_Hanewinkelstraat'>Hanewinkelstraat</a> · 11 huizen · <b>18 deuren/100m</b> · TWIJFEL</div><div class='trij'><a href='#s_van_den_Valgaetstraat'>van den Valgaetstraat</a> · 43 huizen · <b>21 deuren/100m</b> · TWIJFEL</div><div class='tuitleg'>Gekozen op: 1) bewezen nokken (GO), 2) oude pannen, 3) deur-dichtheid (rijtjes = snelste test). Alléén koop-straten (≥60%), flats en corporatie eruit.</div><div class='tuitleg'><b>✅ Test werkt?</b> Loop dan verder: <a href='#s_van_Galenstraat'>van Galenstraat</a>.<br><b>❌ Geen sales (2-uur-regel)?</b> Wijk afschrijven → alternatieven onderaan.</div><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.32420751,5.35345603&travelmode=driving' target='_blank'>🚗 Naar de test-straten</a></div>
+<div class='testblok'><b>🧪 START-TEST — pak deze eerst (≈54 huizen)</b><div class='trij'><a href='#s_van_den_Valgaetstraat'>van den Valgaetstraat</a> · 43 huizen · <b>21 deuren/100m</b> · TWIJFEL</div><div class='trij'><a href='#s_Hanewinkelstraat'>Hanewinkelstraat</a> · 11 huizen · <b>18 deuren/100m</b> · TWIJFEL</div><div class='tuitleg'>Gekozen op: 1) bewezen nokken (GO), 2) oude pannen, 3) deur-dichtheid (rijtjes = snelste test). Alléén koop-straten (≥60%), flats en corporatie eruit.</div><div id='testmap' data-map='{&quot;route&quot;: [{&quot;lat&quot;: 51.32471275, &quot;lon&quot;: 5.35569775, &quot;naam&quot;: &quot;van den Valgaetstraat&quot;}, {&quot;lat&quot;: 51.32484342, &quot;lon&quot;: 5.3549473, &quot;naam&quot;: &quot;Hanewinkelstraat&quot;}], &quot;go&quot;: []}'></div><div class='tuitleg'>🗺️ Blauwe lijn = looproute (1→2→3…). 🟢 = alle GO-straten. Zo zie je hoe dicht het bij elkaar zit.</div><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.32471275,5.35569775&travelmode=driving' target='_blank'>🚗 Naar de test-straten</a></div>
 <div id='lijst'>
 
         <div class='straat' id='s_Jan_Roeststraat' data-init='twijfel' data-lat='51.32491126' data-lon='5.35683123' data-koop='70'>
           <div class='kop'><span class='nr'>1</span>
             <span class='naam'>Jan Roeststraat</span>
-            <span class='bj bj-top'>🎯 1972</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='eigrij'><span class='eig eig-goed'>🔑 70% koop</span> <span class='eig eig-fout'>🏢 20% corporatie</span> <span class='eig eig-goed'>👴 40% 65+</span></div><div class='reden'>Bomen blokkeren zicht; dak dat zichtbaar is oogt oud (rode pannen).</div>
+            <span class='bj bj-top'>🎯 1972</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONBEKEND</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 70% koop</span> <span class='eig eig-fout'>🏢 20% corporatie</span> <span class='eig eig-goed'>👴 40% 65+</span></div><div class='reden'>Rens-label: geen dak</div>
           <div class='fotos'><figure><img src='fotos/BU17240012_JanRoeststraat_begin.jpg' loading='lazy'><figcaption>begin nr7</figcaption></figure><figure><img src='fotos/BU17240012_JanRoeststraat_midden.jpg' loading='lazy'><figcaption>midden nr19</figcaption></figure><figure><img src='fotos/BU17240012_JanRoeststraat_eind.jpg' loading='lazy'><figcaption>eind nr2006</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU17240012_JanRoeststraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -93,8 +97,8 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
         <div class='straat' id='s_van_den_Valgaetstraat' data-init='twijfel' data-lat='51.32471275' data-lon='5.35569775' data-koop='100'>
           <div class='kop'><span class='nr'>2</span>
             <span class='naam'>van den Valgaetstraat</span>
-            <span class='bj bj-top'>🎯 1973</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Zijgevel in beeld; randpannen ogen oud/verweerd (goed teken), maar nok niet direct zichtbaar.</div>
+            <span class='bj bj-top'>🎯 1973</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONBEKEND</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Rens-label: geen dak</div>
           <div class='fotos'><figure><img src='fotos/BU17240012_vandenValgaets_begin.jpg' loading='lazy'><figcaption>begin nr11</figcaption></figure><figure><img src='fotos/BU17240012_vandenValgaets_midden.jpg' loading='lazy'><figcaption>midden nr25</figcaption></figure><figure><img src='fotos/BU17240012_vandenValgaets_eind.jpg' loading='lazy'><figcaption>eind nr2009</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU17240012_vandenValgaets_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -113,8 +117,8 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
         <div class='straat' id='s_Hanewinkelstraat' data-init='twijfel' data-lat='51.32484342' data-lon='5.3549473' data-koop='100'>
           <div class='kop'><span class='nr'>3</span>
             <span class='naam'>Hanewinkelstraat</span>
-            <span class='bj bj-top'>🎯 1973</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span> <span class='eig eig-goed'>👴 50% 65+</span></div><div class='reden'>Laag donker dak, deels verscholen achter groen — bungalow-achtig, ter plekke checken.</div>
+            <span class='bj bj-top'>🎯 1973</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONBEKEND</span></div>
+          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span> <span class='eig eig-goed'>👴 50% 65+</span></div><div class='reden'>Rens-label: geen dak</div>
           <div class='fotos'><figure><img src='fotos/BU17240012_Hanewinkelstra_begin.jpg' loading='lazy'><figcaption>begin nr2</figcaption></figure><figure><img src='fotos/BU17240012_Hanewinkelstra_midden.jpg' loading='lazy'><figcaption>midden nr6</figcaption></figure><figure><img src='fotos/BU17240012_Hanewinkelstra_eind.jpg' loading='lazy'><figcaption>eind nr11</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU17240012_Hanewinkelstra_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -130,51 +134,11 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
             <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Hanewinkelstraat","Hanewinkelstraat",51.32484342,5.3549473)'>👷</button>
           </div>
         </div>
-        <div class='straat' id='s_van_Galenstraat' data-init='twijfel' data-lat='51.32483906' data-lon='5.35454754' data-koop='100'>
-          <div class='kop'><span class='nr'>4</span>
-            <span class='naam'>van Galenstraat</span>
-            <span class='bj bj-top'>🎯 1975</span><span class='ai ai-meh'>AI: TWIJFEL</span></div>
-          <div class='eigrij'><span class='eig eig-goed'>🔑 100% koop</span></div><div class='reden'>Oude pannen + schoorsteen, maar balkons = mogelijk gestapeld/maisonnettes (huur-check).</div>
-          <div class='fotos'><figure><img src='fotos/BU17240012_vanGalenstraat_begin.jpg' loading='lazy'><figcaption>begin nr8</figcaption></figure><figure><img src='fotos/BU17240012_vanGalenstraat_midden.jpg' loading='lazy'><figcaption>midden nr22</figcaption></figure><figure><img src='fotos/BU17240012_vanGalenstraat_eind.jpg' loading='lazy'><figcaption>eind nr36</figcaption></figure></div>
-          <div class='nokzoom'><img src='fotos/BU17240012_vanGalenstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
-          <div class='links'>
-            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.32483906,5.35454754&travelmode=walking' target='_blank'>🚶 Hierheen</a>
-            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.32483906,5.35454754' target='_blank'>🗺️ Maps</a>
-          </div>
-          <input class='notitie' id='n_van_Galenstraat' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
-          <div class='knoppen'>
-            <button class='go' onclick='mark("van_Galenstraat","go")'>✓ GO</button>
-            <button class='meh' onclick='mark("van_Galenstraat","meh")'>~ twijfel</button>
-            <button class='skip' onclick='mark("van_Galenstraat","skip")'>✗ skip</button>
-            <button class='done' onclick='markDone("van_Galenstraat","van Galenstraat")'>✅ DONE</button>
-            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("van_Galenstraat","van Galenstraat",51.32483906,5.35454754)'>👷</button>
-          </div>
-        </div>
-        <div class='straat' id='s_Mollenstraat' data-init='go' data-lat='51.32420751' data-lon='5.35345603' data-koop='95'>
-          <div class='kop'><span class='nr'>5</span>
-            <span class='naam'>Mollenstraat</span>
-            <span class='bj bj-top'>🎯 1973</span><span class='ai ai-go'>AI: GO</span></div>
-          <div class='eigrij'><span class='eig eig-goed'>🔑 95% koop</span> <span class='eig eig-goed'>👴 36% 65+</span></div><div class='reden'>Rijtjes, bruine keramische pannen, 2 schoorstenen op de nok — origineel jaren 60-70.</div>
-          <div class='fotos'><figure><img src='fotos/BU17240012_Mollenstraat_begin.jpg' loading='lazy'><figcaption>begin nr10</figcaption></figure><figure><img src='fotos/BU17240012_Mollenstraat_midden.jpg' loading='lazy'><figcaption>midden nr28</figcaption></figure><figure><img src='fotos/BU17240012_Mollenstraat_eind.jpg' loading='lazy'><figcaption>eind nr2005</figcaption></figure></div>
-          <div class='nokzoom'><img src='fotos/BU17240012_Mollenstraat_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
-          <div class='links'>
-            <a class='gm' href='https://www.google.com/maps/dir/?api=1&destination=51.32420751,5.35345603&travelmode=walking' target='_blank'>🚶 Hierheen</a>
-            <a class='gm sv' href='https://www.google.com/maps/search/?api=1&query=51.32420751,5.35345603' target='_blank'>🗺️ Maps</a>
-          </div>
-          <input class='notitie' id='n_Mollenstraat' placeholder='✏️ notitie (optioneel — helpt het systeem leren)'>
-          <div class='knoppen'>
-            <button class='go' onclick='mark("Mollenstraat","go")'>✓ GO</button>
-            <button class='meh' onclick='mark("Mollenstraat","meh")'>~ twijfel</button>
-            <button class='skip' onclick='mark("Mollenstraat","skip")'>✗ skip</button>
-            <button class='done' onclick='markDone("Mollenstraat","Mollenstraat")'>✅ DONE</button>
-            <button class='wzet' title='klaarzetten voor personeel' onclick='werkZet("Mollenstraat","Mollenstraat",51.32420751,5.35345603)'>👷</button>
-          </div>
-        </div>
-        <div class='straat' id='s_Pieter_Willemsstraat' data-init='go' data-lat='51.32405559' data-lon='5.35773913' data-koop='60'>
+        <div class='straat' id='s_Pieter_Willemsstraat' data-init='twijfel' data-lat='51.32405559' data-lon='5.35773913' data-koop='60'>
           <div class='kop'><span class='nr'>6</span>
             <span class='naam'>Pieter Willemsstraat</span>
-            <span class='bj bj-top'>🎯 1968</span><span class='ai ai-go'>AI: GO</span></div>
-          <div class='eigrij'><span class='eig eig-meh'>🔑 60% koop</span> <span class='eig eig-fout'>🏢 40% corporatie</span> <span class='eig eig-goed'>👴 43% 65+</span></div><div class='reden'>Steil oud schilddak + hoge schoorsteen, vooroorlogs — mooi upsell-target.</div>
+            <span class='bj bj-top'>🎯 1968</span><span class='ai ai-meh'>AI: TWIJFEL</span><span class='nokb nok-onb'>nok: ONBEKEND</span></div>
+          <div class='eigrij'><span class='eig eig-meh'>🔑 60% koop</span> <span class='eig eig-fout'>🏢 40% corporatie</span> <span class='eig eig-goed'>👴 43% 65+</span></div><div class='reden'>Rens-label: geen dak</div>
           <div class='fotos'><figure><img src='fotos/BU17240012_PieterWillemss_begin.jpg' loading='lazy'><figcaption>begin nr5</figcaption></figure><figure><img src='fotos/BU17240012_PieterWillemss_midden.jpg' loading='lazy'><figcaption>midden nr13</figcaption></figure><figure><img src='fotos/BU17240012_PieterWillemss_eind.jpg' loading='lazy'><figcaption>eind nr22</figcaption></figure></div>
           <div class='nokzoom'><img src='fotos/BU17240012_PieterWillemss_nok.jpg' loading='lazy'><div class='nokcap'>nok-zoom (midden)</div></div>
           <div class='links'>
@@ -191,8 +155,22 @@ De aller-slechtste straten (0) zijn er al uit gefilterd. Tik <b>GO/skip</b> + <b
           </div>
         </div>
 </div>
-<h2 class='afgekeurd-kop'>🔄 Wijk valt tegen? Alternatieven dichtbij</h2><div class='alt'><b>Skandia</b> (Geldrop-Mierlo) · score 81 · nog niet gescand · 17.7 km <a class='altknop' href='plan_Skandia.html'>📋 Straten</a><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.428710980970905,5.547353331411755&travelmode=driving' target='_blank'>🚗 Navigeer</a></div><div class='alt'><b>De Notel</b> (Oirschot) · score 86 · 🟢 10 GO-straten · 20.4 km <a class='altknop' href='plan_De_Notel.html'>📋 Straten</a><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.5070696651477,5.321681395979626&travelmode=driving' target='_blank'>🚗 Navigeer</a></div>
-
+<h2 class='afgekeurd-kop'>🔄 Wijk valt tegen? Alternatieven dichtbij</h2><div class='alt'><b>Eersel-Zuid</b> (Eersel) · score 77 · 🟢 0 GO-straten · 4.1 km <a class='altknop' href='plan_Eersel_Zuid.html'>📋 Straten</a><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.35416370472961,5.318411575334043&travelmode=driving' target='_blank'>🚗 Navigeer</a></div><div class='alt'><b>Skandia</b> (Geldrop-Mierlo) · score 81 · 🟢 9 GO-straten · 17.7 km <a class='altknop' href='plan_Skandia.html'>📋 Straten</a><a class='altknop nav2' href='https://www.google.com/maps/dir/?api=1&destination=51.428710980970905,5.547353331411755&travelmode=driving' target='_blank'>🚗 Navigeer</a></div>
+<h2 class='afgekeurd-kop'>🗑️ Afgekeurd door AI — klopt dit? Check mijn werk</h2>
+        <div class='straat afgekeurd'>
+          <div class='kop'><span class='naam'>van Galenstraat</span>
+            <span class='ai ai-skip'>AFGEKEURD</span></div>
+          <div class='reden'>Rens-label: schub nok</div>
+          <div class='fotos'><figure><img src='fotos/BU17240012_vanGalenstraat_begin.jpg' loading='lazy'><figcaption>begin</figcaption></figure><figure><img src='fotos/BU17240012_vanGalenstraat_midden.jpg' loading='lazy'><figcaption>midden</figcaption></figure><figure><img src='fotos/BU17240012_vanGalenstraat_eind.jpg' loading='lazy'><figcaption>eind</figcaption></figure></div>
+          <a class='svlink' href='https://www.google.com/maps?q=&layer=c&cbll=51.32483906,5.35454754' target='_blank'>🔍 zelf checken in Street View</a>
+        </div>
+        <div class='straat afgekeurd'>
+          <div class='kop'><span class='naam'>Mollenstraat</span>
+            <span class='ai ai-skip'>AFGEKEURD</span></div>
+          <div class='reden'>Rens-label: schub nok</div>
+          <div class='fotos'><figure><img src='fotos/BU17240012_Mollenstraat_begin.jpg' loading='lazy'><figcaption>begin</figcaption></figure><figure><img src='fotos/BU17240012_Mollenstraat_midden.jpg' loading='lazy'><figcaption>midden</figcaption></figure><figure><img src='fotos/BU17240012_Mollenstraat_eind.jpg' loading='lazy'><figcaption>eind</figcaption></figure></div>
+          <a class='svlink' href='https://www.google.com/maps?q=&layer=c&cbll=51.32420751,5.35345603' target='_blank'>🔍 zelf checken in Street View</a>
+        </div>
 <button class='export' onclick='exportDone()'>💬 Stuur gelopen straten via WhatsApp (naar jezelf)</button>
 <script>
 localStorage.setItem('laatste_plan','straatplan/'+location.pathname.split('/').pop());
@@ -231,7 +209,9 @@ function werkZet(k,s,la,lo){
   const el=document.getElementById('s_'+k);
   if(el){const b=el.querySelector('.wzet');if(b)b.classList.toggle('aan',aan);}
 }
-function reorder(){for(const el of [...lijst.querySelectorAll('.straat')]) if(cur(el.id.slice(2))==='skip') lijst.appendChild(el);}
+function reorder(){const els=[...lijst.querySelectorAll('.straat')];
+  for(const el of els){const k=el.id.slice(2);if(cur(k)==='skip'&&!done[k])lijst.appendChild(el);}
+  for(const el of els){if(done[el.id.slice(2)])lijst.appendChild(el);}}
 function rebuild(){
   let i=1,g=0,d=0,t=0; const pts=[];
   for(const el of lijst.querySelectorAll('.straat')){
@@ -272,7 +252,7 @@ function mark(k,val){
 function markDone(k,s){
   if(done[k]){delete done[k]; log('done_ongedaan',s);} else {done[k]=s; log('done',s);}
   localStorage.setItem('done_'+code,JSON.stringify(done));
-  paint(k); rebuild();
+  paint(k); reorder(); rebuild();
 }
 function exportDone(){const dt=new Date().toISOString().slice(0,10);const L=Object.values(done);if(!L.length){alert('Nog niks op DONE gezet.');return;}const txt='GELOPEN '+dt+' — '+naam+'\n'+L.map(s=>'✅ '+s).join('\n');window.location.href='https://wa.me/?text='+encodeURIComponent(txt);}
 const tijd=JSON.parse(localStorage.getItem('tijd_'+code)||'[]');
@@ -298,6 +278,11 @@ function renderKlok(){
   const m=Math.round(netto()/60000);
   tt.textContent=tijd.length?('⏱ '+Math.floor(m/60)+'u'+String(m%60).padStart(2,'0')+(l==='pauze'?' (pauze)':l==='finish'?' (klaar)':'')):'';
 }
+// De tijd loopt op TIJDSTEMPELS (niet op een teller), dus 'ie telt gewoon door als je
+// de pagina verlaat — alleen het schermpje stond stil. Bij terugkomst meteen verversen:
+document.addEventListener('visibilitychange',function(){if(!document.hidden)renderKlok();});
+window.addEventListener('focus',renderKlok);
+window.addEventListener('pageshow',renderKlok);
 const br=document.getElementById('buurtrev');
 br.value=localStorage.getItem('buurtrev_'+code)||'';
 function bewaarBuurtrev(){localStorage.setItem('buurtrev_'+code,br.value);log('buurtreview: '+br.value,'⭐ BUURT');alert('Opgeslagen ✓');}
@@ -341,4 +326,34 @@ function toggleSort(){sortMode=(sortMode==='go')?'route':'go';localStorage.setIt
 setInterval(renderKlok,30000);
 [...lijst.querySelectorAll('.straat')].forEach((el,i)=>{el.dataset.idx=i;paint(el.id.slice(2));const wb=el.querySelector('.wzet');if(wb&&wz[el.id.slice(2)])wb.classList.add('aan');});
 applySort(); renderKlok();
+// GPS-afvink: straten die Claude uit je looproute haalde (gelopen.json) ophalen + samenvoegen
+fetch('../gelopen.json',{cache:'no-store'}).then(r=>r.json()).then(G=>{
+  const mine=G[code]; if(!mine)return;
+  let veranderd=false;
+  for(const el of lijst.querySelectorAll('.straat')){
+    const nm=el.querySelector('.naam').textContent.trim(), k=el.id.slice(2);
+    if(mine[nm]&&!done[k]){done[k]=nm;veranderd=true;}
+  }
+  if(veranderd){localStorage.setItem('done_'+code,JSON.stringify(done));
+    [...lijst.querySelectorAll('.straat')].forEach(el=>paint(el.id.slice(2)));applySort();}
+}).catch(()=>{});
+// mini-looproute-kaart
+(function(){
+  const el=document.getElementById('testmap'); if(!el||!window.L)return;
+  let d; try{d=JSON.parse(el.dataset.map);}catch(e){return;}
+  if(!d.route||!d.route.length)return;
+  const m=L.map('testmap',{scrollWheelZoom:false});
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM',maxZoom:19}).addTo(m);
+  // alle GO-straten als groene stip
+  (d.go||[]).forEach(g=>{L.circleMarker([g.lat,g.lon],{radius:5,color:'#fff',weight:1.5,fillColor:'#1a9850',fillOpacity:.9}).bindTooltip(g.naam).addTo(m);});
+  // looproute: blauwe lijn + genummerde markers
+  const pts=d.route.map(p=>[p.lat,p.lon]);
+  L.polyline(pts,{color:'#1a73e8',weight:4,opacity:.8,dashArray:'1,8',lineCap:'round'}).addTo(m);
+  d.route.forEach((p,i)=>{
+    L.marker([p.lat,p.lon],{icon:L.divIcon({className:'',html:'<div style=\'background:#1a73e8;color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:700 12px sans-serif;border:2px solid #fff\'>'+(i+1)+'</div>',iconSize:[22,22],iconAnchor:[11,11]})}).bindTooltip(p.naam).addTo(m);
+  });
+  const all=pts.concat((d.go||[]).map(g=>[g.lat,g.lon]));
+  m.fitBounds(L.latLngBounds(all).pad(0.2));
+  setTimeout(()=>m.invalidateSize(),200);
+})();
 </script></body></html>
