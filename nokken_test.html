@@ -67,8 +67,10 @@ function terug(){i--;localStorage.setItem("nok_idx",i);toon();}
 function skip(){i++;localStorage.setItem("nok_idx",i);if(i>=Q.length){klaar();return;}toon();}
 function klaar(){document.getElementById("kaart").innerHTML='<div class="kaart" style="text-align:center"><b>🎉 Alles gehad!</b><br>Je labels staan in de sheet — Claude bouwt er de echte keuring mee.</div>';document.getElementById("ikgok").textContent="";}
 var QF=new URLSearchParams(location.search).get('q')==='reshoot'?'noktest_reshoot.json':'noktest_queue.json';
+var BF=new URLSearchParams(location.search).get('buurt')||'';
 fetch(QF).then(r=>r.json()).then(q=>{
   const done=JSON.parse(localStorage.getItem("nok_done")||"{}");
+  if(BF) q=q.filter(x=>(x.buurt||'').toLowerCase().includes(BF.toLowerCase()));
   Q=q.filter(x=>!done[x.stem]);
   i=0;
   if(!Q.length){klaar();return;}
