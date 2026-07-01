@@ -1,0 +1,1729 @@
+<!doctype html><html lang="nl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🏘️ Dorpen-circuit</title>
+<script>(function(){var P='3032';if(localStorage.getItem('sitepin')===P)return;for(var i=0;i<3;i++){var p=prompt('🔒 PIN?');if(p===P){localStorage.setItem('sitepin',P);return;}if(p===null)break;}document.documentElement.innerHTML='<body style="font-family:sans-serif;padding:2rem">🔒 Verkeerde PIN — ververs.</body>';window.stop();})();</script>
+<style>
+body{font-family:-apple-system,sans-serif;background:#f5f5f7;margin:0 auto;padding:.7rem;max-width:600px;color:#1c1c1e;}
+.tabs{display:flex;gap:.3rem;flex-wrap:wrap;font-size:.8rem;margin-bottom:.6rem;}.tabs a{background:#fff;border-radius:8px;padding:.35rem .55rem;text-decoration:none;color:#1a73e8;font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.06);}
+h1{font-size:1.2rem;}
+.uitleg{background:#fff;border-radius:10px;padding:.6rem .8rem;font-size:.82rem;color:#555;line-height:1.45;margin:.4rem 0;}
+input{width:100%;border:1px solid #ddd;border-radius:9px;padding:.55rem;font-size:.95rem;box-sizing:border-box;margin:.3rem 0;}
+.dorp{background:#fff;border-radius:11px;padding:.6rem .8rem;margin-bottom:.5rem;box-shadow:0 1px 2px rgba(0,0,0,.06);}
+.dorp.gedaan{outline:3px solid #1a9850;opacity:.65;}
+.dorp.gepland{outline:3px solid #7b1fa2;}
+.kop{display:flex;justify-content:space-between;align-items:center;gap:.4rem;}
+.naam{font-weight:700;}
+.ja{background:#d84315;color:#fff;font-size:.75rem;font-weight:700;border-radius:6px;padding:.1rem .5rem;white-space:nowrap;}
+.meta{font-size:.78rem;color:#777;margin:.25rem 0;}
+.knop{display:flex;gap:.4rem;}
+.st{border:none;border-radius:7px;background:#eee;font-size:.78rem;font-weight:600;padding:.35rem .6rem;cursor:pointer;}
+.nav{background:#34a853;color:#fff;text-decoration:none;border-radius:7px;font-size:.78rem;font-weight:600;padding:.35rem .6rem;}
+</style></head><body>
+<div class="tabs"><a href="index.html">🏠</a><a href="begin_lijst.html">📋 Buurten</a><a href="dorpen.html"><b>🏘️ Dorpen</b></a><a href="kaart.html">🗺️ Kaart</a><a href="vandaag.html">📅 Planning</a><a href="dashboard.html">📊 Cijfers</a><a href="nokken_test.html">🔍 Keuring</a><a href="prijzen.html">💶 Prijzen</a><a href="feedback.html">💬 Feedback</a></div>
+<h1>🏘️ Dorpen-circuit — jaarlijkse oogst (Mill-profiel)</h1>
+<div class="uitleg"><b>Waarom deze lijst:</b> dorpen zoals Mill — weinig stedelijk, veel vrijstaand/2-kap, hoge koop.
+Bel-ploegen slaan ze over, mensen zijn thuis, en wie je klant wordt blijft jaarlijks klant.
+<b>Aan de deur checken:</b> "kwam hier vroeger iemand voor de goten?" — gestopt = goudmijn.
+📅 plan = staat op je rol · ✅ gedaan = volgend jaar weer (datum wordt onthouden).</div>
+<input id='zoek' placeholder='🔍 Zoek dorp of gemeente' oninput='filt()'>
+<input id='maxmin' placeholder='⏱ max minuten rijden (bijv. 30)' inputmode='numeric' oninput='filt()'>
+<div class='dorp' data-min='43' data-code='BU16580000'>
+<div class='kop'><span class='naam'>Heeze</span><span class='ja'>~212 ja/jaar</span></div>
+<div class='meta'>Heeze-Leende · 🚗 43 min · 4046 woningen · 75% koop · 42% vrijst/2-kap · 65+: 29%</div>
+<div class='knop'><button class='st' onclick="zet('BU16580000','Heeze','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU16580000','Heeze','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Heeze,Heeze-Leende&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='30' data-code='BU07980000'>
+<div class='kop'><span class='naam'>Hilvarenbeek</span><span class='ja'>~184 ja/jaar</span></div>
+<div class='meta'>Hilvarenbeek · 🚗 30 min · 3817 woningen · 69% koop · 36% vrijst/2-kap · 65+: 28%</div>
+<div class='knop'><button class='st' onclick="zet('BU07980000','Hilvarenbeek','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07980000','Hilvarenbeek','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Hilvarenbeek,Hilvarenbeek&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='44' data-code='BU16670000'>
+<div class='kop'><span class='naam'>Reusel</span><span class='ja'>~171 ja/jaar</span></div>
+<div class='meta'>Reusel-De Mierden · 🚗 44 min · 3296 woningen · 74% koop · 48% vrijst/2-kap · 65+: 25%</div>
+<div class='knop'><button class='st' onclick="zet('BU16670000','Reusel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU16670000','Reusel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Reusel,Reusel-De Mierden&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='37' data-code='BU08660000'>
+<div class='kop'><span class='naam'>Waalre</span><span class='ja'>~162 ja/jaar</span></div>
+<div class='meta'>Waalre · 🚗 37 min · 3001 woningen · 77% koop · 35% vrijst/2-kap · 65+: 24%</div>
+<div class='knop'><button class='st' onclick="zet('BU08660000','Waalre','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08660000','Waalre','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Waalre,Waalre&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='29' data-code='BU19910401'>
+<div class='kop'><span class='naam'>Schaijk</span><span class='ja'>~138 ja/jaar</span></div>
+<div class='meta'>Maashorst · 🚗 29 min · 2702 woningen · 73% koop · 46% vrijst/2-kap · 65+: 25%</div>
+<div class='knop'><button class='st' onclick="zet('BU19910401','Schaijk','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19910401','Schaijk','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Schaijk,Maashorst&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='28' data-code='BU08281001'>
+<div class='kop'><span class='naam'>Berghem-Zuid</span><span class='ja'>~136 ja/jaar</span></div>
+<div class='meta'>Oss · 🚗 28 min · 2209 woningen · 88% koop · 46% vrijst/2-kap · 65+: 11%</div>
+<div class='knop'><button class='st' onclick="zet('BU08281001','Berghem-Zuid','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08281001','Berghem-Zuid','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Berghem-Zuid,Oss&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='38' data-code='BU07550000'>
+<div class='kop'><span class='naam'>Boekel</span><span class='ja'>~127 ja/jaar</span></div>
+<div class='meta'>Boekel · 🚗 38 min · 2635 woningen · 69% koop · 59% vrijst/2-kap · 65+: 27%</div>
+<div class='knop'><button class='st' onclick="zet('BU07550000','Boekel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07550000','Boekel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Boekel,Boekel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='40' data-code='BU06680400'>
+<div class='kop'><span class='naam'>Kern Beneden-Leeuwen</span><span class='ja'>~125 ja/jaar</span></div>
+<div class='meta'>West Maas en Waal · 🚗 40 min · 2748 woningen · 65% koop · 43% vrijst/2-kap · 65+: 28%</div>
+<div class='knop'><button class='st' onclick="zet('BU06680400','Kern Beneden-Leeuwen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU06680400','Kern Beneden-Leeuwen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Kern Beneden-Leeuwen,West Maas en Waal&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='44' data-code='BU07941700'>
+<div class='kop'><span class='naam'>Stiphout-Dorp</span><span class='ja'>~123 ja/jaar</span></div>
+<div class='meta'>Helmond · 🚗 44 min · 2177 woningen · 81% koop · 47% vrijst/2-kap · 65+: 30%</div>
+<div class='knop'><button class='st' onclick="zet('BU07941700','Stiphout-Dorp','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07941700','Stiphout-Dorp','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Stiphout-Dorp,Helmond&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='41' data-code='BU07580700'>
+<div class='kop'><span class='naam'>Bavel</span><span class='ja'>~118 ja/jaar</span></div>
+<div class='meta'>Breda · 🚗 41 min · 2333 woningen · 72% koop · 45% vrijst/2-kap · 65+: 24%</div>
+<div class='knop'><button class='st' onclick="zet('BU07580700','Bavel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07580700','Bavel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Bavel,Breda&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='41' data-code='BU16590100'>
+<div class='kop'><span class='naam'>Aarle-Rixtel</span><span class='ja'>~110 ja/jaar</span></div>
+<div class='meta'>Laarbeek · 🚗 41 min · 2307 woningen · 68% koop · 52% vrijst/2-kap · 65+: 27%</div>
+<div class='knop'><button class='st' onclick="zet('BU16590100','Aarle-Rixtel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU16590100','Aarle-Rixtel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Aarle-Rixtel,Laarbeek&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='43' data-code='BU07580800'>
+<div class='kop'><span class='naam'>Ulvenhout</span><span class='ja'>~107 ja/jaar</span></div>
+<div class='meta'>Breda · 🚗 43 min · 2019 woningen · 76% koop · 52% vrijst/2-kap · 65+: 28%</div>
+<div class='knop'><button class='st' onclick="zet('BU07580800','Ulvenhout','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07580800','Ulvenhout','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Ulvenhout,Breda&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='16' data-code='BU08241601'>
+<div class='kop'><span class='naam'>Dorp Haaren</span><span class='ja'>~106 ja/jaar</span></div>
+<div class='meta'>Oisterwijk · 🚗 16 min · 2141 woningen · 71% koop · 53% vrijst/2-kap · 65+: 28%</div>
+<div class='knop'><button class='st' onclick="zet('BU08241601','Dorp Haaren','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08241601','Dorp Haaren','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Dorp Haaren,Oisterwijk&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='36' data-code='BU19910601'>
+<div class='kop'><span class='naam'>Zeeland</span><span class='ja'>~106 ja/jaar</span></div>
+<div class='meta'>Maashorst · 🚗 36 min · 2196 woningen · 69% koop · 42% vrijst/2-kap · 65+: 25%</div>
+<div class='knop'><button class='st' onclick="zet('BU19910601','Zeeland','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19910601','Zeeland','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Zeeland,Maashorst&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='17' data-code='BU07570200'>
+<div class='kop'><span class='naam'>Liempde</span><span class='ja'>~94 ja/jaar</span></div>
+<div class='meta'>Boxtel · 🚗 17 min · 1713 woningen · 78% koop · 67% vrijst/2-kap · 65+: 23%</div>
+<div class='knop'><button class='st' onclick="zet('BU07570200','Liempde','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07570200','Liempde','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Liempde,Boxtel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='20' data-code='BU08282200'>
+<div class='kop'><span class='naam'>Geffen</span><span class='ja'>~89 ja/jaar</span></div>
+<div class='meta'>Oss · 🚗 20 min · 1798 woningen · 71% koop · 53% vrijst/2-kap · 65+: 21%</div>
+<div class='knop'><button class='st' onclick="zet('BU08282200','Geffen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08282200','Geffen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Geffen,Oss&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='40' data-code='BU16580100'>
+<div class='kop'><span class='naam'>Leende</span><span class='ja'>~88 ja/jaar</span></div>
+<div class='meta'>Heeze-Leende · 🚗 40 min · 1609 woningen · 78% koop · 49% vrijst/2-kap · 65+: 24%</div>
+<div class='knop'><button class='st' onclick="zet('BU16580100','Leende','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU16580100','Leende','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Leende,Heeze-Leende&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='26' data-code='BU07725210'>
+<div class='kop'><span class='naam'>Kerkdorp Acht</span><span class='ja'>~86 ja/jaar</span></div>
+<div class='meta'>Eindhoven · 🚗 26 min · 1480 woningen · 83% koop · 43% vrijst/2-kap · 65+: 27%</div>
+<div class='knop'><button class='st' onclick="zet('BU07725210','Kerkdorp Acht','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07725210','Kerkdorp Acht','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Kerkdorp Acht,Eindhoven&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='40' data-code='BU16590200'>
+<div class='kop'><span class='naam'>Lieshout</span><span class='ja'>~82 ja/jaar</span></div>
+<div class='meta'>Laarbeek · 🚗 40 min · 1608 woningen · 73% koop · 54% vrijst/2-kap · 65+: 25%</div>
+<div class='knop'><button class='st' onclick="zet('BU16590200','Lieshout','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU16590200','Lieshout','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Lieshout,Laarbeek&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='29' data-code='BU08281000'>
+<div class='kop'><span class='naam'>Berghem-Noord</span><span class='ja'>~82 ja/jaar</span></div>
+<div class='meta'>Oss · 🚗 29 min · 1916 woningen · 61% koop · 36% vrijst/2-kap · 65+: 26%</div>
+<div class='knop'><button class='st' onclick="zet('BU08281000','Berghem-Noord','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08281000','Berghem-Noord','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Berghem-Noord,Oss&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='24' data-code='BU08670200'>
+<div class='kop'><span class='naam'>Waspik beneden</span><span class='ja'>~81 ja/jaar</span></div>
+<div class='meta'>Waalwijk · 🚗 24 min · 1708 woningen · 68% koop · 60% vrijst/2-kap · 65+: 26%</div>
+<div class='knop'><button class='st' onclick="zet('BU08670200','Waspik beneden','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08670200','Waspik beneden','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Waspik beneden,Waalwijk&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='41' data-code='BU07942103'>
+<div class='kop'><span class='naam'>Stepekolk</span><span class='ja'>~79 ja/jaar</span></div>
+<div class='meta'>Helmond · 🚗 41 min · 1459 woningen · 77% koop · 38% vrijst/2-kap · 65+: 8%</div>
+<div class='knop'><button class='st' onclick="zet('BU07942103','Stepekolk','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07942103','Stepekolk','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Stepekolk,Helmond&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='32' data-code='BU07980300'>
+<div class='kop'><span class='naam'>Diessen</span><span class='ja'>~77 ja/jaar</span></div>
+<div class='meta'>Hilvarenbeek · 🚗 32 min · 1377 woningen · 80% koop · 51% vrijst/2-kap · 65+: 24%</div>
+<div class='knop'><button class='st' onclick="zet('BU07980300','Diessen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07980300','Diessen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Diessen,Hilvarenbeek&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='18' data-code='BU07961301'>
+<div class='kop'><span class='naam'>Kom Nuland</span><span class='ja'>~76 ja/jaar</span></div>
+<div class='meta'>&#x27;s-Hertogenbosch · 🚗 18 min · 1500 woningen · 72% koop · 60% vrijst/2-kap · 65+: 22%</div>
+<div class='knop'><button class='st' onclick="zet('BU07961301','Kom Nuland','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07961301','Kom Nuland','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Kom Nuland,&#x27;s-Hertogenbosch&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='33' data-code='BU19590401'>
+<div class='kop'><span class='naam'>Hank</span><span class='ja'>~73 ja/jaar</span></div>
+<div class='meta'>Altena · 🚗 33 min · 1535 woningen · 68% koop · 42% vrijst/2-kap · 65+: 23%</div>
+<div class='knop'><button class='st' onclick="zet('BU19590401','Hank','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19590401','Hank','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Hank,Altena&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='32' data-code='BU19590301'>
+<div class='kop'><span class='naam'>Nieuwendijk</span><span class='ja'>~71 ja/jaar</span></div>
+<div class='meta'>Altena · 🚗 32 min · 1611 woningen · 63% koop · 46% vrijst/2-kap · 65+: 21%</div>
+<div class='knop'><button class='st' onclick="zet('BU19590301','Nieuwendijk','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19590301','Nieuwendijk','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Nieuwendijk,Altena&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='35' data-code='BU08230200'>
+<div class='kop'><span class='naam'>Middelbeers</span><span class='ja'>~66 ja/jaar</span></div>
+<div class='meta'>Oirschot · 🚗 35 min · 1232 woningen · 77% koop · 55% vrijst/2-kap · 65+: 27%</div>
+<div class='knop'><button class='st' onclick="zet('BU08230200','Middelbeers','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08230200','Middelbeers','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Middelbeers,Oirschot&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='41' data-code='BU02090161'>
+<div class='kop'><span class='naam'>Beuningen-Beuningse Plas</span><span class='ja'>~66 ja/jaar</span></div>
+<div class='meta'>Beuningen · 🚗 41 min · 1043 woningen · 91% koop · 47% vrijst/2-kap · 65+: 16%</div>
+<div class='knop'><button class='st' onclick="zet('BU02090161','Beuningen-Beuningse Plas','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02090161','Beuningen-Beuningse Plas','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Beuningen-Beuningse Plas,Beuningen&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='30' data-code='BU08281800'>
+<div class='kop'><span class='naam'>Lith</span><span class='ja'>~66 ja/jaar</span></div>
+<div class='meta'>Oss · 🚗 30 min · 1291 woningen · 73% koop · 59% vrijst/2-kap · 65+: 20%</div>
+<div class='knop'><button class='st' onclick="zet('BU08281800','Lith','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08281800','Lith','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Lith,Oss&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='39' data-code='BU08261300'>
+<div class='kop'><span class='naam'>Dorst</span><span class='ja'>~66 ja/jaar</span></div>
+<div class='meta'>Oosterhout · 🚗 39 min · 1091 woningen · 86% koop · 44% vrijst/2-kap · 65+: 19%</div>
+<div class='knop'><button class='st' onclick="zet('BU08261300','Dorst','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08261300','Dorst','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Dorst,Oosterhout&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='25' data-code='BU08670102'>
+<div class='kop'><span class='naam'>Capelle / Nieuwe Vaart</span><span class='ja'>~65 ja/jaar</span></div>
+<div class='meta'>Waalwijk · 🚗 25 min · 1250 woningen · 74% koop · 75% vrijst/2-kap · 65+: 22%</div>
+<div class='knop'><button class='st' onclick="zet('BU08670102','Capelle / Nieuwe Vaart','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08670102','Capelle / Nieuwe Vaart','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Capelle / Nieuwe Vaart,Waalwijk&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='41' data-code='BU02140100'>
+<div class='kop'><span class='naam'>Beusichem</span><span class='ja'>~64 ja/jaar</span></div>
+<div class='meta'>Buren · 🚗 41 min · 1196 woningen · 77% koop · 43% vrijst/2-kap · 65+: 23%</div>
+<div class='knop'><button class='st' onclick="zet('BU02140100','Beusichem','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02140100','Beusichem','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Beusichem,Buren&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='21' data-code='BU08556706'>
+<div class='kop'><span class='naam'>Zeshoeven</span><span class='ja'>~62 ja/jaar</span></div>
+<div class='meta'>Tilburg · 🚗 21 min · 1157 woningen · 77% koop · 61% vrijst/2-kap · 65+: 27%</div>
+<div class='knop'><button class='st' onclick="zet('BU08556706','Zeshoeven','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08556706','Zeshoeven','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Zeshoeven,Tilburg&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='45' data-code='BU02140500'>
+<div class='kop'><span class='naam'>Maurik</span><span class='ja'>~61 ja/jaar</span></div>
+<div class='meta'>Buren · 🚗 45 min · 1410 woningen · 62% koop · 40% vrijst/2-kap · 65+: 23%</div>
+<div class='knop'><button class='st' onclick="zet('BU02140500','Maurik','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02140500','Maurik','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Maurik,Buren&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='36' data-code='BU08610200'>
+<div class='kop'><span class='naam'>Oerle</span><span class='ja'>~58 ja/jaar</span></div>
+<div class='meta'>Veldhoven · 🚗 36 min · 1097 woningen · 75% koop · 47% vrijst/2-kap · 65+: 23%</div>
+<div class='knop'><button class='st' onclick="zet('BU08610200','Oerle','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08610200','Oerle','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Oerle,Veldhoven&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='31' data-code='BU06680600'>
+<div class='kop'><span class='naam'>Kern Dreumel</span><span class='ja'>~57 ja/jaar</span></div>
+<div class='meta'>West Maas en Waal · 🚗 31 min · 1206 woningen · 68% koop · 55% vrijst/2-kap · 65+: 27%</div>
+<div class='knop'><button class='st' onclick="zet('BU06680600','Kern Dreumel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU06680600','Kern Dreumel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Kern Dreumel,West Maas en Waal&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='31' data-code='BU07852027'>
+<div class='kop'><span class='naam'>Riel-Dorp</span><span class='ja'>~57 ja/jaar</span></div>
+<div class='meta'>Goirle · 🚗 31 min · 954 woningen · 85% koop · 56% vrijst/2-kap · 65+: 24%</div>
+<div class='knop'><button class='st' onclick="zet('BU07852027','Riel-Dorp','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07852027','Riel-Dorp','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Riel-Dorp,Goirle&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='32' data-code='BU02970100'>
+<div class='kop'><span class='naam'>Brakel</span><span class='ja'>~56 ja/jaar</span></div>
+<div class='meta'>Zaltbommel · 🚗 32 min · 1049 woningen · 76% koop · 56% vrijst/2-kap · 65+: 19%</div>
+<div class='knop'><button class='st' onclick="zet('BU02970100','Brakel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02970100','Brakel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Brakel,Zaltbommel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='44' data-code='BU19821701'>
+<div class='kop'><span class='naam'>Wanroij</span><span class='ja'>~55 ja/jaar</span></div>
+<div class='meta'>Land van Cuijk · 🚗 44 min · 1054 woningen · 75% koop · 77% vrijst/2-kap · 65+: 25%</div>
+<div class='knop'><button class='st' onclick="zet('BU19821701','Wanroij','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19821701','Wanroij','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Wanroij,Land van Cuijk&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='42' data-code='BU08580106'>
+<div class='kop'><span class='naam'>Dommelen</span><span class='ja'>~53 ja/jaar</span></div>
+<div class='meta'>Valkenswaard · 🚗 42 min · 866 woningen · 88% koop · 41% vrijst/2-kap · 65+: 17%</div>
+<div class='knop'><button class='st' onclick="zet('BU08580106','Dommelen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08580106','Dommelen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Dommelen,Valkenswaard&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='32' data-code='BU19910201'>
+<div class='kop'><span class='naam'>Kom Volkel</span><span class='ja'>~53 ja/jaar</span></div>
+<div class='meta'>Maashorst · 🚗 32 min · 1112 woningen · 68% koop · 43% vrijst/2-kap · 65+: 27%</div>
+<div class='knop'><button class='st' onclick="zet('BU19910201','Kom Volkel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19910201','Kom Volkel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Kom Volkel,Maashorst&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='36' data-code='BU06680800'>
+<div class='kop'><span class='naam'>Kern Wamel</span><span class='ja'>~52 ja/jaar</span></div>
+<div class='meta'>West Maas en Waal · 🚗 36 min · 1008 woningen · 74% koop · 53% vrijst/2-kap · 65+: 20%</div>
+<div class='knop'><button class='st' onclick="zet('BU06680800','Kern Wamel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU06680800','Kern Wamel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Kern Wamel,West Maas en Waal&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='25' data-code='BU19591101'>
+<div class='kop'><span class='naam'>Andel</span><span class='ja'>~51 ja/jaar</span></div>
+<div class='meta'>Altena · 🚗 25 min · 1036 woningen · 70% koop · 50% vrijst/2-kap · 65+: 20%</div>
+<div class='knop'><button class='st' onclick="zet('BU19591101','Andel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19591101','Andel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Andel,Altena&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='32' data-code='BU19590501'>
+<div class='kop'><span class='naam'>Dussen</span><span class='ja'>~50 ja/jaar</span></div>
+<div class='meta'>Altena · 🚗 32 min · 1061 woningen · 68% koop · 53% vrijst/2-kap · 65+: 22%</div>
+<div class='knop'><button class='st' onclick="zet('BU19590501','Dussen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19590501','Dussen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Dussen,Altena&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='31' data-code='BU07660216'>
+<div class='kop'><span class='naam'>&#x27;s Gravenmoer</span><span class='ja'>~50 ja/jaar</span></div>
+<div class='meta'>Dongen · 🚗 31 min · 987 woningen · 72% koop · 59% vrijst/2-kap · 65+: 25%</div>
+<div class='knop'><button class='st' onclick="zet('BU07660216','&#x27;s Gravenmoer','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07660216','&#x27;s Gravenmoer','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=&#x27;s Gravenmoer,Dongen&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='39' data-code='BU08200100'>
+<div class='kop'><span class='naam'>Gerwen</span><span class='ja'>~48 ja/jaar</span></div>
+<div class='meta'>Nuenen, Gerwen en Nederwetten · 🚗 39 min · 801 woningen · 86% koop · 61% vrijst/2-kap · 65+: 24%</div>
+<div class='knop'><button class='st' onclick="zet('BU08200100','Gerwen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08200100','Gerwen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Gerwen,Nuenen, Gerwen en Nederwetten&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='32' data-code='BU19910109'>
+<div class='kop'><span class='naam'>Hoeven</span><span class='ja'>~48 ja/jaar</span></div>
+<div class='meta'>Maashorst · 🚗 32 min · 844 woningen · 81% koop · 39% vrijst/2-kap · 65+: 28%</div>
+<div class='knop'><button class='st' onclick="zet('BU19910109','Hoeven','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19910109','Hoeven','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Hoeven,Maashorst&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='21' data-code='BU19591402'>
+<div class='kop'><span class='naam'>Wijk</span><span class='ja'>~48 ja/jaar</span></div>
+<div class='meta'>Altena · 🚗 21 min · 1063 woningen · 64% koop · 41% vrijst/2-kap · 65+: 25%</div>
+<div class='knop'><button class='st' onclick="zet('BU19591402','Wijk','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19591402','Wijk','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Wijk,Altena&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='29' data-code='BU07790100'>
+<div class='kop'><span class='naam'>Raamsdonk</span><span class='ja'>~47 ja/jaar</span></div>
+<div class='meta'>Geertruidenberg · 🚗 29 min · 905 woningen · 74% koop · 49% vrijst/2-kap · 65+: 21%</div>
+<div class='knop'><button class='st' onclick="zet('BU07790100','Raamsdonk','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07790100','Raamsdonk','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Raamsdonk,Geertruidenberg&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='34' data-code='BU19601100'>
+<div class='kop'><span class='naam'>Herwijnen</span><span class='ja'>~47 ja/jaar</span></div>
+<div class='meta'>West Betuwe · 🚗 34 min · 1026 woningen · 65% koop · 51% vrijst/2-kap · 65+: 25%</div>
+<div class='knop'><button class='st' onclick="zet('BU19601100','Herwijnen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19601100','Herwijnen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Herwijnen,West Betuwe&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='27' data-code='BU19600500'>
+<div class='kop'><span class='naam'>Haaften</span><span class='ja'>~46 ja/jaar</span></div>
+<div class='meta'>West Betuwe · 🚗 27 min · 1149 woningen · 57% koop · 40% vrijst/2-kap · 65+: 23%</div>
+<div class='knop'><button class='st' onclick="zet('BU19600500','Haaften','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19600500','Haaften','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Haaften,West Betuwe&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='26' data-code='BU08230109'>
+<div class='kop'><span class='naam'>Verspreide huizen Spoordonk</span><span class='ja'>~46 ja/jaar</span></div>
+<div class='meta'>Oirschot · 🚗 26 min · 717 woningen · 91% koop · 96% vrijst/2-kap · 65+: 21%</div>
+<div class='knop'><button class='st' onclick="zet('BU08230109','Verspreide huizen Spoordonk','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08230109','Verspreide huizen Spoordonk','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Verspreide huizen Spoordonk,Oirschot&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='32' data-code='BU08281500'>
+<div class='kop'><span class='naam'>Herpen</span><span class='ja'>~46 ja/jaar</span></div>
+<div class='meta'>Oss · 🚗 32 min · 1085 woningen · 60% koop · 50% vrijst/2-kap · 65+: 26%</div>
+<div class='knop'><button class='st' onclick="zet('BU08281500','Herpen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08281500','Herpen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Herpen,Oss&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='23' data-code='BU02630400'>
+<div class='kop'><span class='naam'>Rossum</span><span class='ja'>~45 ja/jaar</span></div>
+<div class='meta'>Maasdriel · 🚗 23 min · 938 woningen · 69% koop · 50% vrijst/2-kap · 65+: 25%</div>
+<div class='knop'><button class='st' onclick="zet('BU02630400','Rossum','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02630400','Rossum','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Rossum,Maasdriel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='23' data-code='BU19591301'>
+<div class='kop'><span class='naam'>Veen</span><span class='ja'>~45 ja/jaar</span></div>
+<div class='meta'>Altena · 🚗 23 min · 965 woningen · 67% koop · 47% vrijst/2-kap · 65+: 16%</div>
+<div class='knop'><button class='st' onclick="zet('BU19591301','Veen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19591301','Veen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Veen,Altena&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='43' data-code='BU17280300'>
+<div class='kop'><span class='naam'>Hoogeloon</span><span class='ja'>~45 ja/jaar</span></div>
+<div class='meta'>Bladel · 🚗 43 min · 822 woningen · 78% koop · 69% vrijst/2-kap · 65+: 23%</div>
+<div class='knop'><button class='st' onclick="zet('BU17280300','Hoogeloon','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17280300','Hoogeloon','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Hoogeloon,Bladel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='25' data-code='BU02970203'>
+<div class='kop'><span class='naam'>Gameren</span><span class='ja'>~44 ja/jaar</span></div>
+<div class='meta'>Zaltbommel · 🚗 25 min · 905 woningen · 70% koop · 55% vrijst/2-kap · 65+: 22%</div>
+<div class='knop'><button class='st' onclick="zet('BU02970203','Gameren','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02970203','Gameren','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Gameren,Zaltbommel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='41' data-code='BU02520100'>
+<div class='kop'><span class='naam'>Overasselt</span><span class='ja'>~44 ja/jaar</span></div>
+<div class='meta'>Heumen · 🚗 41 min · 824 woningen · 76% koop · 55% vrijst/2-kap · 65+: 33%</div>
+<div class='knop'><button class='st' onclick="zet('BU02520100','Overasselt','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02520100','Overasselt','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Overasselt,Heumen&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='34' data-code='BU07840204'>
+<div class='kop'><span class='naam'>Steenakkers</span><span class='ja'>~44 ja/jaar</span></div>
+<div class='meta'>Gilze en Rijen · 🚗 34 min · 991 woningen · 63% koop · 36% vrijst/2-kap · 65+: 19%</div>
+<div class='knop'><button class='st' onclick="zet('BU07840204','Steenakkers','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07840204','Steenakkers','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Steenakkers,Gilze en Rijen&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='30' data-code='BU19600100'>
+<div class='kop'><span class='naam'>Deil</span><span class='ja'>~44 ja/jaar</span></div>
+<div class='meta'>West Betuwe · 🚗 30 min · 768 woningen · 81% koop · 62% vrijst/2-kap · 65+: 23%</div>
+<div class='knop'><button class='st' onclick="zet('BU19600100','Deil','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19600100','Deil','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Deil,West Betuwe&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='35' data-code='BU07840203'>
+<div class='kop'><span class='naam'>Strijpakkers-Laars</span><span class='ja'>~42 ja/jaar</span></div>
+<div class='meta'>Gilze en Rijen · 🚗 35 min · 793 woningen · 75% koop · 45% vrijst/2-kap · 65+: 18%</div>
+<div class='knop'><button class='st' onclick="zet('BU07840203','Strijpakkers-Laars','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07840203','Strijpakkers-Laars','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Strijpakkers-Laars,Gilze en Rijen&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='42' data-code='BU07700300'>
+<div class='kop'><span class='naam'>Vessem-kom</span><span class='ja'>~41 ja/jaar</span></div>
+<div class='meta'>Eersel · 🚗 42 min · 799 woningen · 74% koop · 61% vrijst/2-kap · 65+: 27%</div>
+<div class='knop'><button class='st' onclick="zet('BU07700300','Vessem-kom','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07700300','Vessem-kom','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Vessem-kom,Eersel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='25' data-code='BU08480009'>
+<div class='kop'><span class='naam'>Verspreide huizen Son</span><span class='ja'>~41 ja/jaar</span></div>
+<div class='meta'>Son en Breugel · 🚗 25 min · 820 woningen · 72% koop · 37% vrijst/2-kap · 65+: 5%</div>
+<div class='knop'><button class='st' onclick="zet('BU08480009','Verspreide huizen Son','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08480009','Verspreide huizen Son','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Verspreide huizen Son,Son en Breugel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='34' data-code='BU19590202'>
+<div class='kop'><span class='naam'>Sleeuwijk oost</span><span class='ja'>~40 ja/jaar</span></div>
+<div class='meta'>Altena · 🚗 34 min · 723 woningen · 80% koop · 53% vrijst/2-kap · 65+: 22%</div>
+<div class='knop'><button class='st' onclick="zet('BU19590202','Sleeuwijk oost','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19590202','Sleeuwijk oost','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Sleeuwijk oost,Altena&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='16' data-code='BU07970200'>
+<div class='kop'><span class='naam'>Elshout</span><span class='ja'>~40 ja/jaar</span></div>
+<div class='meta'>Heusden · 🚗 16 min · 717 woningen · 79% koop · 69% vrijst/2-kap · 65+: 20%</div>
+<div class='knop'><button class='st' onclick="zet('BU07970200','Elshout','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07970200','Elshout','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Elshout,Heusden&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='22' data-code='BU08556702'>
+<div class='kop'><span class='naam'>Achthoeven</span><span class='ja'>~40 ja/jaar</span></div>
+<div class='meta'>Tilburg · 🚗 22 min · 698 woningen · 81% koop · 63% vrijst/2-kap · 65+: 29%</div>
+<div class='knop'><button class='st' onclick="zet('BU08556702','Achthoeven','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08556702','Achthoeven','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Achthoeven,Tilburg&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='20' data-code='BU19591401'>
+<div class='kop'><span class='naam'>Aalburg</span><span class='ja'>~39 ja/jaar</span></div>
+<div class='meta'>Altena · 🚗 20 min · 864 woningen · 64% koop · 36% vrijst/2-kap · 65+: 18%</div>
+<div class='knop'><button class='st' onclick="zet('BU19591401','Aalburg','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19591401','Aalburg','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Aalburg,Altena&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='44' data-code='BU17280202'>
+<div class='kop'><span class='naam'>Hapert Oost</span><span class='ja'>~39 ja/jaar</span></div>
+<div class='meta'>Bladel · 🚗 44 min · 801 woningen · 69% koop · 37% vrijst/2-kap · 65+: 22%</div>
+<div class='knop'><button class='st' onclick="zet('BU17280202','Hapert Oost','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17280202','Hapert Oost','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Hapert Oost,Bladel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='35' data-code='BU19600301'>
+<div class='kop'><span class='naam'>Tricht</span><span class='ja'>~38 ja/jaar</span></div>
+<div class='meta'>West Betuwe · 🚗 35 min · 728 woningen · 75% koop · 56% vrijst/2-kap · 65+: 22%</div>
+<div class='knop'><button class='st' onclick="zet('BU19600301','Tricht','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19600301','Tricht','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Tricht,West Betuwe&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='21' data-code='BU17210120'>
+<div class='kop'><span class='naam'>De Beemd</span><span class='ja'>~37 ja/jaar</span></div>
+<div class='meta'>Bernheze · 🚗 21 min · 728 woningen · 73% koop · 41% vrijst/2-kap · 65+: 14%</div>
+<div class='knop'><button class='st' onclick="zet('BU17210120','De Beemd','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17210120','De Beemd','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=De Beemd,Bernheze&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='41' data-code='BU07700100'>
+<div class='kop'><span class='naam'>Duizel</span><span class='ja'>~37 ja/jaar</span></div>
+<div class='meta'>Eersel · 🚗 41 min · 648 woningen · 81% koop · 68% vrijst/2-kap · 65+: 23%</div>
+<div class='knop'><button class='st' onclick="zet('BU07700100','Duizel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07700100','Duizel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Duizel,Eersel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='40' data-code='BU02960138'>
+<div class='kop'><span class='naam'>Huurlingsedam</span><span class='ja'>~36 ja/jaar</span></div>
+<div class='meta'>Wijchen · 🚗 40 min · 704 woningen · 74% koop · 36% vrijst/2-kap · 65+: 5%</div>
+<div class='knop'><button class='st' onclick="zet('BU02960138','Huurlingsedam','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02960138','Huurlingsedam','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Huurlingsedam,Wijchen&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='38' data-code='BU19820903'>
+<div class='kop'><span class='naam'>Langenboom</span><span class='ja'>~35 ja/jaar</span></div>
+<div class='meta'>Land van Cuijk · 🚗 38 min · 664 woningen · 76% koop · 60% vrijst/2-kap · 65+: 24%</div>
+<div class='knop'><button class='st' onclick="zet('BU19820903','Langenboom','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19820903','Langenboom','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Langenboom,Land van Cuijk&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='44' data-code='BU17710113'>
+<div class='kop'><span class='naam'>Luchen</span><span class='ja'>~35 ja/jaar</span></div>
+<div class='meta'>Geldrop-Mierlo · 🚗 44 min · 559 woningen · 90% koop · 55% vrijst/2-kap · 65+: 10%</div>
+<div class='knop'><button class='st' onclick="zet('BU17710113','Luchen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17710113','Luchen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Luchen,Geldrop-Mierlo&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='43' data-code='BU16670100'>
+<div class='kop'><span class='naam'>Hooge Mierde</span><span class='ja'>~34 ja/jaar</span></div>
+<div class='meta'>Reusel-De Mierden · 🚗 43 min · 615 woningen · 80% koop · 79% vrijst/2-kap · 65+: 24%</div>
+<div class='knop'><button class='st' onclick="zet('BU16670100','Hooge Mierde','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU16670100','Hooge Mierde','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Hooge Mierde,Reusel-De Mierden&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='40' data-code='BU16670200'>
+<div class='kop'><span class='naam'>Lage Mierde</span><span class='ja'>~34 ja/jaar</span></div>
+<div class='meta'>Reusel-De Mierden · 🚗 40 min · 671 woningen · 73% koop · 71% vrijst/2-kap · 65+: 24%</div>
+<div class='knop'><button class='st' onclick="zet('BU16670200','Lage Mierde','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU16670200','Lage Mierde','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Lage Mierde,Reusel-De Mierden&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='34' data-code='BU07700400'>
+<div class='kop'><span class='naam'>Wintelre-kom</span><span class='ja'>~34 ja/jaar</span></div>
+<div class='meta'>Eersel · 🚗 34 min · 608 woningen · 80% koop · 58% vrijst/2-kap · 65+: 21%</div>
+<div class='knop'><button class='st' onclick="zet('BU07700400','Wintelre-kom','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07700400','Wintelre-kom','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Wintelre-kom,Eersel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='43' data-code='BU19821003'>
+<div class='kop'><span class='naam'>🔁 Mill-West</span><span class='ja'>~34 ja/jaar</span></div>
+<div class='meta'>Land van Cuijk · 🚗 43 min · 721 woningen · 67% koop · 51% vrijst/2-kap · 65+: 24%</div>
+<div class='knop'><button class='st' onclick="zet('BU19821003','Mill-West','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19821003','Mill-West','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Mill-West,Land van Cuijk&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='21' data-code='BU19591901'>
+<div class='kop'><span class='naam'>Genderen</span><span class='ja'>~34 ja/jaar</span></div>
+<div class='meta'>Altena · 🚗 21 min · 642 woningen · 75% koop · 56% vrijst/2-kap · 65+: 20%</div>
+<div class='knop'><button class='st' onclick="zet('BU19591901','Genderen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19591901','Genderen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Genderen,Altena&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='33' data-code='BU08281300'>
+<div class='kop'><span class='naam'>Megen</span><span class='ja'>~34 ja/jaar</span></div>
+<div class='meta'>Oss · 🚗 33 min · 750 woningen · 64% koop · 56% vrijst/2-kap · 65+: 23%</div>
+<div class='knop'><button class='st' onclick="zet('BU08281300','Megen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08281300','Megen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Megen,Oss&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='37' data-code='BU07700200'>
+<div class='kop'><span class='naam'>Steensel</span><span class='ja'>~33 ja/jaar</span></div>
+<div class='meta'>Eersel · 🚗 37 min · 581 woningen · 82% koop · 63% vrijst/2-kap · 65+: 21%</div>
+<div class='knop'><button class='st' onclick="zet('BU07700200','Steensel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07700200','Steensel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Steensel,Eersel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='28' data-code='BU19590701'>
+<div class='kop'><span class='naam'>Rijswijk (NB)</span><span class='ja'>~33 ja/jaar</span></div>
+<div class='meta'>Altena · 🚗 28 min · 781 woningen · 61% koop · 41% vrijst/2-kap · 65+: 20%</div>
+<div class='knop'><button class='st' onclick="zet('BU19590701','Rijswijk (NB)','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19590701','Rijswijk (NB)','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Rijswijk (NB),Altena&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='36' data-code='BU19910301'>
+<div class='kop'><span class='naam'>Odiliapeel</span><span class='ja'>~33 ja/jaar</span></div>
+<div class='meta'>Maashorst · 🚗 36 min · 633 woningen · 75% koop · 64% vrijst/2-kap · 65+: 22%</div>
+<div class='knop'><button class='st' onclick="zet('BU19910301','Odiliapeel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19910301','Odiliapeel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Odiliapeel,Maashorst&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='35' data-code='BU19600700'>
+<div class='kop'><span class='naam'>Ophemert</span><span class='ja'>~33 ja/jaar</span></div>
+<div class='meta'>West Betuwe · 🚗 35 min · 610 woningen · 77% koop · 67% vrijst/2-kap · 65+: 24%</div>
+<div class='knop'><button class='st' onclick="zet('BU19600700','Ophemert','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19600700','Ophemert','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Ophemert,West Betuwe&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='19' data-code='BU07961401'>
+<div class='kop'><span class='naam'>Kom Vinkel</span><span class='ja'>~33 ja/jaar</span></div>
+<div class='meta'>&#x27;s-Hertogenbosch · 🚗 19 min · 588 woningen · 80% koop · 66% vrijst/2-kap · 65+: 22%</div>
+<div class='knop'><button class='st' onclick="zet('BU07961401','Kom Vinkel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07961401','Kom Vinkel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Kom Vinkel,&#x27;s-Hertogenbosch&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='41' data-code='BU02250302'>
+<div class='kop'><span class='naam'>Deest</span><span class='ja'>~32 ja/jaar</span></div>
+<div class='meta'>Druten · 🚗 41 min · 772 woningen · 60% koop · 37% vrijst/2-kap · 65+: 22%</div>
+<div class='knop'><button class='st' onclick="zet('BU02250302','Deest','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02250302','Deest','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Deest,Druten&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='27' data-code='BU02970102'>
+<div class='kop'><span class='naam'>Aalst</span><span class='ja'>~32 ja/jaar</span></div>
+<div class='meta'>Zaltbommel · 🚗 27 min · 629 woningen · 73% koop · 56% vrijst/2-kap · 65+: 21%</div>
+<div class='knop'><button class='st' onclick="zet('BU02970102','Aalst','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02970102','Aalst','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Aalst,Zaltbommel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='40' data-code='BU02960400'>
+<div class='kop'><span class='naam'>Bergharen</span><span class='ja'>~32 ja/jaar</span></div>
+<div class='meta'>Wijchen · 🚗 40 min · 572 woningen · 80% koop · 72% vrijst/2-kap · 65+: 26%</div>
+<div class='knop'><button class='st' onclick="zet('BU02960400','Bergharen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02960400','Bergharen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Bergharen,Wijchen&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='42' data-code='BU19820701'>
+<div class='kop'><span class='naam'>Beers kern</span><span class='ja'>~32 ja/jaar</span></div>
+<div class='meta'>Land van Cuijk · 🚗 42 min · 579 woningen · 79% koop · 67% vrijst/2-kap · 65+: 26%</div>
+<div class='knop'><button class='st' onclick="zet('BU19820701','Beers kern','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19820701','Beers kern','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Beers kern,Land van Cuijk&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='45' data-code='BU02090491'>
+<div class='kop'><span class='naam'>Winssen-Centrum</span><span class='ja'>~32 ja/jaar</span></div>
+<div class='meta'>Beuningen · 🚗 45 min · 689 woningen · 66% koop · 49% vrijst/2-kap · 65+: 26%</div>
+<div class='knop'><button class='st' onclick="zet('BU02090491','Winssen-Centrum','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02090491','Winssen-Centrum','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Winssen-Centrum,Beuningen&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='31' data-code='BU19910501'>
+<div class='kop'><span class='naam'>Reek</span><span class='ja'>~32 ja/jaar</span></div>
+<div class='meta'>Maashorst · 🚗 31 min · 632 woningen · 72% koop · 60% vrijst/2-kap · 65+: 20%</div>
+<div class='knop'><button class='st' onclick="zet('BU19910501','Reek','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19910501','Reek','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Reek,Maashorst&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='22' data-code='BU19600600'>
+<div class='kop'><span class='naam'>Waardenburg</span><span class='ja'>~32 ja/jaar</span></div>
+<div class='meta'>West Betuwe · 🚗 22 min · 664 woningen · 68% koop · 37% vrijst/2-kap · 65+: 16%</div>
+<div class='knop'><button class='st' onclick="zet('BU19600600','Waardenburg','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19600600','Waardenburg','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Waardenburg,West Betuwe&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='29' data-code='BU17210602'>
+<div class='kop'><span class='naam'>Vorstenbosch</span><span class='ja'>~31 ja/jaar</span></div>
+<div class='meta'>Bernheze · 🚗 29 min · 573 woningen · 78% koop · 73% vrijst/2-kap · 65+: 23%</div>
+<div class='knop'><button class='st' onclick="zet('BU17210602','Vorstenbosch','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17210602','Vorstenbosch','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Vorstenbosch,Bernheze&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='43' data-code='BU02140306'>
+<div class='kop'><span class='naam'>Verspreide huizen Aalst Leutes polder Aalst</span><span class='ja'>~31 ja/jaar</span></div>
+<div class='meta'>Buren · 🚗 43 min · 467 woningen · 95% koop · 94% vrijst/2-kap · 65+: 18%</div>
+<div class='knop'><button class='st' onclick="zet('BU02140306','Verspreide huizen Aalst Leutes polder Aalst','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02140306','Verspreide huizen Aalst Leutes polder Aalst','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Verspreide huizen Aalst Leutes polder Aalst,Buren&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='29' data-code='BU19480315'>
+<div class='kop'><span class='naam'>Nijnsel</span><span class='ja'>~31 ja/jaar</span></div>
+<div class='meta'>Meierijstad · 🚗 29 min · 589 woningen · 75% koop · 40% vrijst/2-kap · 65+: 18%</div>
+<div class='knop'><button class='st' onclick="zet('BU19480315','Nijnsel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19480315','Nijnsel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Nijnsel,Meierijstad&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='22' data-code='BU08556613'>
+<div class='kop'><span class='naam'>Enschot Midden</span><span class='ja'>~31 ja/jaar</span></div>
+<div class='meta'>Tilburg · 🚗 22 min · 501 woningen · 87% koop · 47% vrijst/2-kap · 65+: 18%</div>
+<div class='knop'><button class='st' onclick="zet('BU08556613','Enschot Midden','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08556613','Enschot Midden','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Enschot Midden,Tilburg&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='24' data-code='BU19480229'>
+<div class='kop'><span class='naam'>Wijbosch</span><span class='ja'>~30 ja/jaar</span></div>
+<div class='meta'>Meierijstad · 🚗 24 min · 515 woningen · 83% koop · 58% vrijst/2-kap · 65+: 23%</div>
+<div class='knop'><button class='st' onclick="zet('BU19480229','Wijbosch','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19480229','Wijbosch','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Wijbosch,Meierijstad&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='44' data-code='BU06680500'>
+<div class='kop'><span class='naam'>Kern Boven-Leeuwen</span><span class='ja'>~30 ja/jaar</span></div>
+<div class='meta'>West Maas en Waal · 🚗 44 min · 627 woningen · 68% koop · 55% vrijst/2-kap · 65+: 22%</div>
+<div class='knop'><button class='st' onclick="zet('BU06680500','Kern Boven-Leeuwen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU06680500','Kern Boven-Leeuwen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Kern Boven-Leeuwen,West Maas en Waal&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='32' data-code='BU19480113'>
+<div class='kop'><span class='naam'>Vlaskamp</span><span class='ja'>~30 ja/jaar</span></div>
+<div class='meta'>Meierijstad · 🚗 32 min · 489 woningen · 87% koop · 52% vrijst/2-kap · 65+: 14%</div>
+<div class='knop'><button class='st' onclick="zet('BU19480113','Vlaskamp','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19480113','Vlaskamp','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Vlaskamp,Meierijstad&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='30' data-code='BU19480426'>
+<div class='kop'><span class='naam'>Mariaheide</span><span class='ja'>~30 ja/jaar</span></div>
+<div class='meta'>Meierijstad · 🚗 30 min · 487 woningen · 87% koop · 65% vrijst/2-kap · 65+: 21%</div>
+<div class='knop'><button class='st' onclick="zet('BU19480426','Mariaheide','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19480426','Mariaheide','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Mariaheide,Meierijstad&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='20' data-code='BU02970201'>
+<div class='kop'><span class='naam'>Bruchem</span><span class='ja'>~29 ja/jaar</span></div>
+<div class='meta'>Zaltbommel · 🚗 20 min · 541 woningen · 77% koop · 61% vrijst/2-kap · 65+: 21%</div>
+<div class='knop'><button class='st' onclick="zet('BU02970201','Bruchem','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02970201','Bruchem','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Bruchem,Zaltbommel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='34' data-code='BU02140201'>
+<div class='kop'><span class='naam'>Kerk Avezaath</span><span class='ja'>~29 ja/jaar</span></div>
+<div class='meta'>Buren · 🚗 34 min · 515 woningen · 81% koop · 54% vrijst/2-kap · 65+: 24%</div>
+<div class='knop'><button class='st' onclick="zet('BU02140201','Kerk Avezaath','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02140201','Kerk Avezaath','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Kerk Avezaath,Buren&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='44' data-code='BU02250402'>
+<div class='kop'><span class='naam'>Afferden</span><span class='ja'>~29 ja/jaar</span></div>
+<div class='meta'>Druten · 🚗 44 min · 601 woningen · 69% koop · 54% vrijst/2-kap · 65+: 22%</div>
+<div class='knop'><button class='st' onclick="zet('BU02250402','Afferden','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02250402','Afferden','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Afferden,Druten&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='32' data-code='BU08480100'>
+<div class='kop'><span class='naam'>Breugel</span><span class='ja'>~29 ja/jaar</span></div>
+<div class='meta'>Son en Breugel · 🚗 32 min · 477 woningen · 87% koop · 72% vrijst/2-kap · 65+: 24%</div>
+<div class='knop'><button class='st' onclick="zet('BU08480100','Breugel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08480100','Breugel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Breugel,Son en Breugel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='32' data-code='BU08230300'>
+<div class='kop'><span class='naam'>Oostelbeers</span><span class='ja'>~29 ja/jaar</span></div>
+<div class='meta'>Oirschot · 🚗 32 min · 513 woningen · 80% koop · 56% vrijst/2-kap · 65+: 21%</div>
+<div class='knop'><button class='st' onclick="zet('BU08230300','Oostelbeers','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08230300','Oostelbeers','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Oostelbeers,Oirschot&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='36' data-code='BU19600800'>
+<div class='kop'><span class='naam'>Asperen Oude Kern</span><span class='ja'>~28 ja/jaar</span></div>
+<div class='meta'>West Betuwe · 🚗 36 min · 455 woningen · 89% koop · 54% vrijst/2-kap · 65+: 15%</div>
+<div class='knop'><button class='st' onclick="zet('BU19600800','Asperen Oude Kern','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19600800','Asperen Oude Kern','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Asperen Oude Kern,West Betuwe&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='41' data-code='BU17230102'>
+<div class='kop'><span class='naam'>Zuidoost Alphen</span><span class='ja'>~28 ja/jaar</span></div>
+<div class='meta'>Alphen-Chaam · 🚗 41 min · 553 woningen · 73% koop · 52% vrijst/2-kap · 65+: 29%</div>
+<div class='knop'><button class='st' onclick="zet('BU17230102','Zuidoost Alphen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17230102','Zuidoost Alphen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Zuidoost Alphen,Alphen-Chaam&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='43' data-code='BU17090100'>
+<div class='kop'><span class='naam'>Zevenbergschen Hoek</span><span class='ja'>~28 ja/jaar</span></div>
+<div class='meta'>Moerdijk · 🚗 43 min · 600 woningen · 67% koop · 49% vrijst/2-kap · 65+: 22%</div>
+<div class='knop'><button class='st' onclick="zet('BU17090100','Zevenbergschen Hoek','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17090100','Zevenbergschen Hoek','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Zevenbergschen Hoek,Moerdijk&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='41' data-code='BU07700001'>
+<div class='kop'><span class='naam'>Molenakkers</span><span class='ja'>~28 ja/jaar</span></div>
+<div class='meta'>Eersel · 🚗 41 min · 420 woningen · 95% koop · 50% vrijst/2-kap · 65+: 34%</div>
+<div class='knop'><button class='st' onclick="zet('BU07700001','Molenakkers','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07700001','Molenakkers','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Molenakkers,Eersel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='31' data-code='BU19600002'>
+<div class='kop'><span class='naam'>Geldermalsen West</span><span class='ja'>~28 ja/jaar</span></div>
+<div class='meta'>West Betuwe · 🚗 31 min · 450 woningen · 88% koop · 71% vrijst/2-kap · 65+: 29%</div>
+<div class='knop'><button class='st' onclick="zet('BU19600002','Geldermalsen West','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19600002','Geldermalsen West','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Geldermalsen West,West Betuwe&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='36' data-code='BU16590300'>
+<div class='kop'><span class='naam'>Mariahout</span><span class='ja'>~27 ja/jaar</span></div>
+<div class='meta'>Laarbeek · 🚗 36 min · 455 woningen · 86% koop · 76% vrijst/2-kap · 65+: 24%</div>
+<div class='knop'><button class='st' onclick="zet('BU16590300','Mariahout','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU16590300','Mariahout','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Mariahout,Laarbeek&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='44' data-code='BU16520300'>
+<div class='kop'><span class='naam'>Handel</span><span class='ja'>~27 ja/jaar</span></div>
+<div class='meta'>Gemert-Bakel · 🚗 44 min · 609 woningen · 64% koop · 52% vrijst/2-kap · 65+: 25%</div>
+<div class='knop'><button class='st' onclick="zet('BU16520300','Handel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU16520300','Handel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Handel,Gemert-Bakel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='27' data-code='BU08240701'>
+<div class='kop'><span class='naam'>Omg. Prinsessenbuurt</span><span class='ja'>~27 ja/jaar</span></div>
+<div class='meta'>Oisterwijk · 🚗 27 min · 540 woningen · 72% koop · 54% vrijst/2-kap · 65+: 25%</div>
+<div class='knop'><button class='st' onclick="zet('BU08240701','Omg. Prinsessenbuurt','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08240701','Omg. Prinsessenbuurt','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Omg. Prinsessenbuurt,Oisterwijk&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='31' data-code='BU19600201'>
+<div class='kop'><span class='naam'>Beesd Oost</span><span class='ja'>~27 ja/jaar</span></div>
+<div class='meta'>West Betuwe · 🚗 31 min · 511 woningen · 76% koop · 46% vrijst/2-kap · 65+: 20%</div>
+<div class='knop'><button class='st' onclick="zet('BU19600201','Beesd Oost','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19600201','Beesd Oost','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Beesd Oost,West Betuwe&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='30' data-code='BU19591201'>
+<div class='kop'><span class='naam'>Almkerk west</span><span class='ja'>~27 ja/jaar</span></div>
+<div class='meta'>Altena · 🚗 30 min · 626 woningen · 62% koop · 43% vrijst/2-kap · 65+: 25%</div>
+<div class='knop'><button class='st' onclick="zet('BU19591201','Almkerk west','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19591201','Almkerk west','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Almkerk west,Altena&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='24' data-code='BU19480418'>
+<div class='kop'><span class='naam'>Eerde</span><span class='ja'>~27 ja/jaar</span></div>
+<div class='meta'>Meierijstad · 🚗 24 min · 483 woningen · 80% koop · 64% vrijst/2-kap · 65+: 18%</div>
+<div class='knop'><button class='st' onclick="zet('BU19480418','Eerde','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19480418','Eerde','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Eerde,Meierijstad&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='27' data-code='BU19591001'>
+<div class='kop'><span class='naam'>Giessen</span><span class='ja'>~27 ja/jaar</span></div>
+<div class='meta'>Altena · 🚗 27 min · 585 woningen · 66% koop · 45% vrijst/2-kap · 65+: 19%</div>
+<div class='knop'><button class='st' onclick="zet('BU19591001','Giessen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19591001','Giessen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Giessen,Altena&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='31' data-code='BU08200008'>
+<div class='kop'><span class='naam'>Verspreide huizen Boord, Opwetten</span><span class='ja'>~27 ja/jaar</span></div>
+<div class='meta'>Nuenen, Gerwen en Nederwetten · 🚗 31 min · 494 woningen · 78% koop · 48% vrijst/2-kap · 65+: 7%</div>
+<div class='knop'><button class='st' onclick="zet('BU08200008','Verspreide huizen Boord, Opwetten','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08200008','Verspreide huizen Boord, Opwetten','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Verspreide huizen Boord, Opwetten,Nuenen, Gerwen en Nederwetten&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='29' data-code='BU02970103'>
+<div class='kop'><span class='naam'>Zuilichem</span><span class='ja'>~27 ja/jaar</span></div>
+<div class='meta'>Zaltbommel · 🚗 29 min · 504 woningen · 76% koop · 63% vrijst/2-kap · 65+: 19%</div>
+<div class='knop'><button class='st' onclick="zet('BU02970103','Zuilichem','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02970103','Zuilichem','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Zuilichem,Zaltbommel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='40' data-code='BU17230106'>
+<div class='kop'><span class='naam'>Noordoost Alphen</span><span class='ja'>~27 ja/jaar</span></div>
+<div class='meta'>Alphen-Chaam · 🚗 40 min · 481 woningen · 79% koop · 40% vrijst/2-kap · 65+: 16%</div>
+<div class='knop'><button class='st' onclick="zet('BU17230106','Noordoost Alphen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17230106','Noordoost Alphen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Noordoost Alphen,Alphen-Chaam&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='35' data-code='BU17190202'>
+<div class='kop'><span class='naam'>Middelmade</span><span class='ja'>~26 ja/jaar</span></div>
+<div class='meta'>Drimmelen · 🚗 35 min · 399 woningen · 94% koop · 58% vrijst/2-kap · 65+: 13%</div>
+<div class='knop'><button class='st' onclick="zet('BU17190202','Middelmade','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17190202','Middelmade','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Middelmade,Drimmelen&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='35' data-code='BU08230008'>
+<div class='kop'><span class='naam'>Verspreide huizen Zuid-Oirschotse Heide</span><span class='ja'>~26 ja/jaar</span></div>
+<div class='meta'>Oirschot · 🚗 35 min · 464 woningen · 80% koop · 48% vrijst/2-kap · 65+: 14%</div>
+<div class='knop'><button class='st' onclick="zet('BU08230008','Verspreide huizen Zuid-Oirschotse Heide','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08230008','Verspreide huizen Zuid-Oirschotse Heide','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Verspreide huizen Zuid-Oirschotse Heide,Oirschot&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='28' data-code='BU08670201'>
+<div class='kop'><span class='naam'>Waspik boven</span><span class='ja'>~26 ja/jaar</span></div>
+<div class='meta'>Waalwijk · 🚗 28 min · 521 woningen · 71% koop · 70% vrijst/2-kap · 65+: 22%</div>
+<div class='knop'><button class='st' onclick="zet('BU08670201','Waspik boven','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08670201','Waspik boven','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Waspik boven,Waalwijk&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='22' data-code='BU07530015'>
+<div class='kop'><span class='naam'>Buitengebied</span><span class='ja'>~26 ja/jaar</span></div>
+<div class='meta'>Best · 🚗 22 min · 430 woningen · 86% koop · 95% vrijst/2-kap · 65+: 19%</div>
+<div class='knop'><button class='st' onclick="zet('BU07530015','Buitengebied','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07530015','Buitengebied','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Buitengebied,Best&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='25' data-code='BU02970300'>
+<div class='kop'><span class='naam'>Nederhemert-Noordzijde</span><span class='ja'>~26 ja/jaar</span></div>
+<div class='meta'>Zaltbommel · 🚗 25 min · 439 woningen · 84% koop · 74% vrijst/2-kap · 65+: 17%</div>
+<div class='knop'><button class='st' onclick="zet('BU02970300','Nederhemert-Noordzijde','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02970300','Nederhemert-Noordzijde','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Nederhemert-Noordzijde,Zaltbommel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='34' data-code='BU08261100'>
+<div class='kop'><span class='naam'>Den Hout</span><span class='ja'>~26 ja/jaar</span></div>
+<div class='meta'>Oosterhout · 🚗 34 min · 408 woningen · 90% koop · 77% vrijst/2-kap · 65+: 19%</div>
+<div class='knop'><button class='st' onclick="zet('BU08261100','Den Hout','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08261100','Den Hout','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Den Hout,Oosterhout&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='40' data-code='BU02090275'>
+<div class='kop'><span class='naam'>Ewijk-Keizershoeve</span><span class='ja'>~26 ja/jaar</span></div>
+<div class='meta'>Beuningen · 🚗 40 min · 441 woningen · 83% koop · 36% vrijst/2-kap · 65+: 6%</div>
+<div class='knop'><button class='st' onclick="zet('BU02090275','Ewijk-Keizershoeve','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02090275','Ewijk-Keizershoeve','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Ewijk-Keizershoeve,Beuningen&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='41' data-code='BU19613401'>
+<div class='kop'><span class='naam'>Hagestein kern</span><span class='ja'>~25 ja/jaar</span></div>
+<div class='meta'>Vijfheerenlanden · 🚗 41 min · 454 woningen · 80% koop · 59% vrijst/2-kap · 65+: 20%</div>
+<div class='knop'><button class='st' onclick="zet('BU19613401','Hagestein kern','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19613401','Hagestein kern','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Hagestein kern,Vijfheerenlanden&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='43' data-code='BU07550100'>
+<div class='kop'><span class='naam'>Venhorst</span><span class='ja'>~25 ja/jaar</span></div>
+<div class='meta'>Boekel · 🚗 43 min · 460 woningen · 79% koop · 69% vrijst/2-kap · 65+: 17%</div>
+<div class='knop'><button class='st' onclick="zet('BU07550100','Venhorst','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07550100','Venhorst','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Venhorst,Boekel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='33' data-code='BU19480102'>
+<div class='kop'><span class='naam'>Bolst</span><span class='ja'>~25 ja/jaar</span></div>
+<div class='meta'>Meierijstad · 🚗 33 min · 470 woningen · 77% koop · 42% vrijst/2-kap · 65+: 15%</div>
+<div class='knop'><button class='st' onclick="zet('BU19480102','Bolst','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19480102','Bolst','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Bolst,Meierijstad&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='39' data-code='BU02140200'>
+<div class='kop'><span class='naam'>Zoelen</span><span class='ja'>~25 ja/jaar</span></div>
+<div class='meta'>Buren · 🚗 39 min · 453 woningen · 80% koop · 70% vrijst/2-kap · 65+: 26%</div>
+<div class='knop'><button class='st' onclick="zet('BU02140200','Zoelen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02140200','Zoelen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Zoelen,Buren&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='28' data-code='BU19600603'>
+<div class='kop'><span class='naam'>Opijnen</span><span class='ja'>~25 ja/jaar</span></div>
+<div class='meta'>West Betuwe · 🚗 28 min · 462 woningen · 78% koop · 61% vrijst/2-kap · 65+: 16%</div>
+<div class='knop'><button class='st' onclick="zet('BU19600603','Opijnen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19600603','Opijnen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Opijnen,West Betuwe&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='41' data-code='BU19781701'>
+<div class='kop'><span class='naam'>Schelluinen-Dorp</span><span class='ja'>~25 ja/jaar</span></div>
+<div class='meta'>Molenlanden · 🚗 41 min · 461 woningen · 78% koop · 36% vrijst/2-kap · 65+: 20%</div>
+<div class='knop'><button class='st' onclick="zet('BU19781701','Schelluinen-Dorp','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19781701','Schelluinen-Dorp','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Schelluinen-Dorp,Molenlanden&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='33' data-code='BU19910299'>
+<div class='kop'><span class='naam'>Buitengebied-Volkel</span><span class='ja'>~25 ja/jaar</span></div>
+<div class='meta'>Maashorst · 🚗 33 min · 396 woningen · 90% koop · 66% vrijst/2-kap · 65+: 16%</div>
+<div class='knop'><button class='st' onclick="zet('BU19910299','Buitengebied-Volkel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19910299','Buitengebied-Volkel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Buitengebied-Volkel,Maashorst&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='43' data-code='BU16520104'>
+<div class='kop'><span class='naam'>Doonheide</span><span class='ja'>~25 ja/jaar</span></div>
+<div class='meta'>Gemert-Bakel · 🚗 43 min · 422 woningen · 84% koop · 50% vrijst/2-kap · 65+: 8%</div>
+<div class='knop'><button class='st' onclick="zet('BU16520104','Doonheide','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU16520104','Doonheide','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Doonheide,Gemert-Bakel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='33' data-code='BU08261200'>
+<div class='kop'><span class='naam'>Oosteind</span><span class='ja'>~25 ja/jaar</span></div>
+<div class='meta'>Oosterhout · 🚗 33 min · 408 woningen · 86% koop · 74% vrijst/2-kap · 65+: 21%</div>
+<div class='knop'><button class='st' onclick="zet('BU08261200','Oosteind','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08261200','Oosteind','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Oosteind,Oosterhout&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='26' data-code='BU17210506'>
+<div class='kop'><span class='naam'>Loosbroek</span><span class='ja'>~24 ja/jaar</span></div>
+<div class='meta'>Bernheze · 🚗 26 min · 394 woningen · 87% koop · 75% vrijst/2-kap · 65+: 22%</div>
+<div class='knop'><button class='st' onclick="zet('BU17210506','Loosbroek','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17210506','Loosbroek','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Loosbroek,Bernheze&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='39' data-code='BU16590009'>
+<div class='kop'><span class='naam'>Verspreide huizen Beek en Donk</span><span class='ja'>~24 ja/jaar</span></div>
+<div class='meta'>Laarbeek · 🚗 39 min · 423 woningen · 81% koop · 67% vrijst/2-kap · 65+: 13%</div>
+<div class='knop'><button class='st' onclick="zet('BU16590009','Verspreide huizen Beek en Donk','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU16590009','Verspreide huizen Beek en Donk','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Verspreide huizen Beek en Donk,Laarbeek&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='40' data-code='BU07550006'>
+<div class='kop'><span class='naam'>Verspreide huizen Arendnest-Zijp</span><span class='ja'>~24 ja/jaar</span></div>
+<div class='meta'>Boekel · 🚗 40 min · 412 woningen · 83% koop · 53% vrijst/2-kap · 65+: 7%</div>
+<div class='knop'><button class='st' onclick="zet('BU07550006','Verspreide huizen Arendnest-Zijp','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07550006','Verspreide huizen Arendnest-Zijp','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Verspreide huizen Arendnest-Zijp,Boekel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='35' data-code='BU19600701'>
+<div class='kop'><span class='naam'>Varik</span><span class='ja'>~23 ja/jaar</span></div>
+<div class='meta'>West Betuwe · 🚗 35 min · 429 woningen · 78% koop · 61% vrijst/2-kap · 65+: 20%</div>
+<div class='knop'><button class='st' onclick="zet('BU19600701','Varik','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19600701','Varik','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Varik,West Betuwe&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='37' data-code='BU17190402'>
+<div class='kop'><span class='naam'>Wagenberg noordwest</span><span class='ja'>~23 ja/jaar</span></div>
+<div class='meta'>Drimmelen · 🚗 37 min · 376 woningen · 89% koop · 80% vrijst/2-kap · 65+: 20%</div>
+<div class='knop'><button class='st' onclick="zet('BU17190402','Wagenberg noordwest','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17190402','Wagenberg noordwest','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Wagenberg noordwest,Drimmelen&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='28' data-code='BU19480433'>
+<div class='kop'><span class='naam'>Zijtaart</span><span class='ja'>~23 ja/jaar</span></div>
+<div class='meta'>Meierijstad · 🚗 28 min · 392 woningen · 84% koop · 65% vrijst/2-kap · 65+: 25%</div>
+<div class='knop'><button class='st' onclick="zet('BU19480433','Zijtaart','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19480433','Zijtaart','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Zijtaart,Meierijstad&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='43' data-code='BU17280100'>
+<div class='kop'><span class='naam'>Netersel</span><span class='ja'>~23 ja/jaar</span></div>
+<div class='meta'>Bladel · 🚗 43 min · 385 woningen · 85% koop · 74% vrijst/2-kap · 65+: 16%</div>
+<div class='knop'><button class='st' onclick="zet('BU17280100','Netersel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17280100','Netersel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Netersel,Bladel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='37' data-code='BU07700500'>
+<div class='kop'><span class='naam'>Knegsel-kom</span><span class='ja'>~23 ja/jaar</span></div>
+<div class='meta'>Eersel · 🚗 37 min · 393 woningen · 83% koop · 58% vrijst/2-kap · 65+: 21%</div>
+<div class='knop'><button class='st' onclick="zet('BU07700500','Knegsel-kom','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07700500','Knegsel-kom','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Knegsel-kom,Eersel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='43' data-code='BU19821501'>
+<div class='kop'><span class='naam'>Sint Hubert</span><span class='ja'>~23 ja/jaar</span></div>
+<div class='meta'>Land van Cuijk · 🚗 43 min · 466 woningen · 70% koop · 51% vrijst/2-kap · 65+: 20%</div>
+<div class='knop'><button class='st' onclick="zet('BU19821501','Sint Hubert','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19821501','Sint Hubert','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Sint Hubert,Land van Cuijk&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='27' data-code='BU02630300'>
+<div class='kop'><span class='naam'>Heerewaarden</span><span class='ja'>~22 ja/jaar</span></div>
+<div class='meta'>Maasdriel · 🚗 27 min · 472 woningen · 67% koop · 45% vrijst/2-kap · 65+: 17%</div>
+<div class='knop'><button class='st' onclick="zet('BU02630300','Heerewaarden','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02630300','Heerewaarden','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Heerewaarden,Maasdriel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='25' data-code='BU19480302'>
+<div class='kop'><span class='naam'>Boskant</span><span class='ja'>~22 ja/jaar</span></div>
+<div class='meta'>Meierijstad · 🚗 25 min · 421 woningen · 75% koop · 48% vrijst/2-kap · 65+: 16%</div>
+<div class='knop'><button class='st' onclick="zet('BU19480302','Boskant','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19480302','Boskant','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Boskant,Meierijstad&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='21' data-code='BU19591403'>
+<div class='kop'><span class='naam'>Spijk</span><span class='ja'>~22 ja/jaar</span></div>
+<div class='meta'>Altena · 🚗 21 min · 353 woningen · 89% koop · 65% vrijst/2-kap · 65+: 13%</div>
+<div class='knop'><button class='st' onclick="zet('BU19591403','Spijk','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19591403','Spijk','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Spijk,Altena&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='36' data-code='BU19820301'>
+<div class='kop'><span class='naam'>Escharen kom</span><span class='ja'>~22 ja/jaar</span></div>
+<div class='meta'>Land van Cuijk · 🚗 36 min · 367 woningen · 85% koop · 68% vrijst/2-kap · 65+: 24%</div>
+<div class='knop'><button class='st' onclick="zet('BU19820301','Escharen kom','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19820301','Escharen kom','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Escharen kom,Land van Cuijk&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='26' data-code='BU08240707'>
+<div class='kop'><span class='naam'>Omg. Achterbos/Papenakker</span><span class='ja'>~22 ja/jaar</span></div>
+<div class='meta'>Oisterwijk · 🚗 26 min · 436 woningen · 71% koop · 49% vrijst/2-kap · 65+: 27%</div>
+<div class='knop'><button class='st' onclick="zet('BU08240707','Omg. Achterbos/Papenakker','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08240707','Omg. Achterbos/Papenakker','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Omg. Achterbos/Papenakker,Oisterwijk&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='33' data-code='BU06680601'>
+<div class='kop'><span class='naam'>Buitengebied Dreumel</span><span class='ja'>~22 ja/jaar</span></div>
+<div class='meta'>West Maas en Waal · 🚗 33 min · 345 woningen · 90% koop · 91% vrijst/2-kap · 65+: 16%</div>
+<div class='knop'><button class='st' onclick="zet('BU06680601','Buitengebied Dreumel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU06680601','Buitengebied Dreumel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Buitengebied Dreumel,West Maas en Waal&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='37' data-code='BU19612901'>
+<div class='kop'><span class='naam'>Leerdam buitengebied</span><span class='ja'>~22 ja/jaar</span></div>
+<div class='meta'>Vijfheerenlanden · 🚗 37 min · 341 woningen · 91% koop · 82% vrijst/2-kap · 65+: 21%</div>
+<div class='knop'><button class='st' onclick="zet('BU19612901','Leerdam buitengebied','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19612901','Leerdam buitengebied','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Leerdam buitengebied,Vijfheerenlanden&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='44' data-code='BU02520000'>
+<div class='kop'><span class='naam'>Heumen</span><span class='ja'>~22 ja/jaar</span></div>
+<div class='meta'>Heumen · 🚗 44 min · 442 woningen · 70% koop · 49% vrijst/2-kap · 65+: 19%</div>
+<div class='knop'><button class='st' onclick="zet('BU02520000','Heumen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02520000','Heumen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Heumen,Heumen&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='33' data-code='BU07980100'>
+<div class='kop'><span class='naam'>Esbeek</span><span class='ja'>~22 ja/jaar</span></div>
+<div class='meta'>Hilvarenbeek · 🚗 33 min · 381 woningen · 81% koop · 65% vrijst/2-kap · 65+: 21%</div>
+<div class='knop'><button class='st' onclick="zet('BU07980100','Esbeek','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07980100','Esbeek','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Esbeek,Hilvarenbeek&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='36' data-code='BU07840208'>
+<div class='kop'><span class='naam'>Buitengebied Gilze</span><span class='ja'>~22 ja/jaar</span></div>
+<div class='meta'>Gilze en Rijen · 🚗 36 min · 354 woningen · 87% koop · 89% vrijst/2-kap · 65+: 20%</div>
+<div class='knop'><button class='st' onclick="zet('BU07840208','Buitengebied Gilze','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07840208','Buitengebied Gilze','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Buitengebied Gilze,Gilze en Rijen&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='39' data-code='BU05121200'>
+<div class='kop'><span class='naam'>Dalem</span><span class='ja'>~22 ja/jaar</span></div>
+<div class='meta'>Gorinchem · 🚗 39 min · 358 woningen · 86% koop · 59% vrijst/2-kap · 65+: 24%</div>
+<div class='knop'><button class='st' onclick="zet('BU05121200','Dalem','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU05121200','Dalem','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Dalem,Gorinchem&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='28' data-code='BU19480415'>
+<div class='kop'><span class='naam'>De Scheifelaar</span><span class='ja'>~21 ja/jaar</span></div>
+<div class='meta'>Meierijstad · 🚗 28 min · 319 woningen · 96% koop · 77% vrijst/2-kap · 65+: 20%</div>
+<div class='knop'><button class='st' onclick="zet('BU19480415','De Scheifelaar','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19480415','De Scheifelaar','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=De Scheifelaar,Meierijstad&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='34' data-code='BU06680101'>
+<div class='kop'><span class='naam'>Buitengebied Alphen</span><span class='ja'>~21 ja/jaar</span></div>
+<div class='meta'>West Maas en Waal · 🚗 34 min · 347 woningen · 88% koop · 79% vrijst/2-kap · 65+: 15%</div>
+<div class='knop'><button class='st' onclick="zet('BU06680101','Buitengebied Alphen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU06680101','Buitengebied Alphen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Buitengebied Alphen,West Maas en Waal&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='41' data-code='BU16520400'>
+<div class='kop'><span class='naam'>De Mortel</span><span class='ja'>~21 ja/jaar</span></div>
+<div class='meta'>Gemert-Bakel · 🚗 41 min · 385 woningen · 79% koop · 70% vrijst/2-kap · 65+: 21%</div>
+<div class='knop'><button class='st' onclick="zet('BU16520400','De Mortel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU16520400','De Mortel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=De Mortel,Gemert-Bakel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='23' data-code='BU17210210'>
+<div class='kop'><span class='naam'>Heilaren</span><span class='ja'>~21 ja/jaar</span></div>
+<div class='meta'>Bernheze · 🚗 23 min · 340 woningen · 89% koop · 37% vrijst/2-kap · 65+: 13%</div>
+<div class='knop'><button class='st' onclick="zet('BU17210210','Heilaren','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17210210','Heilaren','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Heilaren,Bernheze&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='38' data-code='BU19600902'>
+<div class='kop'><span class='naam'>Spijk en Boveneind Spijk en Vogelswerf</span><span class='ja'>~21 ja/jaar</span></div>
+<div class='meta'>West Betuwe · 🚗 38 min · 383 woningen · 79% koop · 65% vrijst/2-kap · 65+: 23%</div>
+<div class='knop'><button class='st' onclick="zet('BU19600902','Spijk en Boveneind Spijk en Vogelswerf','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19600902','Spijk en Boveneind Spijk en Vogelswerf','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Spijk en Boveneind Spijk en Vogelswerf,West Betuwe&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='34' data-code='BU19480110'>
+<div class='kop'><span class='naam'>Erp Centrum</span><span class='ja'>~21 ja/jaar</span></div>
+<div class='meta'>Meierijstad · 🚗 34 min · 465 woningen · 64% koop · 46% vrijst/2-kap · 65+: 36%</div>
+<div class='knop'><button class='st' onclick="zet('BU19480110','Erp Centrum','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19480110','Erp Centrum','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Erp Centrum,Meierijstad&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='44' data-code='BU17280203'>
+<div class='kop'><span class='naam'>Hapert Noord</span><span class='ja'>~20 ja/jaar</span></div>
+<div class='meta'>Bladel · 🚗 44 min · 361 woningen · 81% koop · 64% vrijst/2-kap · 65+: 19%</div>
+<div class='knop'><button class='st' onclick="zet('BU17280203','Hapert Noord','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17280203','Hapert Noord','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Hapert Noord,Bladel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='39' data-code='BU19820401'>
+<div class='kop'><span class='naam'>Gassel kom</span><span class='ja'>~20 ja/jaar</span></div>
+<div class='meta'>Land van Cuijk · 🚗 39 min · 355 woningen · 81% koop · 71% vrijst/2-kap · 65+: 28%</div>
+<div class='knop'><button class='st' onclick="zet('BU19820401','Gassel kom','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19820401','Gassel kom','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Gassel kom,Land van Cuijk&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='39' data-code='BU17190504'>
+<div class='kop'><span class='naam'>De Heerlijkheid Hooge Zwaluwe</span><span class='ja'>~20 ja/jaar</span></div>
+<div class='meta'>Drimmelen · 🚗 39 min · 339 woningen · 84% koop · 70% vrijst/2-kap · 65+: 25%</div>
+<div class='knop'><button class='st' onclick="zet('BU17190504','De Heerlijkheid Hooge Zwaluwe','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17190504','De Heerlijkheid Hooge Zwaluwe','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=De Heerlijkheid Hooge Zwaluwe,Drimmelen&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='38' data-code='BU08200003'>
+<div class='kop'><span class='naam'>Eeneind</span><span class='ja'>~20 ja/jaar</span></div>
+<div class='meta'>Nuenen, Gerwen en Nederwetten · 🚗 38 min · 312 woningen · 91% koop · 69% vrijst/2-kap · 65+: 26%</div>
+<div class='knop'><button class='st' onclick="zet('BU08200003','Eeneind','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08200003','Eeneind','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Eeneind,Nuenen, Gerwen en Nederwetten&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='36' data-code='BU19820901'>
+<div class='kop'><span class='naam'>Langenboom buitengebied</span><span class='ja'>~20 ja/jaar</span></div>
+<div class='meta'>Land van Cuijk · 🚗 36 min · 311 woningen · 91% koop · 90% vrijst/2-kap · 65+: 23%</div>
+<div class='knop'><button class='st' onclick="zet('BU19820901','Langenboom buitengebied','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19820901','Langenboom buitengebied','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Langenboom buitengebied,Land van Cuijk&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='19' data-code='BU17210119'>
+<div class='kop'><span class='naam'>Broekhoek - Middelste Groes</span><span class='ja'>~20 ja/jaar</span></div>
+<div class='meta'>Bernheze · 🚗 19 min · 325 woningen · 86% koop · 49% vrijst/2-kap · 65+: 15%</div>
+<div class='knop'><button class='st' onclick="zet('BU17210119','Broekhoek - Middelste Groes','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17210119','Broekhoek - Middelste Groes','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Broekhoek - Middelste Groes,Bernheze&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='36' data-code='BU08200200'>
+<div class='kop'><span class='naam'>Nederwetten</span><span class='ja'>~19 ja/jaar</span></div>
+<div class='meta'>Nuenen, Gerwen en Nederwetten · 🚗 36 min · 316 woningen · 88% koop · 69% vrijst/2-kap · 65+: 23%</div>
+<div class='knop'><button class='st' onclick="zet('BU08200200','Nederwetten','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08200200','Nederwetten','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Nederwetten,Nuenen, Gerwen en Nederwetten&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='17' data-code='BU07570100'>
+<div class='kop'><span class='naam'>Lennisheuvel</span><span class='ja'>~19 ja/jaar</span></div>
+<div class='meta'>Boxtel · 🚗 17 min · 312 woningen · 88% koop · 78% vrijst/2-kap · 65+: 19%</div>
+<div class='knop'><button class='st' onclick="zet('BU07570100','Lennisheuvel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07570100','Lennisheuvel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Lennisheuvel,Boxtel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='27' data-code='BU08091041'>
+<div class='kop'><span class='naam'>De Baan</span><span class='ja'>~19 ja/jaar</span></div>
+<div class='meta'>Loon op Zand · 🚗 27 min · 316 woningen · 87% koop · 67% vrijst/2-kap · 65+: 18%</div>
+<div class='knop'><button class='st' onclick="zet('BU08091041','De Baan','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08091041','De Baan','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=De Baan,Loon op Zand&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='31' data-code='BU07980200'>
+<div class='kop'><span class='naam'>Biest-Houtakker</span><span class='ja'>~19 ja/jaar</span></div>
+<div class='meta'>Hilvarenbeek · 🚗 31 min · 321 woningen · 85% koop · 80% vrijst/2-kap · 65+: 16%</div>
+<div class='knop'><button class='st' onclick="zet('BU07980200','Biest-Houtakker','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07980200','Biest-Houtakker','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Biest-Houtakker,Hilvarenbeek&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='38' data-code='BU02140001'>
+<div class='kop'><span class='naam'>Buren Appelenboomgaard</span><span class='ja'>~19 ja/jaar</span></div>
+<div class='meta'>Buren · 🚗 38 min · 402 woningen · 68% koop · 35% vrijst/2-kap · 65+: 31%</div>
+<div class='knop'><button class='st' onclick="zet('BU02140001','Buren Appelenboomgaard','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02140001','Buren Appelenboomgaard','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Buren Appelenboomgaard,Buren&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='36' data-code='BU02960500'>
+<div class='kop'><span class='naam'>Hernen</span><span class='ja'>~19 ja/jaar</span></div>
+<div class='meta'>Wijchen · 🚗 36 min · 325 woningen · 84% koop · 67% vrijst/2-kap · 65+: 20%</div>
+<div class='knop'><button class='st' onclick="zet('BU02960500','Hernen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02960500','Hernen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Hernen,Wijchen&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='37' data-code='BU17190403'>
+<div class='kop'><span class='naam'>Wagenberg zuidoost</span><span class='ja'>~19 ja/jaar</span></div>
+<div class='meta'>Drimmelen · 🚗 37 min · 385 woningen · 70% koop · 51% vrijst/2-kap · 65+: 25%</div>
+<div class='knop'><button class='st' onclick="zet('BU17190403','Wagenberg zuidoost','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17190403','Wagenberg zuidoost','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Wagenberg zuidoost,Drimmelen&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='23' data-code='BU19591701'>
+<div class='kop'><span class='naam'>Eethen</span><span class='ja'>~19 ja/jaar</span></div>
+<div class='meta'>Altena · 🚗 23 min · 371 woningen · 72% koop · 53% vrijst/2-kap · 65+: 17%</div>
+<div class='knop'><button class='st' onclick="zet('BU19591701','Eethen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19591701','Eethen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Eethen,Altena&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='40' data-code='BU16590309'>
+<div class='kop'><span class='naam'>Verspreide huizen Mariahout</span><span class='ja'>~19 ja/jaar</span></div>
+<div class='meta'>Laarbeek · 🚗 40 min · 321 woningen · 83% koop · 84% vrijst/2-kap · 65+: 21%</div>
+<div class='knop'><button class='st' onclick="zet('BU16590309','Verspreide huizen Mariahout','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU16590309','Verspreide huizen Mariahout','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Verspreide huizen Mariahout,Laarbeek&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='44' data-code='BU19821601'>
+<div class='kop'><span class='naam'>Wilbertoord</span><span class='ja'>~18 ja/jaar</span></div>
+<div class='meta'>Land van Cuijk · 🚗 44 min · 331 woningen · 79% koop · 71% vrijst/2-kap · 65+: 22%</div>
+<div class='knop'><button class='st' onclick="zet('BU19821601','Wilbertoord','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19821601','Wilbertoord','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Wilbertoord,Land van Cuijk&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='36' data-code='BU06680100'>
+<div class='kop'><span class='naam'>Kern Alphen</span><span class='ja'>~18 ja/jaar</span></div>
+<div class='meta'>West Maas en Waal · 🚗 36 min · 380 woningen · 68% koop · 68% vrijst/2-kap · 65+: 25%</div>
+<div class='knop'><button class='st' onclick="zet('BU06680100','Kern Alphen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU06680100','Kern Alphen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Kern Alphen,West Maas en Waal&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='22' data-code='BU07961499'>
+<div class='kop'><span class='naam'>Landelijk gebied Vinkel</span><span class='ja'>~18 ja/jaar</span></div>
+<div class='meta'>&#x27;s-Hertogenbosch · 🚗 22 min · 319 woningen · 81% koop · 89% vrijst/2-kap · 65+: 14%</div>
+<div class='knop'><button class='st' onclick="zet('BU07961499','Landelijk gebied Vinkel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07961499','Landelijk gebied Vinkel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Landelijk gebied Vinkel,&#x27;s-Hertogenbosch&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='43' data-code='BU02090271'>
+<div class='kop'><span class='naam'>Ewijk-Centrum</span><span class='ja'>~18 ja/jaar</span></div>
+<div class='meta'>Beuningen · 🚗 43 min · 414 woningen · 62% koop · 39% vrijst/2-kap · 65+: 29%</div>
+<div class='knop'><button class='st' onclick="zet('BU02090271','Ewijk-Centrum','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02090271','Ewijk-Centrum','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Ewijk-Centrum,Beuningen&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='44' data-code='BU17280200'>
+<div class='kop'><span class='naam'>Hapert Centrum</span><span class='ja'>~18 ja/jaar</span></div>
+<div class='meta'>Bladel · 🚗 44 min · 373 woningen · 69% koop · 35% vrijst/2-kap · 65+: 32%</div>
+<div class='knop'><button class='st' onclick="zet('BU17280200','Hapert Centrum','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17280200','Hapert Centrum','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Hapert Centrum,Bladel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='37' data-code='BU07550008'>
+<div class='kop'><span class='naam'>Verspreide huizen Molenwijk, Elzen en Neerbroek</span><span class='ja'>~18 ja/jaar</span></div>
+<div class='meta'>Boekel · 🚗 37 min · 329 woningen · 78% koop · 77% vrijst/2-kap · 65+: 13%</div>
+<div class='knop'><button class='st' onclick="zet('BU07550008','Verspreide huizen Molenwijk, Elzen en Neerbroek','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07550008','Verspreide huizen Molenwijk, Elzen en Neerbroek','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Verspreide huizen Molenwijk, Elzen en Neerbroek,Boekel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='28' data-code='BU17210301'>
+<div class='kop'><span class='naam'>Laar</span><span class='ja'>~18 ja/jaar</span></div>
+<div class='meta'>Bernheze · 🚗 28 min · 396 woningen · 65% koop · 37% vrijst/2-kap · 65+: 30%</div>
+<div class='knop'><button class='st' onclick="zet('BU17210301','Laar','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17210301','Laar','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Laar,Bernheze&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='40' data-code='BU17230107'>
+<div class='kop'><span class='naam'>Buitengebied Alphen</span><span class='ja'>~18 ja/jaar</span></div>
+<div class='meta'>Alphen-Chaam · 🚗 40 min · 306 woningen · 83% koop · 97% vrijst/2-kap · 65+: 16%</div>
+<div class='knop'><button class='st' onclick="zet('BU17230107','Buitengebied Alphen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17230107','Buitengebied Alphen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Buitengebied Alphen,Alphen-Chaam&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='37' data-code='BU19613701'>
+<div class='kop'><span class='naam'>Everdingen kern</span><span class='ja'>~18 ja/jaar</span></div>
+<div class='meta'>Vijfheerenlanden · 🚗 37 min · 326 woningen · 78% koop · 38% vrijst/2-kap · 65+: 21%</div>
+<div class='knop'><button class='st' onclick="zet('BU19613701','Everdingen kern','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19613701','Everdingen kern','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Everdingen kern,Vijfheerenlanden&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='35' data-code='BU08282000'>
+<div class='kop'><span class='naam'>Oijen</span><span class='ja'>~18 ja/jaar</span></div>
+<div class='meta'>Oss · 🚗 35 min · 377 woningen · 67% koop · 63% vrijst/2-kap · 65+: 23%</div>
+<div class='knop'><button class='st' onclick="zet('BU08282000','Oijen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08282000','Oijen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Oijen,Oss&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='34' data-code='BU19600007'>
+<div class='kop'><span class='naam'>Verspreide huizen Oostzijde</span><span class='ja'>~18 ja/jaar</span></div>
+<div class='meta'>West Betuwe · 🚗 34 min · 275 woningen · 92% koop · 94% vrijst/2-kap · 65+: 19%</div>
+<div class='knop'><button class='st' onclick="zet('BU19600007','Verspreide huizen Oostzijde','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19600007','Verspreide huizen Oostzijde','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Verspreide huizen Oostzijde,West Betuwe&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='22' data-code='BU02630408'>
+<div class='kop'><span class='naam'>Verspreide huizen Hurwenen en Rossum</span><span class='ja'>~18 ja/jaar</span></div>
+<div class='meta'>Maasdriel · 🚗 22 min · 292 woningen · 86% koop · 71% vrijst/2-kap · 65+: 18%</div>
+<div class='knop'><button class='st' onclick="zet('BU02630408','Verspreide huizen Hurwenen en Rossum','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02630408','Verspreide huizen Hurwenen en Rossum','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Verspreide huizen Hurwenen en Rossum,Maasdriel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='40' data-code='BU06680700'>
+<div class='kop'><span class='naam'>Kern Maasbommel</span><span class='ja'>~18 ja/jaar</span></div>
+<div class='meta'>West Maas en Waal · 🚗 40 min · 349 woningen · 72% koop · 64% vrijst/2-kap · 65+: 22%</div>
+<div class='knop'><button class='st' onclick="zet('BU06680700','Kern Maasbommel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU06680700','Kern Maasbommel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Kern Maasbommel,West Maas en Waal&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='27' data-code='BU08240702'>
+<div class='kop'><span class='naam'>Omg. Klein Bungalowpark</span><span class='ja'>~18 ja/jaar</span></div>
+<div class='meta'>Oisterwijk · 🚗 27 min · 270 woningen · 93% koop · 65% vrijst/2-kap · 65+: 27%</div>
+<div class='knop'><button class='st' onclick="zet('BU08240702','Omg. Klein Bungalowpark','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08240702','Omg. Klein Bungalowpark','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Omg. Klein Bungalowpark,Oisterwijk&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='30' data-code='BU19480112'>
+<div class='kop'><span class='naam'>Keldonk</span><span class='ja'>~17 ja/jaar</span></div>
+<div class='meta'>Meierijstad · 🚗 30 min · 300 woningen · 83% koop · 77% vrijst/2-kap · 65+: 20%</div>
+<div class='knop'><button class='st' onclick="zet('BU19480112','Keldonk','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19480112','Keldonk','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Keldonk,Meierijstad&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='31' data-code='BU19600202'>
+<div class='kop'><span class='naam'>Rhenoy</span><span class='ja'>~17 ja/jaar</span></div>
+<div class='meta'>West Betuwe · 🚗 31 min · 306 woningen · 81% koop · 65% vrijst/2-kap · 65+: 18%</div>
+<div class='knop'><button class='st' onclick="zet('BU19600202','Rhenoy','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19600202','Rhenoy','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Rhenoy,West Betuwe&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='41' data-code='BU16520107'>
+<div class='kop'><span class='naam'>Verspreide huizen Kampen-Esdonk</span><span class='ja'>~17 ja/jaar</span></div>
+<div class='meta'>Gemert-Bakel · 🚗 41 min · 292 woningen · 85% koop · 62% vrijst/2-kap · 65+: 13%</div>
+<div class='knop'><button class='st' onclick="zet('BU16520107','Verspreide huizen Kampen-Esdonk','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU16520107','Verspreide huizen Kampen-Esdonk','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Verspreide huizen Kampen-Esdonk,Gemert-Bakel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='41' data-code='BU06680501'>
+<div class='kop'><span class='naam'>Buitengebied Boven-Leeuwen</span><span class='ja'>~17 ja/jaar</span></div>
+<div class='meta'>West Maas en Waal · 🚗 41 min · 297 woningen · 83% koop · 83% vrijst/2-kap · 65+: 18%</div>
+<div class='knop'><button class='st' onclick="zet('BU06680501','Buitengebied Boven-Leeuwen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU06680501','Buitengebied Boven-Leeuwen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Buitengebied Boven-Leeuwen,West Maas en Waal&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='24' data-code='BU17210110'>
+<div class='kop'><span class='naam'>Buitenpas - Noordrand</span><span class='ja'>~17 ja/jaar</span></div>
+<div class='meta'>Bernheze · 🚗 24 min · 291 woningen · 85% koop · 57% vrijst/2-kap · 65+: 23%</div>
+<div class='knop'><button class='st' onclick="zet('BU17210110','Buitenpas - Noordrand','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17210110','Buitenpas - Noordrand','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Buitenpas - Noordrand,Bernheze&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='38' data-code='BU02140109'>
+<div class='kop'><span class='naam'>Verspreide huizen Beusichem en Zoelmond</span><span class='ja'>~17 ja/jaar</span></div>
+<div class='meta'>Buren · 🚗 38 min · 270 woningen · 91% koop · 73% vrijst/2-kap · 65+: 17%</div>
+<div class='knop'><button class='st' onclick="zet('BU02140109','Verspreide huizen Beusichem en Zoelmond','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02140109','Verspreide huizen Beusichem en Zoelmond','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Verspreide huizen Beusichem en Zoelmond,Buren&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='20' data-code='BU08556801'>
+<div class='kop'><span class='naam'>Kern Biezenmortel</span><span class='ja'>~17 ja/jaar</span></div>
+<div class='meta'>Tilburg · 🚗 20 min · 301 woningen · 81% koop · 77% vrijst/2-kap · 65+: 15%</div>
+<div class='knop'><button class='st' onclick="zet('BU08556801','Kern Biezenmortel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08556801','Kern Biezenmortel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Kern Biezenmortel,Tilburg&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='36' data-code='BU16590209'>
+<div class='kop'><span class='naam'>Verspreide huizen Lieshout</span><span class='ja'>~17 ja/jaar</span></div>
+<div class='meta'>Laarbeek · 🚗 36 min · 270 woningen · 90% koop · 97% vrijst/2-kap · 65+: 26%</div>
+<div class='knop'><button class='st' onclick="zet('BU16590209','Verspreide huizen Lieshout','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU16590209','Verspreide huizen Lieshout','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Verspreide huizen Lieshout,Laarbeek&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='28' data-code='BU08230100'>
+<div class='kop'><span class='naam'>Spoordonk</span><span class='ja'>~17 ja/jaar</span></div>
+<div class='meta'>Oirschot · 🚗 28 min · 306 woningen · 79% koop · 52% vrijst/2-kap · 65+: 12%</div>
+<div class='knop'><button class='st' onclick="zet('BU08230100','Spoordonk','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08230100','Spoordonk','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Spoordonk,Oirschot&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='41' data-code='BU07840401'>
+<div class='kop'><span class='naam'>Kern Molenschot</span><span class='ja'>~17 ja/jaar</span></div>
+<div class='meta'>Gilze en Rijen · 🚗 41 min · 280 woningen · 86% koop · 74% vrijst/2-kap · 65+: 25%</div>
+<div class='knop'><button class='st' onclick="zet('BU07840401','Kern Molenschot','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07840401','Kern Molenschot','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Kern Molenschot,Gilze en Rijen&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='26' data-code='BU19480303'>
+<div class='kop'><span class='naam'>Buitengebied Boskant</span><span class='ja'>~17 ja/jaar</span></div>
+<div class='meta'>Meierijstad · 🚗 26 min · 280 woningen · 86% koop · 91% vrijst/2-kap · 65+: 22%</div>
+<div class='knop'><button class='st' onclick="zet('BU19480303','Buitengebied Boskant','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19480303','Buitengebied Boskant','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Buitengebied Boskant,Meierijstad&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='34' data-code='BU19480109'>
+<div class='kop'><span class='naam'>Empeldonk</span><span class='ja'>~17 ja/jaar</span></div>
+<div class='meta'>Meierijstad · 🚗 34 min · 320 woningen · 75% koop · 58% vrijst/2-kap · 65+: 32%</div>
+<div class='knop'><button class='st' onclick="zet('BU19480109','Empeldonk','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19480109','Empeldonk','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Empeldonk,Meierijstad&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='31' data-code='BU08281900'>
+<div class='kop'><span class='naam'>Lithoijen</span><span class='ja'>~16 ja/jaar</span></div>
+<div class='meta'>Oss · 🚗 31 min · 290 woningen · 81% koop · 90% vrijst/2-kap · 65+: 26%</div>
+<div class='knop'><button class='st' onclick="zet('BU08281900','Lithoijen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08281900','Lithoijen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Lithoijen,Oss&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='25' data-code='BU08282100'>
+<div class='kop'><span class='naam'>Maren-Kessel</span><span class='ja'>~16 ja/jaar</span></div>
+<div class='meta'>Oss · 🚗 25 min · 319 woningen · 73% koop · 67% vrijst/2-kap · 65+: 20%</div>
+<div class='knop'><button class='st' onclick="zet('BU08282100','Maren-Kessel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08282100','Maren-Kessel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Maren-Kessel,Oss&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='42' data-code='BU16670300'>
+<div class='kop'><span class='naam'>Hulsel</span><span class='ja'>~16 ja/jaar</span></div>
+<div class='meta'>Reusel-De Mierden · 🚗 42 min · 259 woningen · 89% koop · 86% vrijst/2-kap · 65+: 23%</div>
+<div class='knop'><button class='st' onclick="zet('BU16670300','Hulsel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU16670300','Hulsel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Hulsel,Reusel-De Mierden&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='45' data-code='BU17230203'>
+<div class='kop'><span class='naam'>Elsakker</span><span class='ja'>~16 ja/jaar</span></div>
+<div class='meta'>Alphen-Chaam · 🚗 45 min · 413 woningen · 56% koop · 60% vrijst/2-kap · 65+: 41%</div>
+<div class='knop'><button class='st' onclick="zet('BU17230203','Elsakker','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17230203','Elsakker','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Elsakker,Alphen-Chaam&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='27' data-code='BU19600400'>
+<div class='kop'><span class='naam'>Meteren</span><span class='ja'>~16 ja/jaar</span></div>
+<div class='meta'>West Betuwe · 🚗 27 min · 312 woningen · 74% koop · 67% vrijst/2-kap · 65+: 16%</div>
+<div class='knop'><button class='st' onclick="zet('BU19600400','Meteren','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19600400','Meteren','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Meteren,West Betuwe&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='34' data-code='BU19613201'>
+<div class='kop'><span class='naam'>Zijderveld kern</span><span class='ja'>~16 ja/jaar</span></div>
+<div class='meta'>Vijfheerenlanden · 🚗 34 min · 287 woningen · 80% koop · 40% vrijst/2-kap · 65+: 20%</div>
+<div class='knop'><button class='st' onclick="zet('BU19613201','Zijderveld kern','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19613201','Zijderveld kern','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Zijderveld kern,Vijfheerenlanden&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='44' data-code='BU16670008'>
+<div class='kop'><span class='naam'>Buitengebied ten noorden van Reusel</span><span class='ja'>~16 ja/jaar</span></div>
+<div class='meta'>Reusel-De Mierden · 🚗 44 min · 297 woningen · 77% koop · 45% vrijst/2-kap · 65+: 10%</div>
+<div class='knop'><button class='st' onclick="zet('BU16670008','Buitengebied ten noorden van Reusel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU16670008','Buitengebied ten noorden van Reusel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Buitengebied ten noorden van Reusel,Reusel-De Mierden&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='45' data-code='BU02140509'>
+<div class='kop'><span class='naam'>Verspreide huizen Eck en Wiel</span><span class='ja'>~16 ja/jaar</span></div>
+<div class='meta'>Buren · 🚗 45 min · 254 woningen · 90% koop · 89% vrijst/2-kap · 65+: 21%</div>
+<div class='knop'><button class='st' onclick="zet('BU02140509','Verspreide huizen Eck en Wiel','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02140509','Verspreide huizen Eck en Wiel','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Verspreide huizen Eck en Wiel,Buren&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='33' data-code='BU08281700'>
+<div class='kop'><span class='naam'>Deursen en Dennenburg</span><span class='ja'>~16 ja/jaar</span></div>
+<div class='meta'>Oss · 🚗 33 min · 256 woningen · 89% koop · 72% vrijst/2-kap · 65+: 17%</div>
+<div class='knop'><button class='st' onclick="zet('BU08281700','Deursen en Dennenburg','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08281700','Deursen en Dennenburg','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Deursen en Dennenburg,Oss&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='34' data-code='BU08281100'>
+<div class='kop'><span class='naam'>Haren</span><span class='ja'>~16 ja/jaar</span></div>
+<div class='meta'>Oss · 🚗 34 min · 298 woningen · 76% koop · 85% vrijst/2-kap · 65+: 22%</div>
+<div class='knop'><button class='st' onclick="zet('BU08281100','Haren','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08281100','Haren','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Haren,Oss&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='29' data-code='BU19600502'>
+<div class='kop'><span class='naam'>Hellouw</span><span class='ja'>~16 ja/jaar</span></div>
+<div class='meta'>West Betuwe · 🚗 29 min · 312 woningen · 72% koop · 69% vrijst/2-kap · 65+: 20%</div>
+<div class='knop'><button class='st' onclick="zet('BU19600502','Hellouw','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19600502','Hellouw','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Hellouw,West Betuwe&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='38' data-code='BU02520101'>
+<div class='kop'><span class='naam'>Nederasselt</span><span class='ja'>~16 ja/jaar</span></div>
+<div class='meta'>Heumen · 🚗 38 min · 292 woningen · 77% koop · 68% vrijst/2-kap · 65+: 21%</div>
+<div class='knop'><button class='st' onclick="zet('BU02520101','Nederasselt','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02520101','Nederasselt','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Nederasselt,Heumen&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='29' data-code='BU07980009'>
+<div class='kop'><span class='naam'>Verspreide huizen Hilvarenbeek</span><span class='ja'>~16 ja/jaar</span></div>
+<div class='meta'>Hilvarenbeek · 🚗 29 min · 260 woningen · 86% koop · 97% vrijst/2-kap · 65+: 23%</div>
+<div class='knop'><button class='st' onclick="zet('BU07980009','Verspreide huizen Hilvarenbeek','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07980009','Verspreide huizen Hilvarenbeek','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Verspreide huizen Hilvarenbeek,Hilvarenbeek&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='38' data-code='BU07700409'>
+<div class='kop'><span class='naam'>Verspreide huizen Wintelre</span><span class='ja'>~16 ja/jaar</span></div>
+<div class='meta'>Eersel · 🚗 38 min · 267 woningen · 84% koop · 75% vrijst/2-kap · 65+: 20%</div>
+<div class='knop'><button class='st' onclick="zet('BU07700409','Verspreide huizen Wintelre','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07700409','Verspreide huizen Wintelre','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Verspreide huizen Wintelre,Eersel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='34' data-code='BU19480309'>
+<div class='kop'><span class='naam'>Buitengebied Vressel en Zwijnsbergen</span><span class='ja'>~16 ja/jaar</span></div>
+<div class='meta'>Meierijstad · 🚗 34 min · 286 woningen · 78% koop · 86% vrijst/2-kap · 65+: 19%</div>
+<div class='knop'><button class='st' onclick="zet('BU19480309','Buitengebied Vressel en Zwijnsbergen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19480309','Buitengebied Vressel en Zwijnsbergen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Buitengebied Vressel en Zwijnsbergen,Meierijstad&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='22' data-code='BU17210206'>
+<div class='kop'><span class='naam'>Oranjewijk</span><span class='ja'>~16 ja/jaar</span></div>
+<div class='meta'>Bernheze · 🚗 22 min · 337 woningen · 66% koop · 82% vrijst/2-kap · 65+: 39%</div>
+<div class='knop'><button class='st' onclick="zet('BU17210206','Oranjewijk','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17210206','Oranjewijk','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Oranjewijk,Bernheze&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='24' data-code='BU02630401'>
+<div class='kop'><span class='naam'>Hurwenen</span><span class='ja'>~15 ja/jaar</span></div>
+<div class='meta'>Maasdriel · 🚗 24 min · 273 woningen · 81% koop · 72% vrijst/2-kap · 65+: 19%</div>
+<div class='knop'><button class='st' onclick="zet('BU02630401','Hurwenen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02630401','Hurwenen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Hurwenen,Maasdriel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='22' data-code='BU17210201'>
+<div class='kop'><span class='naam'>St. Servatius - Schoonstr - Den Dolvert</span><span class='ja'>~15 ja/jaar</span></div>
+<div class='meta'>Bernheze · 🚗 22 min · 343 woningen · 64% koop · 54% vrijst/2-kap · 65+: 30%</div>
+<div class='knop'><button class='st' onclick="zet('BU17210201','St. Servatius - Schoonstr - Den Dolvert','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17210201','St. Servatius - Schoonstr - Den Dolvert','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=St. Servatius - Schoonstr - Den Dolvert,Bernheze&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='37' data-code='BU02140002'>
+<div class='kop'><span class='naam'>Buren Tielseweg</span><span class='ja'>~15 ja/jaar</span></div>
+<div class='meta'>Buren · 🚗 37 min · 331 woningen · 66% koop · 35% vrijst/2-kap · 65+: 18%</div>
+<div class='knop'><button class='st' onclick="zet('BU02140002','Buren Tielseweg','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02140002','Buren Tielseweg','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Buren Tielseweg,Buren&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='25' data-code='BU19591601'>
+<div class='kop'><span class='naam'>Meeuwen</span><span class='ja'>~15 ja/jaar</span></div>
+<div class='meta'>Altena · 🚗 25 min · 265 woningen · 80% koop · 61% vrijst/2-kap · 65+: 17%</div>
+<div class='knop'><button class='st' onclick="zet('BU19591601','Meeuwen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19591601','Meeuwen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Meeuwen,Altena&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='44' data-code='BU17240010'>
+<div class='kop'><span class='naam'>Schutsboom e.o.</span><span class='ja'>~15 ja/jaar</span></div>
+<div class='meta'>Bergeijk · 🚗 44 min · 290 woningen · 73% koop · 45% vrijst/2-kap · 65+: 17%</div>
+<div class='knop'><button class='st' onclick="zet('BU17240010','Schutsboom e.o.','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17240010','Schutsboom e.o.','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Schutsboom e.o.,Bergeijk&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='41' data-code='BU19611101'>
+<div class='kop'><span class='naam'>Leerbroek kern</span><span class='ja'>~15 ja/jaar</span></div>
+<div class='meta'>Vijfheerenlanden · 🚗 41 min · 352 woningen · 60% koop · 36% vrijst/2-kap · 65+: 18%</div>
+<div class='knop'><button class='st' onclick="zet('BU19611101','Leerbroek kern','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19611101','Leerbroek kern','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Leerbroek kern,Vijfheerenlanden&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='22' data-code='BU07530019'>
+<div class='kop'><span class='naam'>Aarlesche Erven</span><span class='ja'>~15 ja/jaar</span></div>
+<div class='meta'>Best · 🚗 22 min · 257 woningen · 82% koop · 60% vrijst/2-kap · 65+: 11%</div>
+<div class='knop'><button class='st' onclick="zet('BU07530019','Aarlesche Erven','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07530019','Aarlesche Erven','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Aarlesche Erven,Best&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='28' data-code='BU19480313'>
+<div class='kop'><span class='naam'>Kienehoef Noord</span><span class='ja'>~14 ja/jaar</span></div>
+<div class='meta'>Meierijstad · 🚗 28 min · 282 woningen · 73% koop · 46% vrijst/2-kap · 65+: 29%</div>
+<div class='knop'><button class='st' onclick="zet('BU19480313','Kienehoef Noord','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19480313','Kienehoef Noord','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Kienehoef Noord,Meierijstad&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='24' data-code='BU17210211'>
+<div class='kop'><span class='naam'>Rodenburg</span><span class='ja'>~14 ja/jaar</span></div>
+<div class='meta'>Bernheze · 🚗 24 min · 311 woningen · 66% koop · 39% vrijst/2-kap · 65+: 15%</div>
+<div class='knop'><button class='st' onclick="zet('BU17210211','Rodenburg','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17210211','Rodenburg','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Rodenburg,Bernheze&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='27' data-code='BU08240705'>
+<div class='kop'><span class='naam'>Omg. Kloosterlaan</span><span class='ja'>~14 ja/jaar</span></div>
+<div class='meta'>Oisterwijk · 🚗 27 min · 279 woningen · 72% koop · 50% vrijst/2-kap · 65+: 24%</div>
+<div class='knop'><button class='st' onclick="zet('BU08240705','Omg. Kloosterlaan','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08240705','Omg. Kloosterlaan','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Omg. Kloosterlaan,Oisterwijk&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='33' data-code='BU19600300'>
+<div class='kop'><span class='naam'>Buurmalsen</span><span class='ja'>~14 ja/jaar</span></div>
+<div class='meta'>West Betuwe · 🚗 33 min · 276 woningen · 73% koop · 54% vrijst/2-kap · 65+: 20%</div>
+<div class='knop'><button class='st' onclick="zet('BU19600300','Buurmalsen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19600300','Buurmalsen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Buurmalsen,West Betuwe&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='40' data-code='BU19611501'>
+<div class='kop'><span class='naam'>Hei- en Boeicop kern</span><span class='ja'>~14 ja/jaar</span></div>
+<div class='meta'>Vijfheerenlanden · 🚗 40 min · 290 woningen · 69% koop · 35% vrijst/2-kap · 65+: 17%</div>
+<div class='knop'><button class='st' onclick="zet('BU19611501','Hei- en Boeicop kern','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU19611501','Hei- en Boeicop kern','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Hei- en Boeicop kern,Vijfheerenlanden&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='42' data-code='BU17400102'>
+<div class='kop'><span class='naam'>IJzendoorn</span><span class='ja'>~14 ja/jaar</span></div>
+<div class='meta'>Neder-Betuwe · 🚗 42 min · 322 woningen · 62% koop · 40% vrijst/2-kap · 65+: 17%</div>
+<div class='knop'><button class='st' onclick="zet('BU17400102','IJzendoorn','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17400102','IJzendoorn','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=IJzendoorn,Neder-Betuwe&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='30' data-code='BU07660112'>
+<div class='kop'><span class='naam'>Dongen-Vaart</span><span class='ja'>~14 ja/jaar</span></div>
+<div class='meta'>Dongen · 🚗 30 min · 257 woningen · 78% koop · 61% vrijst/2-kap · 65+: 14%</div>
+<div class='knop'><button class='st' onclick="zet('BU07660112','Dongen-Vaart','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU07660112','Dongen-Vaart','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Dongen-Vaart,Dongen&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='34' data-code='BU02810200'>
+<div class='kop'><span class='naam'>Wadenoijen</span><span class='ja'>~14 ja/jaar</span></div>
+<div class='meta'>Tiel · 🚗 34 min · 283 woningen · 70% koop · 48% vrijst/2-kap · 65+: 19%</div>
+<div class='knop'><button class='st' onclick="zet('BU02810200','Wadenoijen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02810200','Wadenoijen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Wadenoijen,Tiel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='34' data-code='BU08281200'>
+<div class='kop'><span class='naam'>Macharen</span><span class='ja'>~14 ja/jaar</span></div>
+<div class='meta'>Oss · 🚗 34 min · 275 woningen · 72% koop · 85% vrijst/2-kap · 65+: 30%</div>
+<div class='knop'><button class='st' onclick="zet('BU08281200','Macharen','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08281200','Macharen','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Macharen,Oss&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='41' data-code='BU17090200'>
+<div class='kop'><span class='naam'>Langeweg</span><span class='ja'>~14 ja/jaar</span></div>
+<div class='meta'>Moerdijk · 🚗 41 min · 274 woningen · 72% koop · 67% vrijst/2-kap · 65+: 20%</div>
+<div class='knop'><button class='st' onclick="zet('BU17090200','Langeweg','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17090200','Langeweg','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Langeweg,Moerdijk&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='27' data-code='BU02970105'>
+<div class='kop'><span class='naam'>Verspreide huizen in de polder Aalst</span><span class='ja'>~13 ja/jaar</span></div>
+<div class='meta'>Zaltbommel · 🚗 27 min · 264 woningen · 72% koop · 66% vrijst/2-kap · 65+: 12%</div>
+<div class='knop'><button class='st' onclick="zet('BU02970105','Verspreide huizen in de polder Aalst','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU02970105','Verspreide huizen in de polder Aalst','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Verspreide huizen in de polder Aalst,Zaltbommel&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='23' data-code='BU08092061'>
+<div class='kop'><span class='naam'>Prinsessenbuurt</span><span class='ja'>~13 ja/jaar</span></div>
+<div class='meta'>Loon op Zand · 🚗 23 min · 288 woningen · 64% koop · 49% vrijst/2-kap · 65+: 27%</div>
+<div class='knop'><button class='st' onclick="zet('BU08092061','Prinsessenbuurt','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU08092061','Prinsessenbuurt','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Prinsessenbuurt,Loon op Zand&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='22' data-code='BU17210106'>
+<div class='kop'><span class='naam'>Den Berg</span><span class='ja'>~13 ja/jaar</span></div>
+<div class='meta'>Bernheze · 🚗 22 min · 260 woningen · 70% koop · 67% vrijst/2-kap · 65+: 24%</div>
+<div class='knop'><button class='st' onclick="zet('BU17210106','Den Berg','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17210106','Den Berg','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=Den Berg,Bernheze&travelmode=driving'>🚗</a></div>
+</div>
+<div class='dorp' data-min='38' data-code='BU17190505'>
+<div class='kop'><span class='naam'>De Langstraatspoorlijn</span><span class='ja'>~11 ja/jaar</span></div>
+<div class='meta'>Drimmelen · 🚗 38 min · 258 woningen · 60% koop · 35% vrijst/2-kap · 65+: 21%</div>
+<div class='knop'><button class='st' onclick="zet('BU17190505','De Langstraatspoorlijn','gepland')">📅 plan</button>
+<button class='st' onclick="zet('BU17190505','De Langstraatspoorlijn','gedaan')">✅ gedaan</button>
+<a class='nav' target='_blank' href='https://www.google.com/maps/dir/?api=1&destination=De Langstraatspoorlijn,Drimmelen&travelmode=driving'>🚗</a></div>
+</div>
+<script>
+const LOGURL='https://script.google.com/macros/s/AKfycbzQEt7CUybrqFtYqBTsJ3IxTkTLTw1yz5J9KezJsmMdqGUWNKVZIWyO6An-VFPAahP6FA/exec';
+const S=JSON.parse(localStorage.getItem('dorpstatus')||'{}');
+function paint(){document.querySelectorAll('.dorp').forEach(d=>{const st=S[d.dataset.code];d.classList.toggle('gedaan',st==='gedaan');d.classList.toggle('gepland',st==='gepland');});}
+function zet(code,naam,st){
+  if(S[code]===st){delete S[code];}else{S[code]=st;}
+  localStorage.setItem('dorpstatus',JSON.stringify(S));
+  try{fetch(LOGURL+'?'+new URLSearchParams({buurt:'DORP',straat:naam,actie:(S[code]||'weer open')+' '+new Date().toISOString().slice(0,10)}),{mode:'no-cors'});}catch(e){}
+  paint();
+}
+function filt(){
+  const q=(document.getElementById('zoek').value||'').toLowerCase();
+  const mm=parseFloat(document.getElementById('maxmin').value)||999;
+  document.querySelectorAll('.dorp').forEach(d=>{
+    const ok=(!q||d.textContent.toLowerCase().includes(q))&&(+d.dataset.min<=mm);
+    d.style.display=ok?'':'none';
+  });
+}
+paint();
+</script></body></html>
